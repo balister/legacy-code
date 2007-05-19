@@ -95,18 +95,18 @@ void DDR2Init()
 	while ((PSC->PTSTAT) & 0x00000001);
 	while (((PSC->MDSTAT[13]) & 0x1F) != 0x00000003);	
 	
-	// For Micron MT47H64M16BT-37E @ 162 MHz
+	// For Micron MT47H32M16BN-3 @ 432 MHz
 	// Setup the read latency (CAS Latency + 3 = 6 (but write 6-1=5))
 	DDR->DDRPHYCR = 0x14001905;
-	// Set TIMUNLOCK bit, CAS LAtency 3, 8 banks, 1024-word page size 
-	DDR->SDBCR = 0x00138632;
+	// Set TIMUNLOCK bit, CAS LAtency 3, 4 banks, 1024-word page size 
+	DDR->SDBCR = 0x00138622;
 	// Program timing registers 
-	DDR->SDTIMR = 0x28923211;
-	DDR->SDTIMR2 = 0x0016C722;
+	DDR->SDTIMR  = 0x5BB68DDB;
+	DDR->SDTIMR2 = 0x0031C762;
 	// Clear the TIMUNLOCK bit 
 	DDR->SDBCR &= (~0x00008000);
 	// Set the refresh rate
-	DDR->SDRCR = 0x000004F0;
+	DDR->SDRCR = 0x00000D2A;
 	
 	// Dummy write/read to apply timing settings
 	DDRMem[0] = DDR_TEST_PATTERN;
