@@ -178,7 +178,7 @@ typedef struct _DDR2_MEM_CTL_REGS_
 #define DDRVTPR (*((volatile unsigned int*) 0x01C42030))
 #define DDR ((DDR2Regs*) 0x20000000)
 #define DDR_TEST_PATTERN 0xA55AA55Au
-#define DDR_RAM_SIZE 0x10000000u
+#define DDR_RAM_SIZE 0x8000000u
 
 
 /* -------------------------------------------------------------------------- *
