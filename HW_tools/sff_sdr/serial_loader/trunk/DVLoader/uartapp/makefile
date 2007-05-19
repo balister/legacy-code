@@ -5,7 +5,7 @@
 #############################################################
 # Auth: Daniel Allred (d-allred@ti.com)
 # Vers: v1.0 on 08-Nov-2006
-CROSSCOMPILE=arm_v5t_le-
+CROSSCOMPILE=arm-angstrom-linux-gnueabi-
 CC=$(CROSSCOMPILE)gcc
 OBJCOPY=$(CROSSCOMPILE)objcopy
 OBJDUMP=$(CROSSCOMPILE)objdump
@@ -35,8 +35,8 @@ $(BINARY): $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJECTS)
 		$(CC) $(LDFLAGS) $(OBJECTS) -o $@
-		
+
 .c.o :
 		$(CC) $(CFLAGS) $< -o $@
-		
+
 
