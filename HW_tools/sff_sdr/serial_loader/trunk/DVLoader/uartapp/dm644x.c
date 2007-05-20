@@ -99,7 +99,7 @@ void DDR2Init()
 	// Setup the read latency (CAS Latency + 3 = 6 (but write 6-1=5))
 	DDR->DDRPHYCR = 0x14001905;
 	// Set TIMUNLOCK bit, CAS LAtency 3, 4 banks, 1024-word page size 
-	DDR->SDBCR = 0x00138623;
+	DDR->SDBCR = 0x00138622;
 	// Program timing registers 
 	DDR->SDTIMR  = 0x45246452;
 	DDR->SDTIMR2 = 0x004B8E82;
