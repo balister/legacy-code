@@ -68,9 +68,9 @@ void PLL2Init()
 	PLL2->PLLCTL &= (~0x00000010);          // Enable the PLL
 	
 	// Set PLL multipliers and divisors 
-	PLL2->PLLM = 31;        // 27  Mhz * (31+1) = 864 MHz 
-	PLL2->PLLDIV1 = 10;     // 864 MHz / (10+1) = 78.5  MHz (for VPSS)
-	PLL2->PLLDIV2 = 1;      // 864 MHz / (1+1 ) = 432 MHz (the PHY DDR rate)
+	PLL2->PLLM = 23;        // 27  Mhz * (23+1) = 648 MHz 
+	PLL2->PLLDIV1 = 8;      // 648 MHz / (8+1)  = 72  MHz (for VPSS)
+	PLL2->PLLDIV2 = 1;      // 648 MHz / (1+1 ) = 324 MHz (the PHY DDR rate)
 		
 	PLL2->PLLDIV2 |= (0x00008000);          // Enable DDR divider	
 	PLL2->PLLDIV1 |= (0x00008000);          // Enable VPBE divider	
@@ -95,18 +95,18 @@ void DDR2Init()
 	while ((PSC->PTSTAT) & 0x00000001);
 	while (((PSC->MDSTAT[13]) & 0x1F) != 0x00000003);	
 	
-	// For Micron MT47H32M16BN-3 @ 432 MHz
+	// For Micron MT47H32M16BN-3 @ 324 MHz
 	// Setup the read latency (CAS Latency + 3 = 6 (but write 6-1=5))
 	DDR->DDRPHYCR = 0x14001905;
 	// Set TIMUNLOCK bit, CAS LAtency 3, 4 banks, 1024-word page size 
 	DDR->SDBCR = 0x00138622;
 	// Program timing registers 
-	DDR->SDTIMR  = 0x5BB68DDB;
-	DDR->SDTIMR2 = 0x0031C762;
+	DDR->SDTIMR  = 0x45246452;
+	DDR->SDTIMR2 = 0x004B8E82;
 	// Clear the TIMUNLOCK bit 
 	DDR->SDBCR &= (~0x00008000);
 	// Set the refresh rate
-	DDR->SDRCR = 0x00000D2A;
+	DDR->SDRCR = 0x000009DF;
 	
 	// Dummy write/read to apply timing settings
 	DDRMem[0] = DDR_TEST_PATTERN;
