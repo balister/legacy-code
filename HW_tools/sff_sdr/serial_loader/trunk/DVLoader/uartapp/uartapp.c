@@ -16,8 +16,8 @@ volatile unsigned int DDRMem[0] __attribute__((section(".ddrram")));
      
 unsigned int DDRTest()
 {
-     unsigned int pattLen = 8;
-     unsigned int pattern[8] = { 0x12345678,
+     unsigned int pattLen = 7;
+     unsigned int pattern[7] = {
                                  0xAAAA5555,
                                  0xCCCC3333,
                                  0x5555AAAA,
