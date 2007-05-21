@@ -30,7 +30,7 @@
 /*============================================================================*/
 #define CFG_DAVINCI
 #define CONFIG_ARM926EJS	/* This is an arm926ejs CPU core  	  */
-#define CONFIG_SYS_CLK_FREQ	229500000	/* Arm Clock frequency    */
+#define CONFIG_SYS_CLK_FREQ	327000000	/* Arm Clock frequency    */
 #define CFG_TIMERBASE		0x01C21400	/* use timer 0 		  */
 #define CFG_HZ			27000000	/* Timer Input clock freq */	
 /*============================================================================*/
