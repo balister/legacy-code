@@ -1873,6 +1873,9 @@ netstar_config:		unconfig
 davinci_config :    unconfig
 	@./mkconfig $(@:_config=) arm arm926ejs davinci
 
+sffsdr_config :    unconfig
+	@./mkconfig $(@:_config=) arm arm926ejs sffsdr
+
 omap1510inn_config :	unconfig
 	@$(MKCONFIG) $(@:_config=) arm arm925t omap1510inn
 
