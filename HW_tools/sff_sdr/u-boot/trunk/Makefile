@@ -125,7 +125,7 @@ ifeq ($(ARCH),ppc)
 CROSS_COMPILE = powerpc-linux-
 endif
 ifeq ($(ARCH),arm)
-CROSS_COMPILE = arm-linux-
+CROSS_COMPILE = arm_v5t_le-
 endif
 ifeq ($(ARCH),i386)
 ifeq ($(HOSTARCH),i386)
@@ -1869,6 +1869,9 @@ netstar_config:		unconfig
 		echo "#define PHYS_SDRAM_1_SIZE SZ_64M" >>$(obj)include/config.h ; \
 	fi
 	@$(MKCONFIG) -a netstar arm arm925t netstar
+
+davinci_config :    unconfig
+	@./mkconfig $(@:_config=) arm arm926ejs davinci
 
 omap1510inn_config :	unconfig
 	@$(MKCONFIG) $(@:_config=) arm arm925t omap1510inn

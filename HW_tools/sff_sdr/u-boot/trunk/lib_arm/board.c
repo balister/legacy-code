@@ -185,7 +185,6 @@ static void display_flash_config (ulong size)
 }
 #endif /* CFG_NO_FLASH */
 
-
 /*
  * Breathe some life into the board...
  *
@@ -363,7 +362,15 @@ void start_armboot (void)
 	/* enable exceptions */
 	enable_interrupts ();
 
-	/* Perform network card initialisation if necessary */
+    /* Perform network card initialisation if necessary */
+
+#ifdef CONFIG_DRIVER_TI_EMAC
+extern void emac_set_mac_addr (const char *addr);
+	if (getenv ("ethaddr")) {
+		emac_set_mac_addr(gd->bd->bi_enetaddr);
+	}
+#endif
+	
 #ifdef CONFIG_DRIVER_CS8900
 	cs8900_get_enetaddr (gd->bd->bi_enetaddr);
 #endif
