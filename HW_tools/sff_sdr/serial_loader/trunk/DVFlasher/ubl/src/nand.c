@@ -278,6 +278,12 @@ Uint32 NAND_Init()
     width = ( ( (SYSTEM->BOOTCFG) & 0x20) >> 5);
     gNandInfo.busWidth = (width)?BUS_16BIT:BUS_8BIT;
 
+    if (gNandInfo.busWidth)
+	UARTSendData((Uint8 *) "Bus width = 16 bits\r\n", FALSE);
+    else
+	UARTSendData((Uint8 *) "Bus width = 16 bits\r\n", FALSE);
+
+
     // Setup AEMIF registers for NAND    
     CSRegs = (Uint32*) &(AEMIF->AB1CR);
     CSRegs[gNandInfo.CSOffset] = 0x3FFFFFFC | width;        // Set correct ABxCR reg
@@ -307,6 +313,10 @@ Uint32 NAND_GetDetails()
 	deviceID = flash_read_data( (PNAND_INFO)&gNandInfo ) & 0xFF;
 	j        = flash_read_data( (PNAND_INFO)&gNandInfo ) & 0xFF;
 	j        = flash_read_data( (PNAND_INFO)&gNandInfo ) & 0xFF;
+
+	UARTSendData((Uint8 *) "NAND Device ID = ", FALSE);
+	UARTSendInt(startBlkNum);
+	UARTSendData((Uint8 *) "\r\n", FALSE);
 
 	i=0;
 	while (gNandDevInfo[i].devID != 0x00)
