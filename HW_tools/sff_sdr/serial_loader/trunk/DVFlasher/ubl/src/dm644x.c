@@ -26,94 +26,33 @@ extern Uint32 gEntryPoint;
 // ---------------------------------------------------------------------------
 // Global Memory Timing and PLL Settings
 // ---------------------------------------------------------------------------
-#if defined(DM6441_LV)
-    // For Micron MT47H64M16BT-37E @ 135 MHz   
+    // For Micron MT47H32M16BN-3 @ 324 MHz   
     const Uint8 DDR_NM = 0;
     const Uint8 DDR_CL = 3;
-    const Uint8 DDR_IBANK = 3;
+    const Uint8 DDR_IBANK = 2;
     const Uint8 DDR_PAGESIZE = 2;
-    const Uint8 DDR_T_RFC = 17;
-    const Uint8 DDR_T_RP = 2;
-    const Uint8 DDR_T_RCD = 2;
-    const Uint8 DDR_T_WR = 2;
-    const Uint8 DDR_T_RAS = 5;
-    const Uint8 DDR_T_RC = 7;
-    const Uint8 DDR_T_RRD = 1;
-    const Uint8 DDR_T_WTR = 1;
-    const Uint8 DDR_T_XSNR = 18;
+    const Uint8 DDR_T_RFC = 34;
+    const Uint8 DDR_T_RP = 4;
+    const Uint8 DDR_T_RCD = 4;
+    const Uint8 DDR_T_WR = 4;
+    const Uint8 DDR_T_RAS = 12;
+    const Uint8 DDR_T_RC = 17;
+    const Uint8 DDR_T_RRD = 2;
+    const Uint8 DDR_T_WTR = 2;
+    const Uint8 DDR_T_XSNR = 37;
     const Uint8 DDR_T_XSRD = 199;
-    const Uint8 DDR_T_RTP = 1;
+    const Uint8 DDR_T_RTP = 2;
     const Uint8 DDR_T_CKE = 2;
-    const Uint16 DDR_RR = 1264;
+    const Uint16 DDR_RR = 2527;
     const Uint8 DDR_Board_Delay = 3;
     const Uint8 DDR_READ_Latency = 5;
     
-    const Uint32 PLL2_Mult = 20;
-    const Uint32 PLL2_Div1 = 10;
-    const Uint32 PLL2_Div2 = 2;
-#else
-    // For Micron MT47H64M16BT-37E @ 162 MHz
-    const Uint8 DDR_NM = 0;
-    const Uint8 DDR_CL = 3;
-    const Uint8 DDR_IBANK = 3;
-    const Uint8 DDR_PAGESIZE = 2;
-    const Uint8 DDR_T_RFC = 20;
-    const Uint8 DDR_T_RP = 2;
-    const Uint8 DDR_T_RCD = 2;
-    const Uint8 DDR_T_WR = 2;
-    const Uint8 DDR_T_RAS = 6;
-    const Uint8 DDR_T_RC = 8;
-    const Uint8 DDR_T_RRD = 2;
-    const Uint8 DDR_T_WTR = 1;
-    const Uint8 DDR_T_XSNR = 22;
-    const Uint8 DDR_T_XSRD = 199;
-    const Uint8 DDR_T_RTP = 1;
-    const Uint8 DDR_T_CKE = 2;
-    const Uint16 DDR_RR = 1053;
-    const Uint8 DDR_Board_Delay = 3;
-    const Uint8 DDR_READ_Latency = 5; 
-    
-    const Uint32 PLL2_Mult = 24;
-    const Uint32 PLL2_Div1 = 12;
-    const Uint32 PLL2_Div2 = 2;
-    
-    // 567 verison - only use this with older silicon/EVMs
-    // For Micron MT47H64M16BT-37E @ 189 MHz
-    /*const Uint8 DDR_NM = 0;
-    const Uint8 DDR_CL = 4;
-    const Uint8 DDR_IBANK = 3;
-    const Uint8 DDR_PAGESIZE = 2;
-    const Uint8 DDR_T_RFC = 24;
-    const Uint8 DDR_T_RP = 2;
-    const Uint8 DDR_T_RCD = 2;
-    const Uint8 DDR_T_WR = 2;
-    const Uint8 DDR_T_RAS = 7;
-    const Uint8 DDR_T_RC = 10;
-    const Uint8 DDR_T_RRD = 2;
-    const Uint8 DDR_T_WTR = 1;
-    const Uint8 DDR_T_XSNR = 25;
-    const Uint8 DDR_T_XSRD = 199;
-    const Uint8 DDR_T_RTP = 1;
-    const Uint8 DDR_T_CKE = 2;
-    const Uint16 DDR_RR = 1477;
-    const Uint8 DDR_Board_Delay = 2;
-    const Uint8 DDR_READ_Latency = 5;
-    
-    const Uint32 PLL2_Mult = 14;
-    const Uint32 PLL2_Div1 = 7;
-    const Uint32 PLL2_Div2 = 1;*/
-#endif
+    const Uint32 PLL2_Mult = 23;
+    const Uint32 PLL2_Div1 = 8;
+    const Uint32 PLL2_Div2 = 1;
 
 // Set CPU clocks
-#if defined(DM6441_LV)
-    const Uint32 PLL1_Mult = 15;  // DSP=405 MHz
-#elif defined(DM6441)
-    const Uint32 PLL1_Mult = 19;  // DSP=513 MHz  
-#else
-    const Uint32 PLL1_Mult = 22;  // DSP=594 MHz
-    // 567 version - only use this with older silicon/EVMs
-    // Uint32 PLL1_Mult = 21;
-#endif
+    const Uint32 PLL1_Mult = 21;  // DSP=594 MHz ARM=297 MHz
     
 // ---------------------------------------------------------
 // End of global PLL and Memory settings
