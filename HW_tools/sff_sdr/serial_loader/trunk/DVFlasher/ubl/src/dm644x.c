@@ -208,10 +208,9 @@ void DDR2Init()
 		
 	// For Micron MT47H64M16BT-37E @ 162 MHz
 	// Setup the read latency (CAS Latency + 3 = 6 (but write 6-1=5))
-	//DDR->DDRPHYCR = 0x14001905;
 	DDR->DDRPHYCR = 0x14001900 | DDR_READ_Latency;
+
 	// Set TIMUNLOCK bit, CAS LAtency 3, 8 banks, 1024-word page size 
-	//DDR->SDBCR = 0x00138632;
 	DDR->SDBCR = 0x00138000 |
 	             (DDR_NM << 14)   |
 	             (DDR_CL << 9)    |
@@ -219,7 +218,6 @@ void DDR2Init()
 	             (DDR_PAGESIZE <<0);
 	
 	// Program timing registers 
-	//DDR->SDTIMR = 0x28923211;
 	DDR->SDTIMR = (DDR_T_RFC << 25) |              
                   (DDR_T_RP << 22)  |
                   (DDR_T_RCD << 19) |
@@ -229,7 +227,6 @@ void DDR2Init()
                   (DDR_T_RRD << 3)  |
                   (DDR_T_WTR << 0);
                   
-	//DDR->SDTIMR2 = 0x0016C722;
 	DDR->SDTIMR2 = (DDR_T_XSNR << 16) |
                    (DDR_T_XSRD << 8)  |
                    (DDR_T_RTP << 5)   |
@@ -276,12 +273,6 @@ void DDR2Init()
 
 void PLL1Init()
 {
-    //594 version
-    //Uint32 PLL1_Mult = 22;
-        
-    //567 version - use with 189 MHZ DDR
-    //Uint32 PLL1_Mult = 21;
-            
 	// Set PLL2 clock input to internal osc. 
 	PLL1->PLLCTL &= (~0x00000100);	
 	
