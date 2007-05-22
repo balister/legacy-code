@@ -315,7 +315,7 @@ Uint32 NAND_GetDetails()
 	j        = flash_read_data( (PNAND_INFO)&gNandInfo ) & 0xFF;
 
 	UARTSendData((Uint8 *) "NAND Device ID = ", FALSE);
-	UARTSendInt(startBlkNum);
+	UARTSendInt(deviceID);
 	UARTSendData((Uint8 *) "\r\n", FALSE);
 
 	i=0;
