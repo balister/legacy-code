@@ -281,7 +281,7 @@ Uint32 NAND_Init()
     if (gNandInfo.busWidth)
 	UARTSendData((Uint8 *) "Bus width = 16 bits\r\n", FALSE);
     else
-	UARTSendData((Uint8 *) "Bus width = 16 bits\r\n", FALSE);
+	UARTSendData((Uint8 *) "Bus width = 8 bits\r\n", FALSE);
 
 
     // Setup AEMIF registers for NAND    
@@ -327,6 +327,11 @@ Uint32 NAND_GetDetails()
 			gNandInfo.pagesPerBlock     = gNandDevInfo[i].pagesPerBlock;
 			gNandInfo.numBlocks         = gNandDevInfo[i].numBlocks;
 			gNandInfo.bytesPerPage      = NANDFLASH_PAGESIZE(gNandDevInfo[i].bytesPerPage);
+
+			UARTSendData((Uint8 *) "Bytes per page = ", FALSE);
+			UARTSendInt(gNandInfo.bytesPerPage);
+			UARTSendData((Uint8 *) "\r\n", FALSE);
+
 			gNandInfo.spareBytesPerPage = gNandDevInfo[i].bytesPerPage - gNandInfo.bytesPerPage;
 					
 			// Assign the big_block flag
@@ -340,10 +345,23 @@ Uint32 NAND_GetDetails()
 			}
 			gNandInfo.blkShift = j;        
 			gNandInfo.pageShift = (gNandInfo.bigBlock)?16:8;
+
+			UARTSendData((Uint8 *) "Page shift = ", FALSE);
+			UARTSendInt(gNandInfo.pageShift);
+			UARTSendData((Uint8 *) "\r\n", FALSE);
+
 			gNandInfo.blkShift += gNandInfo.pageShift;
+
+			UARTSendData((Uint8 *) "Block shift = ", FALSE);
+			UARTSendInt(gNandInfo.blkShift);
+			UARTSendData((Uint8 *) "\r\n", FALSE);
 			
 			// Set number of column address bytes needed
 			gNandInfo.numColAddrBytes = gNandInfo.pageShift >> 3;
+
+			UARTSendData((Uint8 *) "Number of column address bytes = ", FALSE);
+			UARTSendInt(gNandInfo.numColAddrBytes);
+			UARTSendData((Uint8 *) "\r\n", FALSE);
 			
 			j = 0;
 			while( (gNandInfo.numBlocks >> j) > 1)
@@ -364,13 +382,21 @@ Uint32 NAND_GetDetails()
 			{
 			    gNandInfo.numRowAddrBytes = 5 - gNandInfo.numColAddrBytes;
 			}
-			
+
+			UARTSendData((Uint8 *) "Number of row address bytes = ", FALSE);
+			UARTSendInt(gNandInfo.numRowAddrBytes);
+			UARTSendData((Uint8 *) "\r\n", FALSE);
+
 			// Set the ECC bit mask
 			if (gNandInfo.bytesPerPage < 512)
 			    gNandInfo.ECCMask = 0x07FF07FF;
 			else
 			    gNandInfo.ECCMask = 0x0FFF0FFF;
 			    		
+			UARTSendData((Uint8 *) "ECCMask = ", FALSE);
+			UARTSendInt(gNandInfo.ECCMask);
+			UARTSendData((Uint8 *) "\r\n", FALSE);
+
 			return E_PASS;
 		}
 		i++;
