@@ -9,7 +9,7 @@
 # 		v1.11 on 7-Mar-2007
 #		v1.12 on 14-Mar-2007
 
-CROSSCOMPILE=arm_v5t_le-
+CROSSCOMPILE=arm-angstrom-linux-gnueabi-
 CC=$(CROSSCOMPILE)gcc
 OBJCOPY=$(CROSSCOMPILE)objcopy
 OBJDUMP=$(CROSSCOMPILE)objdump

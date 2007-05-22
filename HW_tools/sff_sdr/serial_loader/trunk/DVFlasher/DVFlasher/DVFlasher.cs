@@ -274,8 +274,8 @@ namespace DVFlasher
             myCmdParams.UARTUBLExecAddr = 0x0100;
             myCmdParams.UARTUBLUsed = true;
             
-            myCmdParams.NORUBLExecAddr = 0x2af8;
-            myCmdParams.NANDUBLExecAddr = 0x2504;
+            myCmdParams.NORUBLExecAddr = 0x2a1c;
+            myCmdParams.NANDUBLExecAddr = 0x23f4;
 
             myCmdParams.APPMagicFlag = MagicFlags.UBL_MAGIC_SAFE;
             myCmdParams.APPFileName = null;
@@ -530,7 +530,6 @@ namespace DVFlasher
         static Int32 Main(String[] args)
         {
             // Begin main code
-            Console.Clear();
             Console.WriteLine("-----------------------------------------------------");
             Console.WriteLine("   TI DVFlasher Host Program for DM644x              ");
             Console.WriteLine("   (C) 2007, Texas Instruments, Inc.                 ");
