@@ -61,7 +61,7 @@
 
 /* Set details of RAM */
 #define RAM_START_ADDR		(0x80000000)
-#define RAM_END_ADDR		(0x8FFFFFFF)
+#define RAM_END_ADDR		(0x87FFFFFF)
 
 typedef struct {
 	Uint32 magicNum;	/* Expected magic number */

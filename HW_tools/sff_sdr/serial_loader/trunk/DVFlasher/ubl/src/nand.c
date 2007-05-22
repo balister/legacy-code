@@ -221,6 +221,12 @@ Uint32 NAND_WaitForRdy(Uint32 timeout) {
 		return E_FAIL;
 	}
 
+#if 0
+    UARTSendData((Uint8 *) "NANDWaitForRdy()Remaining time = ", FALSE);
+    UARTSendInt(cnt);
+    UARTSendData((Uint8 *) "\r\n", FALSE);
+#endif
+
     return E_PASS;
 }
 

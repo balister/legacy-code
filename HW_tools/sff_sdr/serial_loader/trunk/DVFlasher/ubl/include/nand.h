@@ -36,7 +36,8 @@
 #define NAND_CLE_OFFSET     (0x10)
 
 // NAND timeout 
-#define NAND_TIMEOUT    10240
+//#define NAND_TIMEOUT    10240
+#define NAND_TIMEOUT    20480 
 
 // NAND flash commands
 #define NAND_LO_PAGE        0x00
