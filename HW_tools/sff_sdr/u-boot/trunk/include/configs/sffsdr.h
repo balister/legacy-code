@@ -4,6 +4,9 @@
  * Swaminathan S <swami.iyer@ti.com>
  * Configuation settings for the TI DaVinci EVM board.
  *
+ * Modified for Lyrtech SFF SDR board
+ * by Philip Balister <philip@opensdr.org>
+ *
  * See file CREDITS for list of people who contributed to this
  * project.
  *
@@ -30,7 +33,7 @@
 /*============================================================================*/
 #define CFG_DAVINCI
 #define CONFIG_ARM926EJS	/* This is an arm926ejs CPU core  	  */
-#define CONFIG_SYS_CLK_FREQ	327000000	/* Arm Clock frequency    */
+#define CONFIG_SYS_CLK_FREQ	297000000	/* Arm Clock frequency    */
 #define CFG_TIMERBASE		0x01C21400	/* use timer 0 		  */
 #define CFG_HZ			27000000	/* Timer Input clock freq */	
 /*============================================================================*/
@@ -39,9 +42,6 @@
  * Flash Boot info
 */
 /*============================================================================*/
-#define CFG_ENV_IS_IN_FLASH 	1		/* U-Boot env in NOR Flash   */
-
-#ifndef CFG_ENV_IS_IN_FLASH
 #define CFG_ENV_IS_IN_NAND 	1               /* U-Boot env in NAND Flash  */
 #define CFG_ENV_SECT_SIZE	512		/* Env sector Size */
 #define CFG_ENV_SIZE		(16 * 1024)
@@ -50,7 +50,6 @@
 #define CFG_ENV_SECT_SIZE	CFG_FLASH_SECT_SZ	/* Env sector Size */
 #define CFG_ENV_SIZE		CFG_FLASH_SECT_SZ
 #define CFG_ENV_ADDR		(CFG_FLASH_BASE + 0x20000)
-#endif
 
 
 /*
@@ -96,7 +95,7 @@ CFI Flash Configuration
 #define CFG_MEMTEST_END		0x90000000	/* 16MB RAM test   	  */
 #define CONFIG_NR_DRAM_BANKS	1		/* we have 1 bank of DRAM */
 #define PHYS_SDRAM_1		0x80000000	/* DDR Start 		  */
-#define PHYS_SDRAM_1_SIZE	0x10000000	/* DDR size 256MB 	  */
+#define PHYS_SDRAM_1_SIZE	0x08000000	/* DDR size 256MB 	  */
 #define CONFIG_STACKSIZE	(256*1024)	/* regular stack	  */
 /*============================================================================*/
 
@@ -131,7 +130,7 @@ CFI Flash Configuration
 #define CONFIG_BOOTDELAY	  3     	/* Boot delay before OS boot*/
 #define CONFIG_BOOTFILE		"uImage"	/* file to load */
 #define CFG_LONGHELP				/* undef to save memory     */
-#define CFG_PROMPT	"DaVinci EVM # "	/* Monitor Command Prompt   */
+#define CFG_PROMPT	"SFF SDR # "	/* Monitor Command Prompt   */
 #define CFG_CBSIZE	1024			/* Console I/O Buffer Size  */
 #define CFG_PBSIZE	(CFG_CBSIZE+sizeof(CFG_PROMPT)+16) /* Print buffer sz */
 #define CFG_MAXARGS	16		/* max number of command args   */

@@ -7,12 +7,16 @@
 # Texas Instruments, <www.ti.com>
 # Swaminathan <swami.iyer@ti.com>
 #
-# Davinci EVM board (ARM925EJS) cpu
+# Updated for Lyrtech SFF SDR board (ARM925EJS) cpu
+# (C) Copyright 2007
+# 
+# Philip Balister <philip@opensdr.com>
+#
 # see http://www.ti.com/ for more information on Texas Instruments
 #
-# Davinci EVM has 1 bank of 256 MB DDR RAM 
+# Lyrtech SFF SDR has 1 bank of 128 MB DDR RAM 
 # Physical Address:
-# 8000'0000 to 9000'0000
+# 8000'0000 to 8800'0000
 #
 #
 # Linux-Kernel is expected to be at 8000'8000, entry 8000'8000
