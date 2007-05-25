@@ -45,11 +45,6 @@
 #define CFG_ENV_IS_IN_NAND 	1               /* U-Boot env in NAND Flash  */
 #define CFG_ENV_SECT_SIZE	512		/* Env sector Size */
 #define CFG_ENV_SIZE		(16 * 1024)
-#else
-#define CONFIG_INITRD_TAG  	  1
-#define CFG_ENV_SECT_SIZE	CFG_FLASH_SECT_SZ	/* Env sector Size */
-#define CFG_ENV_SIZE		CFG_FLASH_SECT_SZ
-#define CFG_ENV_ADDR		(CFG_FLASH_BASE + 0x20000)
 
 
 /*
