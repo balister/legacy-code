@@ -11,6 +11,11 @@
 #include <linux/types.h>
 #include <linux/mtd/mtd-abi.h>
 
+#if 0
+#define CONFIG_MTD_DEBUG		1
+#define CONFIG_MTD_DEBUG_VERBOSE	3
+#endif
+
 #define MAX_MTD_DEVICES 16
 
 #define MTD_ERASE_PENDING      	0x01
@@ -201,11 +206,19 @@ static inline void mtd_erase_callback(struct erase_info *instr)
 #define MTD_DEBUG_LEVEL3	(3)	/* Noisy   */
 
 #ifdef CONFIG_MTD_DEBUG
+#if 0
 #define DEBUG(n, args...)				\
  	do {						\
 		if (n <= CONFIG_MTD_DEBUG_VERBOSE)	\
 			printk(KERN_INFO args);		\
 	} while(0)
+#else
+#define DEBUG(n, args...)				\
+	do {						\
+		if (n <= CONFIG_MTD_DEBUG_VERBOSE)	\
+			printf(args);		\
+	} while(0)
+#endif
 #else /* CONFIG_MTD_DEBUG */
 #define DEBUG(n, args...) do { } while(0)
 

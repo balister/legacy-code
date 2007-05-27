@@ -152,7 +152,7 @@ static int read_bbt (struct mtd_info *mtd, uint8_t *buf, int page, int num,
 					continue;
 				if (reserved_block_code &&
 				    (tmp == reserved_block_code)) {
-					printk (KERN_DEBUG "nand_read_bbt: Reserved block at 0x%08x\n",
+					DEBUG(MTD_DEBUG_LEVEL0, "nand_read_bbt: Reserved block at 0x%08x\n",
 						((offs << 2) + (act >> 1)) << this->bbt_erase_shift);
 					this->bbt[offs + (act >> 3)] |= 0x2 << (act & 0x06);
 					continue;
@@ -229,14 +229,14 @@ static int read_abs_bbts (struct mtd_info *mtd, uint8_t *buf, struct nand_bbt_de
 	if (td->options & NAND_BBT_VERSION) {
 		nand_read_raw (mtd, buf, td->pages[0] << this->page_shift, mtd->oobblock, mtd->oobsize);
 		td->version[0] = buf[mtd->oobblock + td->veroffs];
-		printk (KERN_DEBUG "Bad block table at page %d, version 0x%02X\n", td->pages[0], td->version[0]);
+		DEBUG(MTD_DEBUG_LEVEL0, "Bad block table at page %d, version 0x%02X\n", td->pages[0], td->version[0]);
 	}
 
 	/* Read the mirror version, if available */
 	if (md && (md->options & NAND_BBT_VERSION)) {
 		nand_read_raw (mtd, buf, md->pages[0] << this->page_shift, mtd->oobblock, mtd->oobsize);
 		md->version[0] = buf[mtd->oobblock + md->veroffs];
-		printk (KERN_DEBUG "Bad block table at page %d, version 0x%02X\n", md->pages[0], md->version[0]);
+		DEBUG(MTD_DEBUG_LEVEL0, "Bad block table at page %d, version 0x%02X\n", md->pages[0], md->version[0]);
 	}
 
 	return 1;
@@ -375,7 +375,7 @@ static int search_bbt (struct mtd_info *mtd, uint8_t *buf, struct nand_bbt_descr
 		if (td->pages[i] == -1)
 			printk (KERN_WARNING "Bad block table not found for chip %d\n", i);
 		else
-			printk (KERN_DEBUG "Bad block table found at page %d, version 0x%02X\n", td->pages[i], td->version[i]);
+			DEBUG(MTD_DEBUG_LEVEL0, "Bad block table found at page %d, version 0x%02X\n", td->pages[i], td->version[i]);
 	}
 	return 0;
 }
@@ -569,7 +569,7 @@ write:
 			printk (KERN_WARNING "nand_bbt: Error while writing bad block table %d\n", res);
 			return res;
 		}
-		printk (KERN_DEBUG "Bad block table written to 0x%08x, version 0x%02X\n",
+		DEBUG(MTD_DEBUG_LEVEL0, "Bad block table written to 0x%08x, version 0x%02X\n",
 			(unsigned int) to, td->version[chip]);
 
 		/* Mark it as used */

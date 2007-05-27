@@ -14,6 +14,9 @@ EXPORT_FUNC(vprintf)
 EXPORT_FUNC(do_reset)
 EXPORT_FUNC(getenv)
 EXPORT_FUNC(setenv)
+#ifdef CONFIG_HAS_UID
+EXPORT_FUNC(forceenv)
+#endif
 EXPORT_FUNC(simple_strtoul)
 #if (CONFIG_COMMANDS & CFG_CMD_I2C)
 EXPORT_FUNC(i2c_write)

@@ -1876,6 +1876,9 @@ omap1510inn_config :	unconfig
 omap5912osk_config :	unconfig
 	@$(MKCONFIG) $(@:_config=) arm arm926ejs omap5912osk NULL omap
 
+davinci_config :	unconfig
+	@$(MKCONFIG) $(@:_config=) arm arm926ejs davinci NULL tms320dm6446
+
 omap1610inn_config \
 omap1610inn_cs0boot_config \
 omap1610inn_cs3boot_config \
