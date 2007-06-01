@@ -2,7 +2,7 @@ DESCRIPTION = "OSSIE Core Framework"
 SECTION =  "libs"
 PRIORITY = "optional"
 LICENSE = "LGPL"
-DEPENDS = "omniorb libtool-cross"
+DEPENDS = "omniorb boost libtool-cross"
 PV = "0.0.0+svn${SRCDATE}"
 
 S = "${WORKDIR}/ossie"
