@@ -12,9 +12,11 @@ S = "${WORKDIR}/TX_Random_data"
 
 SRC_URI = "svn://oe:oe@ossie-dev.mprg.org/repos/ossie/waveforms/TX_Random_data/trunk;module=TX_Random_data;proto=https"
 
-prefix="/home/sca"
+prefix="/sdr"
 
 inherit autotools
 
-FILES_${PN} += "/home/sca/waveforms/Random_BPSK/*.xml"
+FILES_${PN} += "/sdr/dom/waveforms/Random_BPSK*.xml"
+FILES_${PN} += "/sdr/dev/Random_BPSK_node/*.xml"
+
 BROKEN = "1"

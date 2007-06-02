@@ -5,6 +5,8 @@ LICENSE = "LGPL"
 DEPENDS = "omniorb boost libtool-cross"
 PV = "0.0.0+svn${SRCDATE}"
 
+SRCDATE = "now"
+
 S = "${WORKDIR}/ossie"
 
 SRC_URI = "svn://oe:oe@ossie-dev.mprg.org/repos/ossie/ossie/trunk;module=ossie;proto=https"
@@ -19,6 +21,6 @@ do_stage () {
 	autotools_stage_all
 }
 
-FILES_${PN} += "/home/sca/xml/dtd/*.dtd"
+FILES_${PN} += "/sdr/dom/xml/dtd/*.dtd"
 
 BROKEN = "1"

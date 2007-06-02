@@ -10,10 +10,11 @@ S = "${WORKDIR}/RandomBits"
 
 SRC_URI = "svn://oe:oe@ossie-dev.mprg.org/repos/ossie/components/RandomBits/trunk;module=RandomBits;proto=https"
 
-prefix="/home/sca"
+prefix="/sdr"
 
 inherit autotools
 
-FILES_${PN} += "/home/sca/xml/RandomBits/*.xml"
+FILES_${PN} += "/sdr/dom/xml/RandomBits/*.xml"
+FILES_${PN} += "/sdr/dom/bin/RandomBits"
 
 BROKEN = "1"

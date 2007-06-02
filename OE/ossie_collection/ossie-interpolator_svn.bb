@@ -11,10 +11,11 @@ S = "${WORKDIR}/Interpolator"
 
 SRC_URI = "svn://oe:oe@ossie-dev.mprg.org/repos/ossie/components/Interpolator/trunk;module=Interpolator;proto=https"
 
-prefix="/home/sca"
+prefix="/sdr"
 
 inherit autotools
 
-FILES_${PN} += "/home/sca/xml/Interpolator/*.xml"
+FILES_${PN} += "/sdr/dom/xml/Interpolator/*.xml"
+FILES_${PN} += "/sdr/dom/bin/Interpolator"
 
 BROKEN = "1"

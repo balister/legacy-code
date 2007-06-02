@@ -11,10 +11,11 @@ S = "${WORKDIR}/USRP_TX_Control"
 
 SRC_URI = "svn://oe:oe@ossie-dev.mprg.org/repos/ossie/components/USRP_TX_Control/trunk;module=USRP_TX_Control;proto=https"
 
-prefix="/home/sca"
-
 inherit autotools
 
-FILES_${PN} += "/home/sca/xml/USRP_TX_Control/*.xml"
+prefix = "/sdr"
+
+FILES_${PN} += "/sdr/dom/xml/USRP_TX_Control/*.xml"
+FILES_${PN} += "/sdr/dom/bin/USRP_TX_Control"
 
 BROKEN = "1"

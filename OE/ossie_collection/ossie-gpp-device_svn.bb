@@ -11,10 +11,11 @@ S = "${WORKDIR}/GPP"
 
 SRC_URI = "svn://oe:oe@ossie-dev.mprg.org/repos/ossie/platform/GPP/trunk;module=GPP;proto=https"
 
-prefix="/home/sca"
-
 inherit autotools
 
-FILES_${PN} += "/home/sca/xml/GPP/*xml"
+prefix = "/sdr"
+
+FILES_${PN} += "/sdr/dev/xml/GPP/*xml"
+FILES_${PN} += "/sdr/dev/bin/GPP"
 
 BROKEN = "1"

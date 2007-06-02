@@ -11,10 +11,11 @@ S = "${WORKDIR}/Modulator"
 
 SRC_URI = "svn://oe:oe@ossie-dev.mprg.org/repos/ossie/components/Modulator/trunk;module=Modulator;proto=https"
 
-prefix="/home/sca"
+prefix="/sdr"
 
 inherit autotools
 
-FILES_${PN} += "/home/sca/xml/Modulator/*.xml"
+FILES_${PN} += "/sdr/dom/xml/Modulator/*.xml"
+FILES_${PN} += "/sdr/dom/bin/Modulator"
 
 BROKEN = "1"
