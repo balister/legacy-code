@@ -487,6 +487,15 @@ Uint32 NAND_ReadPage(Uint32 block, Uint32 page, Uint8 *dest) {
 		if(eccValue[i] != tempSpareValue)
         {
             UARTSendData((Uint8 *)"NAND ECC failure!\r\n", FALSE);
+            UARTSendData((Uint8 *)"eccValue[i] = ", FALSE);
+	    UARTSendInt(eccValue[i]);
+            UARTSendData((Uint8 *)"\r\nn", FALSE);
+            UARTSendData((Uint8 *)"tempSpareValue = ", FALSE);
+	    UARTSendInt(tempSpareValue);
+            UARTSendData((Uint8 *)"\r\nn", FALSE);
+            UARTSendData((Uint8 *)"i = ", FALSE);
+	    UARTSendInt(i);
+            UARTSendData((Uint8 *)"\r\nn", FALSE);
             return E_FAIL;
         }
     }
