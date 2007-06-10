@@ -281,6 +281,10 @@ Uint32 NAND_Init()
     
     // Setting the nand_width = 0(8 bit NAND) or 1(16 bit NAND). AEMIF CS2 bus Width
 	//   is given by the BOOTCFG(bit no.5)
+    UARTSendData((Uint8 *) "BOOTCFG = ", FALSE);
+    UARTSendInt(SYSTEM->BOOTCFG);
+    UARTSendData((Uint8 *) "\r\n", FALSE);
+
     width = ( ( (SYSTEM->BOOTCFG) & 0x20) >> 5);
     gNandInfo.busWidth = (width)?BUS_16BIT:BUS_8BIT;
 
@@ -489,13 +493,13 @@ Uint32 NAND_ReadPage(Uint32 block, Uint32 page, Uint8 *dest) {
             UARTSendData((Uint8 *)"NAND ECC failure!\r\n", FALSE);
             UARTSendData((Uint8 *)"eccValue[i] = ", FALSE);
 	    UARTSendInt(eccValue[i]);
-            UARTSendData((Uint8 *)"\r\nn", FALSE);
+            UARTSendData((Uint8 *)"\r\n", FALSE);
             UARTSendData((Uint8 *)"tempSpareValue = ", FALSE);
 	    UARTSendInt(tempSpareValue);
-            UARTSendData((Uint8 *)"\r\nn", FALSE);
+            UARTSendData((Uint8 *)"\r\n", FALSE);
             UARTSendData((Uint8 *)"i = ", FALSE);
 	    UARTSendInt(i);
-            UARTSendData((Uint8 *)"\r\nn", FALSE);
+            UARTSendData((Uint8 *)"\r\n", FALSE);
             return E_FAIL;
         }
     }
