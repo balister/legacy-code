@@ -57,11 +57,11 @@
 #define UBL_IMAGE_SIZE      (0x00003800)
 
 // Define maximum downloadable image size
-#define MAX_IMAGE_SIZE		(0x02000000)
+#define MAX_IMAGE_SIZE		(0x00800000)
 
 /* Set details of RAM */
 #define RAM_START_ADDR		(0x80000000)
-#define RAM_END_ADDR		(0x87FFFFFF)
+#define RAM_END_ADDR		(0x83FFFFFF)
 
 typedef struct {
 	Uint32 magicNum;	/* Expected magic number */

@@ -286,9 +286,12 @@ Uint32 NAND_Init()
     UARTSendData((Uint8 *) "\r\n", FALSE);
 
     width = ( ( (SYSTEM->BOOTCFG) & 0x20) >> 5);
+    UARTSendData((Uint8 *) "Width = ", FALSE);
+    UARTSendInt(width);
+    UARTSendData((Uint8 *) "\r\n", FALSE);
     gNandInfo.busWidth = (width)?BUS_16BIT:BUS_8BIT;
 
-    if (gNandInfo.busWidth)
+    if (gNandInfo.busWidth == BUS_16BIT)
 	UARTSendData((Uint8 *) "Bus width = 16 bits\r\n", FALSE);
     else
 	UARTSendData((Uint8 *) "Bus width = 8 bits\r\n", FALSE);
@@ -597,15 +600,25 @@ Uint32 NAND_VerifyPage(Uint32 block, Uint32 page, Uint8* src, Uint8* dest)
 {
     Uint32 i;
 
+    UARTSendData((Uint8 *)"In NAND_VerifyPage\r\n", FALSE);
+
     if (NAND_ReadPage(block, page, dest) != E_PASS)
         return E_FAIL;
     
     for (i=0; i< gNandInfo.bytesPerPage; i++)
     {
+
+        if (i<20 && ((i%4) == 0)) {
+            UARTSendData((Uint8 *)"Data read from flash = ", FALSE);
+            UARTSendInt(*((Uint32 *) &dest[i]));
+            UARTSendData((Uint8 *)"\r\n", FALSE);
+
+        }
+
         // Check for data read errors
         if (src[i] != dest[i])
         {
-            UARTSendData("Data mismatch! Verification failed.", FALSE);
+            UARTSendData((Uint8 *)"Data mismatch! Verification failed.\r\n", FALSE);
             return E_FAIL;
         }
     }
@@ -702,6 +715,10 @@ Uint32 NAND_WriteHeaderAndData(NAND_BOOT *nandBoot, Uint8 *srcBuf) {
 	}
 	UARTSendData((Uint8 *)"Number of blocks needed for header and data: 0x", FALSE);
 	UARTSendInt(numBlks);
+	UARTSendData((Uint8 *)"\r\n", FALSE);
+
+	UARTSendData((Uint8 *)"Pages to write = ", FALSE);
+	UARTSendInt(nandBoot->numPage);
 	UARTSendData((Uint8 *)"\r\n", FALSE);
 
 	// Check whether writing UBL or APP (based on destination block)

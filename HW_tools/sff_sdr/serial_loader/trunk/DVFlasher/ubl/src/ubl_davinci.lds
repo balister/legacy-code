@@ -69,15 +69,15 @@ SECTIONS {
 	
 	__topstack = 0xC000 - 0x4;
 	
-	/* 128 MB of DDR2 */
+	/* 64 MB of DDR2 */
    	. = 0x80000000;
 	.ddrram	:
 	{
    		*(.ddrram)
 	}
 
-	/* 128 MB of DDR2 */
-   	. = 0x88000000;
+	/* 32 MB of DDR2 */
+   	. = 0x82000000;
 	.ddrram2	 :
 	{
 		*(.ddrram2)

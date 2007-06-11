@@ -210,6 +210,14 @@ Uint32 UARTGetHeaderAndData(UART_ACK_HEADER* ackHeader)
         return E_FAIL;
     }
 
+    UARTSendData((Uint8*) "Magic Number = ",FALSE);
+    UARTSendInt(ackHeader->magicNum);
+    UARTSendData((Uint8*) "/r/nApplication start address = ",FALSE);
+    UARTSendInt(ackHeader->appStartAddr);
+    UARTSendData((Uint8*) "/r/nSREC Byte Count = ",FALSE);
+    UARTSendInt(ackHeader->srecByteCnt);
+    UARTSendData((Uint8*) "/r/n",FALSE);
+
     // Verify that the S-record's size is appropriate
     if((ackHeader->srecByteCnt == 0) || (ackHeader->srecByteCnt > MAX_IMAGE_SIZE))
     {

@@ -274,8 +274,8 @@ namespace DVFlasher
             myCmdParams.UARTUBLExecAddr = 0x0100;
             myCmdParams.UARTUBLUsed = true;
             
-            myCmdParams.NORUBLExecAddr = 0x2a1c;
-            myCmdParams.NANDUBLExecAddr = 0x2520;
+            myCmdParams.NORUBLExecAddr = 0x2a74;
+            myCmdParams.NANDUBLExecAddr = 0x26b0;
 
             myCmdParams.APPMagicFlag = MagicFlags.UBL_MAGIC_SAFE;
             myCmdParams.APPFileName = null;
@@ -609,6 +609,7 @@ namespace DVFlasher
             if (workerThreadSucceeded)
             {
                 Console.WriteLine("\nOperation completed successfully.");
+                Console.ReadKey();
                 return 0;
             }
             else
