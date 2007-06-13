@@ -95,6 +95,10 @@ void boot()
     
     // Jump to entry point
 	APPEntry = (void*) gEntryPoint;
+    UARTSendData((Uint8 *) "About to jump to: ",FALSE);
+    UARTSendInt(APPEntry);
+    UARTSendData((Uint8 *) "\n\r",FALSE);
+
     (*APPEntry)();	
 }
 

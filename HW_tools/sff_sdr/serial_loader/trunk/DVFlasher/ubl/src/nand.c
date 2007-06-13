@@ -263,9 +263,10 @@ Uint32 NAND_ECCReadAndRestart (PNAND_INFO pNandInfo)
     // Read and mask appropriate (based on CSn space flash is in) ECC regsiter
     retval = ((Uint32*)(&(AEMIF->NANDF1ECC)))[pNandInfo->CSOffset] & pNandInfo->ECCMask;
     
-    UARTSendData((Uint8 *)"Value read from ECC register = ", FALSE);
-    UARTSendInt(retval);
-    UARTSendData((Uint8 *)"\r\n", FALSE);
+    //UARTSendData((Uint8 *)"Value read from ECC register = ", FALSE);
+    //UARTSendInt(retval);
+    //UARTSendData((Uint8 *)"\r\n", FALSE);
+    UARTSendData((Uint8 *)".", FALSE);
 
     // Write appropriate bit to start ECC calcualtions 
     AEMIF->NANDFCR |= (1<<(8 + (pNandInfo->CSOffset)));   
@@ -497,11 +498,11 @@ Uint32 NAND_ReadPage(Uint32 block, Uint32 page, Uint8 *dest) {
 
 	    // Verify ECC values
 
-        UARTSendData((Uint8 *) "ECCValue = ", FALSE);
-	UARTSendInt(eccValue[i]);
-        UARTSendData((Uint8 *) ", ECC from spare RAM = ", FALSE);
-	UARTSendInt(tempSpareValue);
-	UARTSendData((Uint8 *) "\r\n", FALSE);
+        //UARTSendData((Uint8 *) "ECCValue = ", FALSE);
+	//UARTSendInt(eccValue[i]);
+        //UARTSendData((Uint8 *) ", ECC from spare RAM = ", FALSE);
+	//UARTSendInt(tempSpareValue);
+	//UARTSendData((Uint8 *) "\r\n", FALSE);
 
 	if(eccValue[i] != tempSpareValue)
         {
@@ -518,6 +519,7 @@ Uint32 NAND_ReadPage(Uint32 block, Uint32 page, Uint8 *dest) {
             return E_FAIL;
         }
     }
+    UARTSendData((Uint8 *)"Done reading NAND flash\r\n", FALSE);
     
     // Return status check result
 	return NAND_WaitForStatus(NAND_TIMEOUT);
