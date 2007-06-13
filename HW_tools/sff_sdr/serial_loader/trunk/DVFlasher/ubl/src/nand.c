@@ -519,7 +519,7 @@ Uint32 NAND_ReadPage(Uint32 block, Uint32 page, Uint8 *dest) {
             return E_FAIL;
         }
     }
-    UARTSendData((Uint8 *)"Done reading NAND flash\r\n", FALSE);
+    UARTSendData((Uint8 *)"\r\nDone reading a page from NAND flash\r\n", FALSE);
     
     // Return status check result
 	return NAND_WaitForStatus(NAND_TIMEOUT);
@@ -622,12 +622,12 @@ Uint32 NAND_VerifyPage(Uint32 block, Uint32 page, Uint8* src, Uint8* dest)
     for (i=0; i< gNandInfo.bytesPerPage; i++)
     {
 
-        if (i<20 && ((i%4) == 0)) {
-            UARTSendData((Uint8 *)"Data read from flash = ", FALSE);
-            UARTSendInt(*((Uint32 *) &dest[i]));
-            UARTSendData((Uint8 *)"\r\n", FALSE);
+        //if (i<20 && ((i%4) == 0)) {
+        //    UARTSendData((Uint8 *)"Data read from flash = ", FALSE);
+        //    UARTSendInt(*((Uint32 *) &dest[i]));
+        //    UARTSendData((Uint8 *)"\r\n", FALSE);
 
-        }
+        //}
 
         // Check for data read errors
         if (src[i] != dest[i])
