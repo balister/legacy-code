@@ -52,7 +52,7 @@ extern Uint32 gEntryPoint;
     const Uint32 PLL2_Div2 = 1;
 
 // Set CPU clocks
-    const Uint32 PLL1_Mult = 21;  // DSP=594 MHz ARM=297 MHz
+    const Uint32 PLL1_Mult = 22;  // DSP=594 MHz ARM=297 MHz
     
 // ---------------------------------------------------------
 // End of global PLL and Memory settings
