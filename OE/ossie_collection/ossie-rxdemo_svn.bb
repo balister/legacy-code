@@ -9,7 +9,7 @@ DEPENDS = "ossiecf"
 S = "${WORKDIR}/RxDemo"
 
 
-SRC_URI = "svn://ossie-dev.mprg.org/repos/ossie/components/RxDemo/trunk;module=RxDemo;proto=https"
+SRC_URI = "svn://ossie.wireless.vt.edu/repos/ossie/components/RxDemo/trunk;module=RxDemo;proto=https"
 
 prefix="/sdr"
 

@@ -9,7 +9,7 @@ DEPENDS = "ossiecf"
 
 S = "${WORKDIR}/GPP"
 
-SRC_URI = "svn://ossie-dev.mprg.org/repos/ossie/platform/GPP/trunk;module=GPP;proto=https"
+SRC_URI = "svn://ossie.wireless.vt.edu/repos/ossie/platform/GPP/trunk;module=GPP;proto=https"
 
 inherit autotools
 

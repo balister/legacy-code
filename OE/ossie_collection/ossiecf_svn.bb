@@ -9,7 +9,7 @@ SRCDATE = "now"
 
 S = "${WORKDIR}/ossie"
 
-SRC_URI = "svn://ossie-dev.mprg.org/repos/ossie/ossie/trunk;module=ossie;proto=https"
+SRC_URI = "svn://ossie.wireless.vt.edu/repos/ossie/ossie/trunk;module=ossie;proto=https"
 
 inherit autotools pkgconfig
 

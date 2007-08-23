@@ -9,7 +9,7 @@ DEPENDS = "ossiecf"
 S = "${WORKDIR}/ChannelDemo"
 
 
-SRC_URI = "svn://ossie-dev.mprg.org/repos/ossie/components/ChannelDemo/trunk;module=ChannelDemo;proto=https"
+SRC_URI = "svn://ossie.wireless.vt.edu/repos/ossie/components/ChannelDemo/trunk;module=ChannelDemo;proto=https"
 
 prefix="/sdr"
 

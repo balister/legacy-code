@@ -9,7 +9,7 @@ DEPENDS = "ossiecf ossie-standardinterfaces"
 S = "${WORKDIR}/USRP_TX_Control"
 
 
-SRC_URI = "svn://ossie-dev.mprg.org/repos/ossie/components/USRP_TX_Control/trunk;module=USRP_TX_Control;proto=https"
+SRC_URI = "svn://ossie.wireless.vt.edu/repos/ossie/components/USRP_TX_Control/trunk;module=USRP_TX_Control;proto=https"
 
 inherit autotools
 
