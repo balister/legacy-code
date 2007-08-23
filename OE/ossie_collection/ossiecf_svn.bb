@@ -9,13 +9,13 @@ SRCDATE = "now"
 
 S = "${WORKDIR}/ossie"
 
-SRC_URI = "svn://oe:oe@ossie-dev.mprg.org/repos/ossie/ossie/trunk;module=ossie;proto=https"
+SRC_URI = "svn://ossie-dev.mprg.org/repos/ossie/ossie/trunk;module=ossie;proto=https"
 
 inherit autotools pkgconfig
 
 EXTRA_OECONF = "--with-omniorb=${STAGING_BINDIR}/.. IDL=${STAGING_BINDIR_NATIVE}/omniidl"
 
-CXXFLAGS_powerpc += "-lstdc++"
+#LDFLAGS += "-lstdc++"
 
 do_stage () {
 	autotools_stage_all
