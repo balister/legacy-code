@@ -8,7 +8,6 @@ DEPENDS = "ossiecf"
 
 S = "${WORKDIR}/standardInterfaces"
 
-SRCDATE = "now"
 SRC_URI = "svn://ossie.wireless.vt.edu/repos/ossie/standardInterfaces/trunk;module=standardInterfaces;proto=https"
 
 inherit autotools pkgconfig

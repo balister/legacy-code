@@ -8,7 +8,6 @@ DEPENDS = "ossiecf"
 
 S = "${WORKDIR}/SigProc"
 
-SRCDATE = "now"
 SRC_URI = "svn://ossie.wireless.vt.edu/repos/ossie/SigProc/trunk;module=SigProc;proto=https"
 
 inherit autotools pkgconfig

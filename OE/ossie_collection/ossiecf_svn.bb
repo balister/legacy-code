@@ -5,8 +5,6 @@ LICENSE = "LGPL"
 DEPENDS = "omniorb boost libtool-cross"
 PV = "0.0.0+svn${SRCDATE}"
 
-SRCDATE = "now"
-
 S = "${WORKDIR}/ossie"
 
 SRC_URI = "svn://ossie.wireless.vt.edu/repos/ossie/ossie/trunk;module=ossie;proto=https"
