@@ -2,7 +2,7 @@ export IMAGE_BASENAME = "ossie-image"
 export IMAGE_LINGUAS = ""
 export PACKAGE_INSTALL = "${MACHINE_TASK_PROVIDER} task-ossie"
 
-DEPENDS = "${MACHINE_TASK_PROVIDER} task-ossie"
+RDEPENDS = "${MACHINE_TASK_PROVIDER} task-ossie"
 
 OSSIE_URI = "http://192.168.1.81/feed"
 
