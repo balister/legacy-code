@@ -4,8 +4,8 @@ PRIORITY = "optional"
 LICENSE = "GPL"
 PV = "0.0.0+svn${SRCDATE}"
 
-DEPENDS = "ossiecf ossie-channeldemo ossie-rxdemo ossie-txdemo"
-RDEPENDS = "ossie-channeldemo ossie-rxdemo ossie-txdemo"
+DEPENDS = "ossiecf ossie-channeldemo ossie-rxdemo ossie-txdemo ossie-gpp-node"
+RDEPENDS = "ossie-channeldemo ossie-rxdemo ossie-txdemo ossie-gpp-node"
 
 S = "${WORKDIR}/ossie_demo"
 
