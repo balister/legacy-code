@@ -1,3 +1,5 @@
+PR = "r1"
+
 export IMAGE_BASENAME = "ossie-image"
 export IMAGE_LINGUAS = ""
 export PACKAGE_INSTALL = "${MACHINE_TASK_PROVIDER} task-ossie"

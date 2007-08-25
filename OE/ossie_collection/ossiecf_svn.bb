@@ -3,6 +3,8 @@ SECTION =  "libs"
 PRIORITY = "optional"
 LICENSE = "LGPL"
 DEPENDS = "omniorb boost libtool-cross"
+
+PR = "r1"
 PV = "0.0.0+svn${SRCDATE}"
 
 S = "${WORKDIR}/ossie"

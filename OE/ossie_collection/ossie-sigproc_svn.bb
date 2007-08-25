@@ -2,6 +2,8 @@ DESCRIPTION = "OSSIE Signal Processing routines"
 SECTION =  "libs"
 PRIORITY = "optional"
 LICENSE = "LGPL"
+
+PR = "r1"
 PV = "0.0.0+svn${SRCDATE}"
 
 DEPENDS = "ossiecf"

@@ -2,6 +2,8 @@ DESCRIPTION = "OSSIE Modulator component"
 SECTION =  "apps"
 PRIORITY = "optional"
 LICENSE = "GPL"
+
+PR = "r1"
 PV = "0.0.0+svn${SRCDATE}"
 
 DEPENDS = "ossiecf ossie-standardinterfaces ossie-sigproc"
