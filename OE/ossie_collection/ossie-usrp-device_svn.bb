@@ -15,7 +15,7 @@ inherit autotools
 
 prefix = "/sdr"
 
-FILES_${PN} += "/sdr/dev/xml/USRP/*xml"
-FILES_${PN} += "/sdr/dev/bin/USRP"
+FILES_${PN} = "${prefix}/dev/xml/USRP/*xml ${prefix}/dev/bin/*"
+FILES_${PN}-dbg = "${prefix}/dev/bin/.debug"
 
 BROKEN = "1"

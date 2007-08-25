@@ -15,7 +15,7 @@ inherit autotools
 
 prefix = "/sdr"
 
-FILES_${PN} += "/sdr/dev/xml/GPP/*xml"
-FILES_${PN} += "/sdr/dev/bin/GPP"
+FILES_${PN} = "${prefix}/dev/xml/GPP/*xml ${prefix}/dev/bin"
+FILES_${PN}-dbg = "${prefix}/dev/bin/.debug"
 
 BROKEN = "1"
