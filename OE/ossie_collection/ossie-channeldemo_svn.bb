@@ -15,6 +15,7 @@ prefix="/sdr"
 
 inherit autotools
 
-FILES_${PN} += "/home/sca/xml/ChannelDemo/*.xml"
+FILES_${PN} += "${prefix}/dom/xml/ChannelDemo/*.xml ${prefix}/dom/bin"
+FILES_${PN}-dbg = "${prefix}/dom/bin/.debug"
 
 BROKEN = "1"

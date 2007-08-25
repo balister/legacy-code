@@ -4,8 +4,8 @@ PRIORITY = "optional"
 LICENSE = "GPL"
 PV = "0.0.0+svn${SRCDATE}"
 
-DEPENDS = "ossiecf ossie-channeldemo ossie-rxdemo"
-RDEPENDS = "ossie-channeldemo ossie-rxdemo"
+DEPENDS = "ossiecf ossie-channeldemo ossie-rxdemo ossie-txdemo"
+RDEPENDS = "ossie-channeldemo ossie-rxdemo ossie-txdemo"
 
 S = "${WORKDIR}/ossie_demo"
 
@@ -16,5 +16,6 @@ prefix="/sdr"
 
 inherit autotools
 
-FILES_${PN} += "/home/sca/waveforms/ossie_demo/*.xml /home/sca/xml/TxDemo/*.xml"
+FILES_${PN} += "/sdr/dom/waveforms/*.xml"
+
 BROKEN = "1"
