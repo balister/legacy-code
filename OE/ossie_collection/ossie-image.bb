@@ -1,21 +1,18 @@
-PR = "r1"
+PR = "r2"
+
+ANGSTROM_EXTRA_INSTALL ?= ""
+DISTRO_SSH_DAEMON ?= "dropbear"
+
+IMAGE_INSTALL = "task-boot \
+            util-linux-mount util-linux-umount \
+            ${DISTRO_SSH_DAEMON} \
+            task-ossie \
+            angstrom-version \
+           "
 
 export IMAGE_BASENAME = "ossie-image"
-export IMAGE_LINGUAS = ""
-export PACKAGE_INSTALL = "${MACHINE_TASK_PROVIDER} task-ossie"
-
-RDEPENDS = "${MACHINE_TASK_PROVIDER} task-ossie"
-
-OSSIE_URI = "http://192.168.1.81/feed"
-
-FEED_URIS += " \
-                no-arch##${OSSIE_URI}/unstable/feed/all \
-                base##${OSSIE_URI}/unstable/feed/${TARGET_ARCH}/base \
-                python##${OSSIE_URI}/unstable/feed/${TARGET_ARCH}/python \
-                debug##${OSSIE_URI}/unstable/feed/${TARGET_ARCH}/debug \
-                ${MACHINE}##${OSSIE_URI}/unstable/feed/${TARGET_ARCH}/machine/${MACHINE}"
+IMAGE_LINGUAS = ""
 
 
 inherit image
 
-LICENSE = "MIT"
