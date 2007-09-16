@@ -4,6 +4,7 @@ ANGSTROM_EXTRA_INSTALL ?= ""
 DISTRO_SSH_DAEMON ?= "dropbear"
 
 IMAGE_INSTALL = "task-boot \
+            task-base \
             util-linux-mount util-linux-umount \
             ${DISTRO_SSH_DAEMON} \
             task-ossie \
