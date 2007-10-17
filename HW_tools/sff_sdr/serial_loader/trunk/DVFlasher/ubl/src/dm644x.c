@@ -47,9 +47,9 @@ extern Uint32 gEntryPoint;
     const Uint8 DDR_Board_Delay = 3;
     const Uint8 DDR_READ_Latency = 5;
     
-    const Uint32 PLL2_Mult = 23;
-    const Uint32 PLL2_Div1 = 8;
-    const Uint32 PLL2_Div2 = 1;
+    const Uint32 PLL2_Mult = 24;
+    const Uint32 PLL2_Div1 = 12;
+    const Uint32 PLL2_Div2 = 2;
 
 // Set CPU clocks
     const Uint32 PLL1_Mult = 22;  // DSP=594 MHz ARM=297 MHz
