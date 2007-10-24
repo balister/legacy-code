@@ -5,7 +5,7 @@ LICENSE = "GPL"
 PV = "0.0.0+svn${SRCDATE}"
 PR = "r0"
 
-DEPENDS = "ossiecf expat"
+DEPENDS = "ossiecf"
 
 S="${WORKDIR}/c_wavLoader"
 
