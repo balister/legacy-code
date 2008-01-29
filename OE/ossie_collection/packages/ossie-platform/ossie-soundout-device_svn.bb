@@ -7,7 +7,7 @@ LICENSE = "GPL"
 PR = "r1"
 PV = "0.0.0+svn${SRCDATE}"
 
-DEPENDS = "alsa-lib ossiecf ossie-standardinterfaces"
+DEPENDS = "alsa-lib ossie-cf ossie-standardinterfaces"
 
 S = "${WORKDIR}/Sound_out"
 

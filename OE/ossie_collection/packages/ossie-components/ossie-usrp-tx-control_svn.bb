@@ -6,7 +6,7 @@ LICENSE = "GPL"
 PR = "r1"
 PV = "0.0.0+svn${SRCDATE}"
 
-DEPENDS = "ossiecf ossie-standardinterfaces"
+DEPENDS = "ossie-cf ossie-standardinterfaces"
 
 S = "${WORKDIR}/USRP_TX_Control"
 

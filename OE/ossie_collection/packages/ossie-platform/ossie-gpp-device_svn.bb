@@ -7,7 +7,7 @@ LICENSE = "GPL"
 PR = "r1"
 PV = "0.0.0+svn${SRCDATE}"
 
-DEPENDS = "ossiecf"
+DEPENDS = "ossie-cf"
 
 S = "${WORKDIR}/GPP"
 

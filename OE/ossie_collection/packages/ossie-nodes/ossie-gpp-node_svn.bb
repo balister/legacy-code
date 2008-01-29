@@ -6,7 +6,7 @@ LICENSE = "GPL"
 PR = "r1"
 PV = "0.0.0+svn${SRCDATE}"
 
-DEPENDS = "ossiecf ossie-gpp-device"
+DEPENDS = "ossie-cf ossie-gpp-device"
 RDEPENDS = "ossie-gpp-device"
 
 S = "${WORKDIR}/default_GPP_node"

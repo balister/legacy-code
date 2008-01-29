@@ -6,7 +6,7 @@ LICENSE = "GPL"
 PR = "r1"
 PV = "0.0.0+svn${SRCDATE}"
 
-DEPENDS = "ossiecf ossie-standardinterfaces ossie-sigproc"
+DEPENDS = "ossie-cf ossie-standardinterfaces ossie-sigproc"
 
 S = "${WORKDIR}/RandomBits"
 

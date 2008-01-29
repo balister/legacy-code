@@ -6,7 +6,7 @@ LICENSE = "GPL"
 PR = "r1"
 PV = "0.0.0+svn${SRCDATE}"
 
-DEPENDS = "ossiecf ossie-channeldemo ossie-rxdemo ossie-txdemo ossie-gpp-node"
+DEPENDS = "ossie-cf ossie-channeldemo ossie-rxdemo ossie-txdemo ossie-gpp-node"
 RDEPENDS = "ossie-channeldemo ossie-rxdemo ossie-txdemo ossie-gpp-node"
 
 S = "${WORKDIR}/ossie_demo"
