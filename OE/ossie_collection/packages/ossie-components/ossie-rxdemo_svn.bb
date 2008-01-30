@@ -6,7 +6,7 @@ LICENSE = "GPL"
 PR = "r1"
 PV = "0.0.0+svnr${SRCREV}"
 
-DEPENDS = "ossie-cf"
+DEPENDS = "ossie-cf ossie-standardinterfaces"
 
 S = "${WORKDIR}/RxDemo"
 
