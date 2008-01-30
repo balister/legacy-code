@@ -4,7 +4,7 @@ PRIORITY = "optional"
 LICENSE = "LGPL"
 
 PR = "r1"
-PV = "0.0.0+svn${SRCDATE}"
+PV = "0.0.0+svnr${SRCREV}"
 
 DEPENDS = "ossie-cf"
 

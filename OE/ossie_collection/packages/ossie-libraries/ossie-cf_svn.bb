@@ -5,7 +5,7 @@ LICENSE = "LGPL"
 DEPENDS = "omniorb boost libtool-cross"
 
 PR = "r1"
-PV = "0.0.0+svn${SRCDATE}"
+PV = "0.0.0+svnr${SRCREV}"
 
 S = "${WORKDIR}/ossie"
 

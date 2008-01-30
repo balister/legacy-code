@@ -5,7 +5,7 @@ MAINTAINER = "Philip Balister philip@balister.org"
 LICENSE = "GPL"
 
 PR = "r1"
-PV = "0.0.0+svn${SRCDATE}"
+PV = "0.0.0+svnr${SRCREV}"
 
 DEPENDS = "ossie-cf"
 

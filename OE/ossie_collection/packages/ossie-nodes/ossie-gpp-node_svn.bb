@@ -4,7 +4,7 @@ PRIORITY = "optional"
 LICENSE = "GPL"
 
 PR = "r1"
-PV = "0.0.0+svn${SRCDATE}"
+PV = "0.0.0+svnr${SRCREV}"
 
 DEPENDS = "ossie-cf ossie-gpp-device"
 RDEPENDS = "ossie-gpp-device"
