@@ -19,6 +19,4 @@ prefix="/sdr"
 inherit autotools
 
 FILES_${PN} += "/sdr/dom/waveforms/Random_BPSK*.xml"
-FILES_${PN} += "/sdr/dev/Random_BPSK_node/*.xml"
 
-BROKEN = "1"
