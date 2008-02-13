@@ -9,6 +9,7 @@ SRCREV_pn-ossie-cf ?= ${AUTOREV}
 SRCREV_pn-ossie-sigproc ?= ${AUTOREV}
 SRCREV_pn-ossie-standardinterfaces ?= ${AUTOREV}
 SRCREV_pn-ossie-gpp-node ?= ${AUTOREV}
+SRCREV_pn-ossie-gpp-sound-node ?= ${AUTOREV}
 SRCREV_pn-ossie-c-wavloader ?= ${AUTOREV}
 SRCREV_pn-ossie-gpp-device ?= ${AUTOREV}
 SRCREV_pn-ossie-nodebooter ?= ${AUTOREV}
@@ -16,3 +17,8 @@ SRCREV_pn-ossie-soundout-device ?= ${AUTOREV}
 SRCREV_pn-ossie-usrp-device ?= ${AUTOREV}
 SRCREV_pn-ossie-demo ?= ${AUTOREV}
 SRCREV_pn-ossie-tx-random-data ?= ${AUTOREV}
+SRCREV_pn-ossie-wfmdemod ?= ${AUTOREV}
+SRCREV_pn-ossie-rationalresamplercomplexshort ?= ${AUTOREV}
+SRCREV_pn-ossie-wfmrxmono ?= ${AUTOREV}
+SRCREV_pn-ossie-fileinput ?= ${AUTOREV}
+
