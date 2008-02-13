@@ -18,5 +18,5 @@ prefix="/sdr"
 inherit autotools
 
 FILES_${PN} += "/sdr/dom/xml/RationalResamplerComplexShort/*.xml"
-FILES_${PN} += "/sdr/dom/bin/RationalResamplerComplexSHort"
+FILES_${PN} += "/sdr/dom/bin/RationalResamplerComplexShort"
 
