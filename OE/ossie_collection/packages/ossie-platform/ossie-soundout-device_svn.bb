@@ -19,6 +19,6 @@ inherit autotools
 
 EXTRA_OECONF = "--with-omniorb=${STAGING_BINDIR}/.. IDL=${STAGING_BINDIR_NATIVE}/omniidl"
 
-FILES_${PN} = "${prefix}/dev/xml/SoundCardPlayback/*xml ${prefix}/dev/bin/*"
+FILES_${PN} = "${prefix}/dev/xml/soundCardPlayback/*xml ${prefix}/dev/bin/*"
 FILES_${PN}-dbg = "${prefix}/dev/bin/.debug
 
