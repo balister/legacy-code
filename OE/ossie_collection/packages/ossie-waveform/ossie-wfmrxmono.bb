@@ -6,8 +6,8 @@ LICENSE = "GPL"
 PR = "r1"
 PV = "0.0.0+svnr${SRCREV}"
 
-DEPENDS = "ossie-cf ossie-wfmdemod ossie-rationalresamplercomplexshort ossie-soundout-device ossie-gpp-device"
-RDEPENDS = "ossie-wfmdemod ossie-rationalresamplercomplexshort ossie-soundout-device ossie-gpp-device"
+DEPENDS = "ossie-cf ossie-fileinput ossie-wfmdemod ossie-rationalresamplercomplexshort ossie-gpp-sound-node"
+RDEPENDS = "ossie-fileinput ossie-wfmdemod ossie-rationalresamplercomplexshort ossie-gpp-sound-node"
 
 S = "${WORKDIR}/WFMRxMono"
 
