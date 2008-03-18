@@ -6,8 +6,8 @@ LICENSE = "GPL"
 PR = "r1"
 PV = "0.0.0+svnr${SRCREV}"
 
-DEPENDS = "ossie-cf ossie-fileinput ossie-wfmdemod ossie-rationalresamplercomplexshort ossie-gpp-sound-node"
-RDEPENDS = "ossie-fileinput ossie-wfmdemod ossie-rationalresamplercomplexshort ossie-gpp-sound-node"
+DEPENDS = "ossie-cf ossie-fileinput ossie-wfmdemod ossie-rationalresamplercomplexshort ossie-gpp-sound-node ossie-nodebooter ossie-c-wavloader"
+RDEPENDS = "ossie-fileinput ossie-wfmdemod ossie-rationalresamplercomplexshort ossie-gpp-sound-node ossie-nodebooter ossie-c-wavloader"
 
 S = "${WORKDIR}/WFMRxMono"
 
