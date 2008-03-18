@@ -21,4 +21,5 @@ SRCREV_pn-ossie-wfmdemod ?= ${AUTOREV}
 SRCREV_pn-ossie-rationalresamplercomplexshort ?= ${AUTOREV}
 SRCREV_pn-ossie-wfmrxmono ?= ${AUTOREV}
 SRCREV_pn-ossie-fileinput ?= ${AUTOREV}
+SRCREV_pn-ossie-file2sound ?= ${AUTOREV}
 
