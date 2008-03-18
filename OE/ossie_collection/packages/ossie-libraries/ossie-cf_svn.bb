@@ -15,12 +15,9 @@ inherit autotools pkgconfig
 
 EXTRA_OECONF = "--with-omniorb=${STAGING_BINDIR}/.. IDL=${STAGING_BINDIR_NATIVE}/omniidl"
 
-#LDFLAGS += "-lstdc++"
-
 do_stage () {
 	autotools_stage_all
 }
 
 FILES_${PN} += "/sdr/dom/xml/dtd/*.dtd"
 
-BROKEN = "1"

@@ -17,9 +17,7 @@ inherit autotools pkgconfig
 EXTRA_OECONF_append_arm = " --enable-fpm=arm"
 EXTRA_OECONF_append_powerpc = " --enable-fpm=ppc"
 
-CXXFLAGS_powerpc = "-lstdc++"
-
 do_stage () {
 	autotools_stage_all
 }
-BROKEN = "1"
+
