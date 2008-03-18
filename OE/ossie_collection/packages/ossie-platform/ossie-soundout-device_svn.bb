@@ -17,7 +17,7 @@ prefix="/sdr"
 
 inherit autotools
 
-EXTRA_OECONF = "--with-omniorb=${STAGING_BINDIR}/.. IDL=${STAGING_BINDIR_NATIVE}/omniidl"
+EXTRA_OECONF = "--with-omniorb=${STAGING_BINDIR}/.. IDL=${STAGING_BINDIR_NATIVE}/omniidl OSSIE_CFLAGS=-I${STAGING_INCDIR} SI_PATH=${STAGING_INCDIR}"
 
 FILES_${PN} = "${prefix}/dev/xml/soundCardPlayback/*xml ${prefix}/dev/bin/*"
 FILES_${PN}-dbg = "${prefix}/dev/bin/.debug
