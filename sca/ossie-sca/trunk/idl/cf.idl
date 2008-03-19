@@ -1,0 +1,535 @@
+//Source file: CF.idl
+#ifndef __CF_DEFINED
+#define __CF_DEFINED
+/* CmIdentification
+%X% %Q% %Z% %W% */
+
+
+module CF {
+    interface File;
+    interface Resource;
+    interface Application;
+    interface Device;
+    interface ApplicationFactory;
+    interface DeviceManager;
+
+    struct DataType {
+        string id;
+        any value;
+    };
+
+    exception InvalidProfile {
+    };
+
+    typedef sequence <DataType> Properties;
+
+    exception InvalidObjectReference {
+        string msg;
+    };
+
+    typedef sequence <octet> OctetSequence;
+    typedef sequence <string> StringSequence;
+
+    exception UnknownProperties {
+        Properties invalidProperties;
+    };
+
+    struct DeviceAssignmentType {
+        string componentId;
+        string assignedDeviceId;
+    };
+
+    typedef sequence <DeviceAssignmentType> DeviceAssignmentSequence;
+
+    enum ErrorNumberType {
+        CFNOTSET,
+        CFE2BIG,
+        CFEACCES,
+        CFEAGAIN,
+        CFEBADF,
+        CFEBADMSG,
+        CFEBUSY,
+        CFECANCELED,
+        CFECHILD,
+        CFEDEADLK,
+        CFEDOM,
+        CFEEXIST,
+        CFEFAULT,
+        CFEFBIG,
+        CFEINPROGRESS,
+        CFEINTR,
+        CFEINVAL,
+        CFEIO,
+        CFEISDIR,
+        CFEMFILE,
+        CFEMLINK,
+        CFEMSGSIZE,
+        CFENAMETOOLONG,
+        CFENFILE,
+        CFENODEV,
+        CFENOENT,
+        CFENOEXEC,
+        CFENOLCK,
+        CFENOMEM,
+        CFENOSPC,
+        CFENOSYS,
+        CFENOTDIR,
+        CFENOTEMPTY,
+        CFENOTSUP,
+        CFENOTTY,
+        CFENXIO,
+        CFEPERM,
+        CFEPIPE,
+        CFERANGE,
+        CFEROFS,
+        CFESPIPE,
+        CFESRCH,
+        CFETIMEDOUT,
+        CFEXDEV
+    };
+
+    exception InvalidFileName {
+        ErrorNumberType errorNumber;
+        string msg;
+    };
+    exception FileException {
+        ErrorNumberType errorNumber;
+        string msg;
+    };
+
+    typedef sequence <Device> DeviceSequence;
+
+    interface AggregateDevice {
+        readonly attribute DeviceSequence devices;
+
+        void addDevice (in Device associatedDevice)
+            raises (InvalidObjectReference);
+        void removeDevice (in Device associatedDevice)
+            raises (InvalidObjectReference);
+    };
+
+    interface FileSystem {
+        exception UnknownFileSystemProperties {
+            Properties invalidProperties;
+        };
+
+        const string SIZE = "SIZE";
+        const string AVAILABLE_SIZE = "AVAILABLE_SPACE";
+
+        enum FileType {
+            PLAIN,
+            DIRECTORY,
+            FILE_SYSTEM
+        };
+
+        struct FileInformationType {
+             string name;
+             FileType kind;
+             unsigned long long size;
+             Properties fileProperties;
+        };
+
+        typedef sequence <FileInformationType> FileInformationSequence;
+
+        const string CREATED_TIME_ID = "CREATED_TIME";
+        const string MODIFIED_TIME_ID = "MODIFIED_TIME";
+        const string LAST_ACCESS_TIME_ID = "LAST_ACCESS_TIME";
+
+        void remove (in string fileName)
+            raises (FileException, InvalidFileName);
+        void copy (in string sourceFileName, in string destinationFileName)
+            raises (InvalidFileName, FileException);
+        boolean exists (in string fileName)
+            raises (InvalidFileName);
+        FileInformationSequence list (in string pattern)
+            raises (FileException, InvalidFileName);
+        File create (in string fileName)
+            raises (InvalidFileName, FileException);
+        File open (in string fileName, in boolean read_Only)
+            raises (InvalidFileName, FileException);
+        void mkdir (in string directoryName)
+            raises (InvalidFileName, FileException);
+        void rmdir (in string directoryName)
+            raises (InvalidFileName, FileException);
+        void query (inout Properties fileSystemProperties)
+            raises (UnknownFileSystemProperties);
+    };
+
+    interface File {
+        exception IOException {
+            ErrorNumberType errorNumber;
+            string msg;
+        };
+        exception InvalidFilePointer {
+        };
+
+        readonly attribute string fileName;
+        readonly attribute unsigned long filePointer;
+
+        void read (out OctetSequence data, in unsigned long length)
+            raises (IOException);
+        void write (in OctetSequence data)
+            raises (IOException);
+        unsigned long sizeOf ()
+            raises (FileException);
+        void close ()
+            raises (FileException);
+        void setFilePointer (in unsigned long filePointer)
+            raises (InvalidFilePointer, FileException);
+    };
+
+    interface ResourceFactory {
+        exception InvalidResourceId {
+        };
+        exception ShutdownFailure {
+            string msg;
+        };
+        exception CreateResourceFailure {
+            ErrorNumberType errorNumber;
+            string msg;
+        };
+
+        readonly attribute string identifier;
+
+        Resource createResource (in string resourceId, in Properties qualifiers)
+            raises (CreateResourceFailure);
+        void releaseResource (in string resourceId)
+            raises (InvalidResourceId);
+        void shutdown ()
+            raises (ShutdownFailure);
+    };
+
+    interface FileManager : FileSystem {
+        struct MountType {
+            string mountPoint;
+            FileSystem fs;
+        };
+
+        typedef sequence <MountType> MountSequence;
+
+        exception NonExistentMount {
+        };
+        exception InvalidFileSystem {
+        };
+        exception MountPointAlreadyExists {
+        };
+
+        void mount (in string mountPoint, in FileSystem file_System)
+            raises (InvalidFileName, InvalidFileSystem, MountPointAlreadyExists);
+        void unmount (in string mountPoint)
+            raises (NonExistentMount);
+        MountSequence getMounts ();
+    };
+
+    interface Port {
+        exception InvalidPort {
+            unsigned short errorCode;
+            string msg;
+        };
+        exception OccupiedPort {
+        };
+
+        void connectPort (in Object connection, in string connectionId)
+            raises (InvalidPort, OccupiedPort);
+        void disconnectPort (in string connectionId)    
+            raises (InvalidPort);
+    };
+
+    interface LifeCycle {
+        exception InitializeError {
+            StringSequence errorMessages;
+        };
+        exception ReleaseError {
+            StringSequence errorMessages;
+        };
+
+        void initialize ()
+            raises (InitializeError);
+        void releaseObject ()
+            raises (ReleaseError);
+    };
+
+    interface TestableObject {
+        exception UnknownTest {
+        };
+
+        void runTest (in unsigned long testid, inout Properties testValues)
+            raises (UnknownTest, UnknownProperties);
+    };
+
+    interface PropertySet {
+        exception InvalidConfiguration {
+            string msg;
+            Properties invalidProperties;
+        };
+        exception PartialConfiguration {
+            Properties invalidProperties;
+        };
+
+        void configure (in Properties configProperties)
+            raises (InvalidConfiguration, PartialConfiguration);
+        void query (inout Properties configProperties)
+            raises (UnknownProperties);
+    };
+
+    interface DomainManager : PropertySet {
+        exception ApplicationInstallationError {
+            ErrorNumberType errorNumber;
+            string msg;
+        };
+
+        typedef sequence <Application> ApplicationSequence;
+        typedef sequence <ApplicationFactory> ApplicationFactorySequence;
+        typedef sequence <DeviceManager> DeviceManagerSequence;
+
+        exception InvalidIdentifier {
+        };
+        exception DeviceManagerNotRegistered {
+        };
+        exception ApplicationUninstallationError {
+            ErrorNumberType errorNumber;
+            string msg;
+        };
+        exception RegisterError {
+            ErrorNumberType errorNumber;
+            string msg;
+        };
+        exception UnregisterError {
+            ErrorNumberType errorNumber;
+            string msg;
+        };
+        exception AlreadyConnected {
+        };
+        exception InvalidEventChannelName {
+        };
+        exception NotConnected {
+        };
+
+        readonly attribute string domainManagerProfile;
+        readonly attribute DeviceManagerSequence deviceManagers;
+        readonly attribute ApplicationSequence applications;
+        readonly attribute ApplicationFactorySequence applicationFactories;
+        readonly attribute FileManager fileMgr;
+        readonly attribute string identifier;
+
+        void registerDevice (in Device registeringDevice, 
+                             in DeviceManager registeredDeviceMgr)
+            raises (InvalidObjectReference, InvalidProfile, 
+                    DeviceManagerNotRegistered, RegisterError);
+        void registerDeviceManager (in DeviceManager deviceMgr)
+            raises (InvalidObjectReference, InvalidProfile, RegisterError);
+        void unregisterDeviceManager (in DeviceManager deviceMgr)
+            raises (InvalidObjectReference, UnregisterError);
+        void unregisterDevice (in Device unregisteringDevice)
+            raises (InvalidObjectReference, UnregisterError);
+        void installApplication (in string profileFileName)
+            raises (InvalidProfile, InvalidFileName, 
+                    ApplicationInstallationError);
+        void uninstallApplication (in string applicationId)
+            raises (InvalidIdentifier, ApplicationUninstallationError);
+        void registerService (in Object registeringService,
+                              in DeviceManager registeredDeviceMgr, 
+                              in string name)
+            raises (InvalidObjectReference, InvalidProfile,
+                    DeviceManagerNotRegistered, RegisterError);
+        void unregisterService (in Object unregisteringService, in string name)
+            raises (InvalidObjectReference, UnregisterError);
+        void registerWithEventChannel (in Object registeringObject,
+                                       in string registeringId,
+                                       in string eventChannelName)
+            raises (InvalidObjectReference, InvalidEventChannelName, 
+                    AlreadyConnected);
+        void unregisterFromEventChannel (in string unregisteringId,
+                                         in string eventChannelName)
+            raises (InvalidEventChannelName, NotConnected);
+        };
+
+    interface ApplicationFactory {
+        exception CreateApplicationRequestError {
+            DeviceAssignmentSequence invalidAssignments;
+        };
+        exception CreateApplicationError {
+            ErrorNumberType errorNumber;
+            string msg;
+        };
+        exception InvalidInitConfiguration {
+            Properties invalidProperties;
+        };
+
+        readonly attribute string name;
+        readonly attribute string identifier;
+        readonly attribute string softwareProfile;
+
+        Application create (in string name, in Properties initConfiguration,
+                            in DeviceAssignmentSequence deviceAssignments)
+            raises (CreateApplicationError, CreateApplicationRequestError, 
+                    InvalidInitConfiguration);
+    };
+
+    interface PortSupplier {
+        exception UnknownPort {
+        };
+
+        Object getPort (in string name)
+            raises (UnknownPort);
+    };
+
+    interface Resource : LifeCycle, TestableObject, PropertySet, PortSupplier
+    {
+        exception StartError {
+            ErrorNumberType errorNumber;
+            string msg;
+        };
+        exception StopError {
+            ErrorNumberType errorNumber;
+            string msg;
+        };
+
+        readonly attribute string identifier;
+
+        void start ()
+            raises (StartError);
+        void stop ()
+            raises (StopError);
+    };
+
+    interface Device : Resource {
+        exception InvalidState {
+            string msg;
+        };
+        exception InvalidCapacity {
+            string msg;
+            Properties capacities;
+        };
+
+        enum AdminType {
+            LOCKED,
+            SHUTTING_DOWN,
+            UNLOCKED
+        };
+        enum OperationalType {
+            ENABLED,
+            DISABLED
+        };
+        enum UsageType {
+            IDLE,
+            ACTIVE,
+            BUSY
+        };
+
+        readonly attribute UsageType usageState;
+        attribute AdminType adminState;
+        readonly attribute OperationalType operationalState;
+        readonly attribute string softwareProfile;
+        readonly attribute string label;
+        readonly attribute AggregateDevice compositeDevice;
+
+        boolean allocateCapacity (in Properties capacities)
+            raises (InvalidCapacity, InvalidState);
+        void deallocateCapacity (in Properties capacities)
+            raises (InvalidCapacity, InvalidState);
+    };
+
+    interface Application : Resource {
+        struct ComponentProcessIdType {
+            string componentId;
+            unsigned long processId;
+        };
+
+        typedef sequence <ComponentProcessIdType> ComponentProcessIdSequence;
+
+        struct ComponentElementType {
+            string componentId;
+            string elementId;
+        };
+
+        typedef sequence <ComponentElementType> ComponentElementSequence;
+
+        readonly attribute ComponentElementSequence componentNamingContexts;
+        readonly attribute ComponentProcessIdSequence componentProcessIds;
+        readonly attribute DeviceAssignmentSequence componentDevices;
+        readonly attribute ComponentElementSequence componentImplementations;
+        readonly attribute string profile;
+        readonly attribute string name;
+    };
+
+    interface LoadableDevice : Device {
+        enum LoadType {
+            KERNEL_MODULE,
+            DRIVER,
+            SHARED_LIBRARY,
+            EXECUTABLE
+        };
+
+        exception InvalidLoadKind {
+        };
+        exception LoadFail {
+            ErrorNumberType errorNumber;
+            string msg;
+        };
+
+        void load (in FileSystem fs, in string fileName, in LoadType loadKind)
+            raises (InvalidState, InvalidLoadKind, InvalidFileName, LoadFail );
+        void unload (in string fileName)
+            raises (InvalidState, InvalidFileName);
+    };
+
+    interface ExecutableDevice : LoadableDevice {
+        exception InvalidProcess {
+            ErrorNumberType errorNumber;
+            string msg;
+        };
+        exception InvalidFunction {
+        };
+
+        typedef unsigned long ProcessID_Type;
+
+        exception InvalidParameters {
+            Properties invalidParms;
+        };
+        exception InvalidOptions {
+            Properties invalidOpts;
+        };
+        const string STACK_SIZE = "STACK_SIZE";
+        const string PRIORITY_ID = "PRIORITY";
+        exception ExecuteFail {
+            ErrorNumberType errorNumber;
+            string msg;
+        };
+
+        void terminate (in ProcessID_Type processId)
+            raises (InvalidProcess, InvalidState);
+        ProcessID_Type execute (in string name, in Properties options, 
+                                in Properties parameters)
+            raises (InvalidState, InvalidFunction, InvalidParameters,
+                    InvalidOptions, InvalidFileName, ExecuteFail);
+    };
+
+    interface DeviceManager : PropertySet, PortSupplier {
+        struct ServiceType {
+            Object serviceObject;
+            string serviceName;
+        };
+
+        typedef sequence <ServiceType> ServiceSequence;
+
+        readonly attribute string deviceConfigurationProfile;
+        readonly attribute FileSystem fileSys;
+        readonly attribute string identifier;
+        readonly attribute string label;
+        readonly attribute DeviceSequence registeredDevices;
+        readonly attribute ServiceSequence registeredServices;
+
+        void registerDevice (in Device registeringDevice)
+            raises (InvalidObjectReference);
+        void unregisterDevice (in Device registeredDevice)
+            raises (InvalidObjectReference);
+        void shutdown ();
+        void registerService (in Object registeringService, in string name)
+            raises (InvalidObjectReference);
+        void unregisterService (in Object registeredService, in string name)
+            raises (InvalidObjectReference);
+        string getComponentImplementationId (in string componentInstantiationId);
+    };
+};
+#endif

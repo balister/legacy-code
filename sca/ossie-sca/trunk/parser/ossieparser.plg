@@ -1,0 +1,144 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: ossieparser - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\caguayog\LOCALS~1\Temp\RSP519E.bat" with contents
+[
+@echo off
+tao_idl ..\ossieidl\cf.idl -o \OSSIE\ossieidl -I \OSSIE\ossieidl
+]
+Creating command line "C:\DOCUME~1\caguayog\LOCALS~1\Temp\RSP519E.bat"
+Creating temporary file "C:\DOCUME~1\caguayog\LOCALS~1\Temp\RSP519F.tmp" with contents
+[
+/nologo /MTd /W3 /Gm /GR /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "OSSIEPARSER_EXPORTS" /FR"Debug/" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"C:\OSSIE\ossieidl\cfC.cpp"
+"C:\OSSIE\ossieparser\ComponentAssemblyParser.cpp"
+"C:\OSSIE\ossieparser\ComponentInstantiation.cpp"
+"C:\OSSIE\ossieparser\ComponentPlacement.cpp"
+"C:\OSSIE\ossieparser\ComponentSupportedInterface.cpp"
+"C:\OSSIE\ossieparser\Connection.cpp"
+"C:\OSSIE\ossieparser\DCDComponentInstantiation.cpp"
+"C:\OSSIE\ossieparser\DCDComponentPlacement.cpp"
+"C:\OSSIE\ossieparser\DCDConnectionParser.cpp"
+"C:\OSSIE\ossieparser\DCDInstantiationProperty.cpp"
+"C:\OSSIE\ossieparser\DCDParser.cpp"
+"C:\OSSIE\ossieparser\DMDParser.cpp"
+"C:\OSSIE\ossieparser\ExternalPort.cpp"
+"C:\OSSIE\ossieparser\FindBy.cpp"
+"C:\OSSIE\ossieparser\InstantiationProperty.cpp"
+"C:\OSSIE\ossieparser\ORB_WRAP.cpp"
+"C:\OSSIE\ossieparser\ossieparser.cpp"
+"C:\OSSIE\ossieparser\Port.cpp"
+"C:\OSSIE\ossieparser\PRFParser.cpp"
+"C:\OSSIE\ossieparser\PRFSimpleProperty.cpp"
+"C:\OSSIE\ossieparser\ProvidesPort.cpp"
+"C:\OSSIE\ossieparser\SADComponentInstantiation.cpp"
+"C:\OSSIE\ossieparser\SADComponentPlacement.cpp"
+"C:\OSSIE\ossieparser\SADHostCollocation.cpp"
+"C:\OSSIE\ossieparser\SADParser.cpp"
+"C:\OSSIE\ossieparser\SCDParser.cpp"
+"C:\OSSIE\ossieparser\SPDAuthor.cpp"
+"C:\OSSIE\ossieparser\SPDImplementation.cpp"
+"C:\OSSIE\ossieparser\SPDParser.cpp"
+"C:\OSSIE\ossieparser\SPDUsesDevice.cpp"
+"C:\OSSIE\ossieparser\UsesPort.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\caguayog\LOCALS~1\Temp\RSP519F.tmp" 
+Creating temporary file "C:\DOCUME~1\caguayog\LOCALS~1\Temp\RSP51A0.tmp" with contents
+[
+/nologo /MTd /W3 /Gm /GR /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "OSSIEPARSER_EXPORTS" /FR"Debug/" /Fp"Debug/ossieparser.pch" /Yc"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"C:\OSSIE\ossieparser\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\caguayog\LOCALS~1\Temp\RSP51A0.tmp" 
+Custom build IDL
+idli_a01036.cc
+Creating temporary file "C:\DOCUME~1\caguayog\LOCALS~1\Temp\RSP51A1.tmp" with contents
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib aced.lib taod.lib xerces-c_2.lib TAO_CosNamingd.lib TAO_PortableServerd.lib /nologo /dll /incremental:yes /pdb:"Debug/ossieparser.pdb" /debug /machine:I386 /out:"Debug/ossieparser.dll" /implib:"Debug/ossieparser.lib" /pdbtype:sept 
+.\Debug\cfC.obj
+.\Debug\ComponentAssemblyParser.obj
+.\Debug\ComponentInstantiation.obj
+.\Debug\ComponentPlacement.obj
+.\Debug\ComponentSupportedInterface.obj
+.\Debug\Connection.obj
+.\Debug\DCDComponentInstantiation.obj
+.\Debug\DCDComponentPlacement.obj
+.\Debug\DCDConnectionParser.obj
+.\Debug\DCDInstantiationProperty.obj
+.\Debug\DCDParser.obj
+.\Debug\DMDParser.obj
+.\Debug\ExternalPort.obj
+.\Debug\FindBy.obj
+.\Debug\InstantiationProperty.obj
+.\Debug\ORB_WRAP.obj
+.\Debug\ossieparser.obj
+.\Debug\Port.obj
+.\Debug\PRFParser.obj
+.\Debug\PRFSimpleProperty.obj
+.\Debug\ProvidesPort.obj
+.\Debug\SADComponentInstantiation.obj
+.\Debug\SADComponentPlacement.obj
+.\Debug\SADHostCollocation.obj
+.\Debug\SADParser.obj
+.\Debug\SCDParser.obj
+.\Debug\SPDAuthor.obj
+.\Debug\SPDImplementation.obj
+.\Debug\SPDParser.obj
+.\Debug\SPDUsesDevice.obj
+.\Debug\StdAfx.obj
+.\Debug\UsesPort.obj
+]
+Creating command line "link.exe @C:\DOCUME~1\caguayog\LOCALS~1\Temp\RSP51A1.tmp"
+<h3>Output Window</h3>
+Compiling...
+StdAfx.cpp
+Compiling...
+cfC.cpp
+ComponentAssemblyParser.cpp
+ComponentInstantiation.cpp
+ComponentPlacement.cpp
+ComponentSupportedInterface.cpp
+Connection.cpp
+DCDComponentInstantiation.cpp
+DCDComponentPlacement.cpp
+DCDConnectionParser.cpp
+DCDInstantiationProperty.cpp
+DCDParser.cpp
+DMDParser.cpp
+ExternalPort.cpp
+FindBy.cpp
+InstantiationProperty.cpp
+ORB_WRAP.cpp
+ossieparser.cpp
+Port.cpp
+PRFParser.cpp
+PRFSimpleProperty.cpp
+Generating Code...
+Compiling...
+ProvidesPort.cpp
+SADComponentInstantiation.cpp
+SADComponentPlacement.cpp
+SADHostCollocation.cpp
+SADParser.cpp
+SCDParser.cpp
+SPDAuthor.cpp
+SPDImplementation.cpp
+SPDParser.cpp
+c:\ossie\ossieparser\spdparser.cpp(106) : warning C4101: 'toCatch' : unreferenced local variable
+SPDUsesDevice.cpp
+UsesPort.cpp
+Generating Code...
+Linking...
+   Creating library Debug/ossieparser.lib and object Debug/ossieparser.exp
+
+
+
+<h3>Results</h3>
+ossieparser.dll - 0 error(s), 1 warning(s)
+</pre>
+</body>
+</html>
