@@ -2,6 +2,8 @@
 
 Copyright 2004, 2006, 2007, 2008 Virginia Polytechnic Institute and State University
 
+Copyright 2008, Philip Balister philip@opensdr.com
+
 This file is part of the OSSIE Core Framework.
 
 OSSIE Core Framework is free software; you can redistribute it and/or modify
@@ -156,7 +158,7 @@ void DeviceManager_impl::post_constructor (CF::DeviceManager_var my_object_var)
 	char nameStr[255];
 	sprintf( nameStr, "DomainName1/%s", componentPlacements[i].usageName() );
 	DEBUG(3, DevMgr, "searching for "<< nameStr);
-	for (unsigned int delay(50000);;) {
+	for (unsigned int delay(1000000);;) {
 	    /// \todo sleep prevents system from beating Name Service to death, Fix better
 	    ossieSupport::nsleep(0, delay);
 
@@ -167,7 +169,7 @@ void DeviceManager_impl::post_constructor (CF::DeviceManager_var my_object_var)
 	    if (!CORBA::is_nil(_obj))
 		break;
 
-	    if (delay < 1000000)
+	    if (delay < 800000000)
 		delay *= 2;
 	}
 

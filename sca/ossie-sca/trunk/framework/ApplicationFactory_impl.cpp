@@ -2,6 +2,8 @@
  
 Copyright 2004, 2005, 2006, 2007, 2008 Virginia Polytechnic Institute and State University
  
+Copyright 2008, Philip Balister philip@opensdr.com
+
 This file is part of the OSSIE Core Framework.
  
 OSSIE Core Framework is free software; you can redistribute it and/or modify
@@ -256,7 +258,7 @@ throw (CORBA::SystemException, CF::ApplicationFactory::CreateApplicationError,
                 CORBA::Object_ptr _obj = CORBA::Object::_nil ();
                 
                 // Wait for component to start
-                for (unsigned int delay(50000);;) {
+                for (unsigned int delay(1000000);;) {
 		    try {
 			_obj = orb->get_object_from_name(waveformContext, _lookupName.c_str());
 		    } catch (CosNaming::NamingContext::NotFound) {};
@@ -267,7 +269,7 @@ throw (CORBA::SystemException, CF::ApplicationFactory::CreateApplicationError,
 		    ///\todo Figure out how to get rid of this sleep
 		    ossieSupport::nsleep(0, delay);
 		    
-		    if (delay < 1000000)
+		    if (delay < 800000000)
 			delay *= 2;
                 }
                 
