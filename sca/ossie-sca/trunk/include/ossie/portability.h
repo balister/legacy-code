@@ -54,8 +54,9 @@ namespace ossieSupport {
     t.tv_sec = seconds;
     t.tv_nsec = nano_seconds;
 
+    DEBUG(1, NSLEEP, "Sleeping for  " << t.tv_sec << " seconds " << t.tv_nsec << " nanoseconds.");
     int result = nanosleep(&t, &rem);
-
+    DEBUG(1, NSLEEP, "Result = " << result << " rem.nsec = " << rem.tv_nsec);
     return result;
 #endif
   }
