@@ -4,22 +4,22 @@ devbindir = $(prefix)/dev/bin
 devbin_PROGRAMS = USRP
 
 USRP_SOURCES =                  \
-    src/main.cpp                \
-    src/USRP.cpp                \
-    src/port_impl.cpp           \
-    src/USRP.h                  \
-    src/db_base.h               \
-    src/db_base.cpp             \
-    src/flex.h                  \
-    src/flex.cpp                \
-    src/basic.h                 \
-    src/basic.cpp               \
-    src/dbsrx.h                 \
-    src/dbsrx.cpp               \
-    src/tvrx.h                  \
-    src/tvrx.cpp                \
-    src/lf.h                    \
-    src/lf.cpp
+    main.cpp                \
+    USRP.cpp                \
+    port_impl.cpp           \
+    USRP.h                  \
+    db_base.h               \
+    db_base.cpp             \
+    flex.h                  \
+    flex.cpp                \
+    basic.h                 \
+    basic.cpp               \
+    dbsrx.h                 \
+    dbsrx.cpp               \
+    tvrx.h                  \
+    tvrx.cpp                \
+    lf.h                    \
+    lf.cpp
 
 ossieName = USRP
 xmldir = $(prefix)/dev/xml/$(ossieName)
