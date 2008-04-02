@@ -1,6 +1,7 @@
 /****************************************************************************
 
 Copyright 2005, 2006, 2007, 2008 Virginia Polytechnic Institute and State University
+Copyright 2008, Philip Balister philip@opensdr.com 
 
 This file is part of the OSSIE USRP Device.
 
@@ -35,8 +36,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "standardinterfaces/complexShort_u.h"
 #include "standardinterfaces/complexShort_p.h"
 #include "standardinterfaces/Radio_Control_p.h"
-
-#include "ossie/Device_impl.h"
 
 #include "flex.h"
 #include "dbsrx.h"
