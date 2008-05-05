@@ -1,4 +1,4 @@
-AC_INIT(FileInput, 0.7.0)
+AC_INIT(file-input, 0.7.0)
 AM_INIT_AUTOMAKE
 
 AC_PREFIX_DEFAULT("/sdr")

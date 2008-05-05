@@ -1,12 +1,12 @@
 AM_CXXFLAGS = -Wall 
 
-bin_PROGRAMS = FileInput
+bin_PROGRAMS = file-input
 bindir = $(prefix)/dom/bin
 
-FileInput_SOURCES = FileInput.cpp FileInput.h main.cpp
+FileInput_SOURCES = file-input.cpp file-input.h main.cpp
 
-ossieName = FileInput
+ossieName = file-input
 xmldir = $(prefix)/dom/xml/$(ossieName)
-dist_xml_DATA = FileInput.prf.xml FileInput.scd.xml \
-FileInput.spd.xml 
+dist_xml_DATA = $(ossieName).prf.xml $(ossieName).scd.xml \
+$(ossieName).spd.xml 
 

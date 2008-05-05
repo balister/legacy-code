@@ -11,15 +11,15 @@
         <webpage>http://www.mprg.org</webpage> 
     </author>
     <propertyfile type="PRF">
-        <localfile name="FileInput.prf.xml"/>
+        <localfile name="file-input.prf.xml"/>
     </propertyfile>
     <descriptor>
-        <localfile name="FileInput.scd.xml"/>
+        <localfile name="file-input.scd.xml"/>
     </descriptor>
     <implementation id="DCE:3855c5c0-6db5-11db-b780-00123f63025f" aepcompliance="aep_compliant">
         <description>Default implementation description</description> 
         <code type="Executable">
-            <localfile name="/bin/FileInput"/>
+            <localfile name="/bin/file-input"/>
         </code>
         <processor name="x86"/>
     </implementation>
