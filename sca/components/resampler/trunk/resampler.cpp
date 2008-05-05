@@ -26,7 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include <ossie/debug.h>
 
-#include "RationalResamplerComplexShort.h"
+#include "resampler.h"
 
 RationalResamplerComplexShort_i::RationalResamplerComplexShort_i(const char *uuid, omni_condition *condition) : 
 Resource_impl(uuid), component_running(condition), N(1), D(1), i_filter(NULL), q_filter(NULL), dataOut(NULL), dataIn(NULL)

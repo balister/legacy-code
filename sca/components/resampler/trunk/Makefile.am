@@ -1,12 +1,12 @@
 AM_CXXFLAGS = -Wall 
 
-bin_PROGRAMS = RationalResamplerComplexShort
+bin_PROGRAMS = resampler
 
-RationalResamplerComplexShort_SOURCES = RationalResamplerComplexShort.cpp RationalResamplerComplexShort.h main.cpp
+RationalResamplerComplexShort_SOURCES = resampler.cpp resampler.h main.cpp
 
-ossieName = RationalResamplerComplexShort
+ossieName = resampler
 xmldir = $(prefix)/dom/xml/$(ossieName)
 bindir = $(prefix)/dom/bin
-dist_xml_DATA = RationalResamplerComplexShort.prf.xml RationalResamplerComplexShort.scd.xml \
-RationalResamplerComplexShort.spd.xml 
+dist_xml_DATA = resampler.prf.xml resampler.scd.xml \
+resampler.spd.xml 
 
