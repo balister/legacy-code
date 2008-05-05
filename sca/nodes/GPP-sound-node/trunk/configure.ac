@@ -1,4 +1,4 @@
-AC_INIT(default_GPP_sound_node, 0.7.0)
+AC_INIT(GPP-sound-node, 0.7.0)
 
 AM_INIT_AUTOMAKE
 
