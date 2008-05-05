@@ -1,11 +1,11 @@
 CXXFLAGS = -Wall -O3 -g
 
-bin_PROGRAMS = Decimator
+bin_PROGRAMS = decimator
 bindir = $(prefix)/dom/bin
 
-Decimator_SOURCES = main.cpp Decimator.cpp Decimator.h
+Decimator_SOURCES = main.cpp decimator.cpp decimator.h
 
-ossieName = Decimator
+ossieName = decimator
 xmldir = $(prefix)/dom/xml/$(ossieName)
-dist_xml_DATA = Decimator.scd.xml Decimator.spd.xml Decimator.prf.xml
+dist_xml_DATA = $(ossieName).scd.xml $(ossieName).spd.xml $(ossieName).prf.xml
 

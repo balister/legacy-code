@@ -13,15 +13,15 @@
         <webpage>http://www.mprg.org</webpage>
     </author>
     <propertyfile type="PRF">
-      <localfile name="Decimator.prf.xml" />
+      <localfile name="decimator.prf.xml" />
     </propertyfile>
     <descriptor name="">
-        <localfile name="Decimator.scd.xml" />
+        <localfile name="decimator.scd.xml" />
     </descriptor>
     <!--[Implementation Decimate_linux]-->
     <implementation id="DCE:1aee5bc6-5149-4c58-a2ae-89fab9276719" aepcompliance="aep_compliant">
         <code type="Executable">
-            <localfile name="/bin/Decimator" />
+            <localfile name="/bin/decimator" />
         </code>
         <os name="Linux" version="5.5.1" />
         <processor name="x86" />
