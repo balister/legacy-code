@@ -1,0 +1,45 @@
+/****************************************************************************
+
+Copyright 2007 Virginia Polytechnic Institute and State University
+
+This file is part of the OSSIE Decimator.
+
+OSSIE Decimator is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+OSSIE Decimator is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with OSSIE Decimator; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+****************************************************************************/
+
+/*! \mainpage Decimator
+
+\section description Basic description
+
+\section properties Properties
+
+\subsection prop_decimateby DecimateBy (DCE:cea26b54-9d86-4b68-a761-14186efa9415)
+
+\subsection prop_filter Filter coefficients (DCE:134e5dd8-c773-47af-a557-2837076358c4)
+
+\section interfaces Interfaces
+
+\section dependencies Software build dependencies
+  - SigProc
+  - Standard Interfaces
+
+\section algorithm Detailed Description of Algorithm
+
+\section status Status and history
+
+\section references References
+
+*/
