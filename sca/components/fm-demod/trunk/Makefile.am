@@ -1,12 +1,12 @@
 AM_CXXFLAGS = -Wall 
 
-bin_PROGRAMS = WFMdemod
+bin_PROGRAMS = fm-demod
 
-WFMdemod_SOURCES = WFMdemod.cpp WFMdemod.h main.cpp
+WFMdemod_SOURCES = fm-demod.cpp fm-demod.h main.cpp
 
-ossieName = WFMdemod
+ossieName = fm-demod
 xmldir = $(prefix)/dom/xml/$(ossieName)
 bindir = $(prefix)/dom/bin
-dist_xml_DATA = WFMdemod.prf.xml WFMdemod.scd.xml \
-WFMdemod.spd.xml 
+dist_xml_DATA = $(ossieName).prf.xml $(ossieName).scd.xml \
+ossieName.spd.xml 
 

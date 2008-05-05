@@ -11,15 +11,15 @@
         <webpage>http://www.mprg.org</webpage> 
     </author>
     <propertyfile type="PRF">
-        <localfile name="WFMdemod.prf.xml"/>
+        <localfile name="fm-demod.prf.xml"/>
     </propertyfile>
     <descriptor>
-        <localfile name="WFMdemod.scd.xml"/>
+        <localfile name="fm-demod.scd.xml"/>
     </descriptor>
     <implementation id="DCE:a472bd1c-c548-11dc-a762-000c29a1ba37">
         <description>Description</description> 
         <code type="Executable">
-            <localfile name="/bin/WFMdemod"/>
+            <localfile name="/bin/fm-demod"/>
         </code>
         <processor name="x86"/>
     </implementation>
