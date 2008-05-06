@@ -27,7 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <math.h>  // For energy debugging routine
 #include "ossie/cf.h"
 
-#include "Decimator.h"
+#include "decimator.h"
 
     //#define PRINT_ENERGY 1
 
