@@ -28,7 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <assert.h>
 #include <byteswap.h>
 
-#include "WFMdemod.h"
+#include "fm-demod.h"
 
 WFMDemod_i::WFMDemod_i(const char *uuid, omni_condition *condition) : 
 Resource_impl(uuid), I1(0), I2(0), Q1(0), Q2(0), component_running(condition) 
