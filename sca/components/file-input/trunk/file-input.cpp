@@ -35,7 +35,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include <omnithread.h>
 
-#include "FileInput.h"
+#include "file-input.h"
 
 #include "ossie/debug.h"
 #include "ossie/Resource_impl.h"
