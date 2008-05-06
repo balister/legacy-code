@@ -1,4 +1,4 @@
-AC_INIT(WFMMono, 0.5.0)
+AC_INIT(fm-fromfile, 0.5.0)
 AM_INIT_AUTOMAKE
 
 AC_PREFIX_DEFAULT("/sdr")

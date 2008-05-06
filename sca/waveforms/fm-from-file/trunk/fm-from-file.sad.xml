@@ -2,23 +2,23 @@
 <!DOCTYPE softwareassembly SYSTEM "../../xml/dtd/softwareassembly.dtd">
 <!--Created with OSSIE WaveDev Beta Version 0.6.2-->
 <!--Powered by Python-->
-<softwareassembly id="DCE:26ad5312-c7ad-11dc-8a24-000c29a1ba37" name="OSSIE::WFMMono">
+<softwareassembly id="DCE:26ad5312-c7ad-11dc-8a24-000c29a1ba37" name="fm-from-file">
     <componentfiles>
-        <componentfile id="FileInput_686133ce-c7a7-11dc-a141-000c29a1ba37" type="SPD">
-            <localfile name="/xml/FileInput/FileInput.spd.xml"/>
+        <componentfile id="file-input_686133ce-c7a7-11dc-a141-000c29a1ba37" type="SPD">
+            <localfile name="/xml/file-input/file-input.spd.xml"/>
         </componentfile>
-        <componentfile id="WFMdemod_687cc1b6-c7a7-11dc-98cb-000c29a1ba37" type="SPD">
-            <localfile name="/xml/WFMdemod/WFMdemod.spd.xml"/>
+        <componentfile id="fm-demod_687cc1b6-c7a7-11dc-98cb-000c29a1ba37" type="SPD">
+            <localfile name="/xml/fm-demod/fm-demod.spd.xml"/>
         </componentfile>
-        <componentfile id="RationalResamplerComplexShort_863d457e-c7aa-11dc-93ec-000c29a1ba37" type="SPD">
-            <localfile name="/xml/RationalResamplerComplexShort/RationalResamplerComplexShort.spd.xml"/>
+        <componentfile id="resampler_863d457e-c7aa-11dc-93ec-000c29a1ba37" type="SPD">
+            <localfile name="/xml/resampler/resampler.spd.xml"/>
         </componentfile>
     </componentfiles>
     <partitioning>
         <componentplacement>
-            <componentfileref refid="FileInput_686133ce-c7a7-11dc-a141-000c29a1ba37"/>
+            <componentfileref refid="file-input_686133ce-c7a7-11dc-a141-000c29a1ba37"/>
             <componentinstantiation id="DCE:7180375c-c7a7-11dc-bdca-000c29a1ba37">
-                <usagename>FileInput1</usagename> 
+                <usagename>file-input1</usagename> 
                 <componentproperties>
 
                     <!--[Component FileInput1, Attribute input_file_name]--> 
@@ -33,23 +33,23 @@
                     <simpleref refid="DCE:07624606-7a52-11db-820d-0004236abd3a" value="1"/>
                 </componentproperties>
                 <findcomponent>
-                    <namingservice name="FileInput1"/>
+                    <namingservice name="file-input1"/>
                 </findcomponent>
             </componentinstantiation>
         </componentplacement>
         <componentplacement>
-            <componentfileref refid="WFMdemod_687cc1b6-c7a7-11dc-98cb-000c29a1ba37"/>
+            <componentfileref refid="fm-demod_687cc1b6-c7a7-11dc-98cb-000c29a1ba37"/>
             <componentinstantiation id="DCE:7580d3ca-c7a7-11dc-8f3d-000c29a1ba37">
-                <usagename>WFMdemod1</usagename> 
+                <usagename>fm-demod1</usagename> 
                 <findcomponent>
-                    <namingservice name="WFMdemod1"/>
+                    <namingservice name="fm-demod1"/>
                 </findcomponent>
             </componentinstantiation>
         </componentplacement>
         <componentplacement>
-            <componentfileref refid="RationalResamplerComplexShort_863d457e-c7aa-11dc-93ec-000c29a1ba37"/>
+            <componentfileref refid="resampler_863d457e-c7aa-11dc-93ec-000c29a1ba37"/>
             <componentinstantiation id="DCE:8bcd0376-c7aa-11dc-a593-000c29a1ba37">
-                <usagename>RationalResamplerComplexShort1</usagename> 
+                <usagename>resampler1</usagename> 
                 <componentproperties>
 
                     <!--[Attribute Numerator]--> 
@@ -94,7 +94,7 @@
 		    </simplesequenceref>
                 </componentproperties>
                 <findcomponent>
-                    <namingservice name="RationalResamplerComplexShort1"/>
+                    <namingservice name="resampler1"/>
                 </findcomponent>
             </componentinstantiation>
         </componentplacement>
@@ -107,13 +107,13 @@
             <providesport>
                 <providesidentifier>dataIn</providesidentifier> 
                 <findby>
-                    <namingservice name="WFMdemod1"/>
+                    <namingservice name="fm-demod1"/>
                 </findby>
             </providesport>
             <usesport>
                 <usesidentifier>DataOut</usesidentifier> 
                 <findby>
-                    <namingservice name="FileInput1"/>
+                    <namingservice name="file-input1"/>
                 </findby>
             </usesport>
         </connectinterface>
@@ -121,13 +121,13 @@
             <providesport>
                 <providesidentifier>dataIn</providesidentifier> 
                 <findby>
-                    <namingservice name="RationalResamplerComplexShort1"/>
+                    <namingservice name="resampler1"/>
                 </findby>
             </providesport>
             <usesport>
                 <usesidentifier>dataOut</usesidentifier> 
                 <findby>
-                    <namingservice name="WFMdemod1"/>
+                    <namingservice name="fm-demod1"/>
                 </findby>
             </usesport>
         </connectinterface>
@@ -138,7 +138,7 @@
             <usesport>
                 <usesidentifier>dataOut</usesidentifier> 
                 <findby>
-                    <namingservice name="RationalResamplerComplexShort1"/>
+                    <namingservice name="resampler1"/>
                 </findby>
             </usesport>
         </connectinterface>
