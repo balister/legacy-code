@@ -1,0 +1,31 @@
+/*! \mainpage Sound Card (Playback)
+
+\section description  Basic description
+
+\section properties Properties
+
+\subsection prop_sample_rate sample_rate (DCE:98ca3738-5511-4fb1-ba00-2b86dc4e3c99)
+Sets the sampling frequency (Hz) of the sound playback device.
+
+NOTE: this feature has not yet been implemented
+
+\section interfaces Interfaces
+
+\subsection port_soundOut Port: "soundOut"
+
+\subsection port_soundIn Port: "soundIn"
+
+\subsection interface_soundInControl Interface: "soundInControl"
+
+\subsection interface_soundOutControl Interface: "soundOutControl"
+
+\section dependencies Software build dependencies
+
+\section algorithm Detailed Description of Algorithm
+
+\section status Status and history
+
+\section references References
+
+*/
+
