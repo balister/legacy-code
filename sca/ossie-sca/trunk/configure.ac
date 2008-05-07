@@ -17,13 +17,14 @@ AC_CHECK_PROG([IDL], [omniidl], [omniidl], [AC_MSG_ERROR([cannot find omniidl pr
 AC_CHECK_HEADERS([boost/filesystem/operations.hpp], [], [AC_MSG_ERROR([Boost filesystem library headers not installed.])])
 AC_CHECK_LIB([boost_filesystem], [main], [], [AC_MSG_ERROR([cannot find boost_filesystem library.])])
 
-AC_LANG_POP
 
 AC_HEADER_SYS_WAIT
 AC_CHECK_HEADERS(time.h)
 AC_HEADER_DIRENT
 
 AC_FUNC_FORK
+
+AC_LANG_POP
 
 if test "$ac_cv_func_fork_works" != yes; then
    AC_MSG_ERROR([working fork test failed. Make sure /usr/local/lib is in /etc/ld.so.conf and run /sbin/ldconfig.])
