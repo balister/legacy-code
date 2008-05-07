@@ -17,9 +17,9 @@ SRCREV_pn-ossie-soundout-device ?= ${AUTOREV}
 SRCREV_pn-ossie-usrp-device ?= ${AUTOREV}
 SRCREV_pn-ossie-demo ?= ${AUTOREV}
 SRCREV_pn-ossie-tx-random-data ?= ${AUTOREV}
-SRCREV_pn-ossie-wfmdemod ?= ${AUTOREV}
-SRCREV_pn-ossie-rationalresamplercomplexshort ?= ${AUTOREV}
-SRCREV_pn-ossie-wfmrxmono ?= ${AUTOREV}
-SRCREV_pn-ossie-fileinput ?= ${AUTOREV}
+SRCREV_pn-ossie-fm-demod ?= ${AUTOREV}
+SRCREV_pn-ossie-resampler ?= ${AUTOREV}
+SRCREV_pn-ossie-fm-from-file ?= ${AUTOREV}
+SRCREV_pn-ossie-file-input ?= ${AUTOREV}
 SRCREV_pn-ossie-file2sound ?= ${AUTOREV}
 

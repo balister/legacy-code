@@ -8,15 +8,15 @@ PV = "0.0.0+svnr${SRCREV}"
 
 DEPENDS = "ossie-cf ossie-standardinterfaces ossie-sigproc"
 
-S = "${WORKDIR}/WFMDemod"
+S = "${WORKDIR}/trunk"
 
 
-SRC_URI = "svn://ossie.wireless.vt.edu/repos/ossie/components/WFMDemod/trunk;module=WFMDemod;proto=https"
+SRC_URI = "svn://svn.geekisp.com/opensdr/sca/components/fm-demod;module=trunk;proto=https"
 
 prefix="/sdr"
 
 inherit autotools
 
-FILES_${PN} += "/sdr/dom/xml/WFMdemod/*.xml"
-FILES_${PN} += "/sdr/dom/bin/WFMdemod"
+FILES_${PN} += "/sdr/dom/xml/fm-demod/*.xml"
+FILES_${PN} += "/sdr/dom/bin/fm-demod"
 

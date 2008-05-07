@@ -9,10 +9,10 @@ PV = "0.0.0+svnr${SRCREV}"
 DEPENDS = "ossie-cf ossie-gpp-device ossie-soundout-device"
 RDEPENDS = "ossie-gpp-device ossie-soundout-device"
 
-S = "${WORKDIR}/default_GPP_sound_node"
+S = "${WORKDIR}/trunk"
 
 
-SRC_URI = "svn://ossie.wireless.vt.edu/repos/ossie/nodes/default_GPP_sound_node/trunk;module=default_GPP_sound_node;proto=https"
+SRC_URI = "svn://svn.geekisp.com/opensdr/sca/nodes/GPP-sound-node;module=trunk;proto=https"
 
 prefix="/sdr"
 

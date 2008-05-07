@@ -11,7 +11,7 @@ DEPENDS = "alsa-lib ossie-cf ossie-standardinterfaces"
 
 S = "${WORKDIR}/trunk"
 
-SRC_URI = "svn://svn.geekisp.com/sca/platform/Sound_out;module=trunk;proto=https"
+SRC_URI = "svn://svn.geekisp.com/opensdr/sca/platform/Sound_out;module=trunk;proto=https"
 
 prefix="/sdr"
 
