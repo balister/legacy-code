@@ -8,12 +8,11 @@ PV = "0.0.0+svnr${SRCREV}"
 
 DEPENDS = "ossie-cf"
 
-S = "${WORKDIR}/nodebooter"
+S = "${WORKDIR}/trunk"
 
-SRC_URI = "svn://ossie.wireless.vt.edu/repos/ossie/platform/nodebooter/trunk;module=nodebooter;proto=https"
+SRC_URI = "svn://svn.geekisp.com/opensdr/sca/platform/nodebooter;module=trunk;proto=https"
 
 inherit autotools
 
 FILES_${PN} += "/sdr/dom/domain/DomainManager*"
 
-BROKEN = "1"

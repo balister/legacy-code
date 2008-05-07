@@ -9,9 +9,9 @@ PV = "0.0.0+svnr${SRCREV}"
 
 DEPENDS = "ossie-cf"
 
-S = "${WORKDIR}/GPP"
+S = "${WORKDIR}/trunk"
 
-SRC_URI = "svn://ossie.wireless.vt.edu/repos/ossie/platform/GPP/trunk;module=GPP;proto=https"
+SRC_URI = "svn://svn.geekisp.com/opensdr/sca/platform/GPP;module=trunk;proto=https"
 
 inherit autotools
 
@@ -20,4 +20,3 @@ prefix = "/sdr"
 FILES_${PN} = "${prefix}/dev/xml/GPP/*xml ${prefix}/dev/bin"
 FILES_${PN}-dbg = "${prefix}/dev/bin/.debug"
 
-BROKEN = "1"

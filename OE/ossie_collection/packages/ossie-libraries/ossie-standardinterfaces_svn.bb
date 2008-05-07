@@ -8,9 +8,9 @@ PV = "0.0.0+svnr${SRCREV}"
 
 DEPENDS = "ossie-cf"
 
-S = "${WORKDIR}/standardInterfaces"
+S = "${WORKDIR}/trunk"
 
-SRC_URI = "svn://ossie.wireless.vt.edu/repos/ossie/standardInterfaces/trunk;module=standardInterfaces;proto=https"
+SRC_URI = "svn://svn.geekisp.com/opensdr/sca/standardInterfaces;module=trunk;proto=https"
 
 inherit autotools pkgconfig
 

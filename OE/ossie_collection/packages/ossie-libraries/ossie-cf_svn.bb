@@ -7,9 +7,9 @@ DEPENDS = "omniorb boost libtool-cross"
 PR = "r1"
 PV = "0.0.0+svnr${SRCREV}"
 
-S = "${WORKDIR}/ossie"
+S = "${WORKDIR}/trunk"
 
-SRC_URI = "svn://ossie.wireless.vt.edu/repos/ossie/ossie/trunk;module=ossie;proto=https"
+SRC_URI = "svn://svn.geekisp.com/opensdr/sca/ossie-sca;module=trunk;proto=https"
 
 inherit autotools pkgconfig
 

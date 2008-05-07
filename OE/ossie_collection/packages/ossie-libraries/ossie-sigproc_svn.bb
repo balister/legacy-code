@@ -8,9 +8,9 @@ PV = "0.0.0+svnr${SRCREV}"
 
 DEPENDS = "ossie-cf"
 
-S = "${WORKDIR}/SigProc"
+S = "${WORKDIR}/trunk"
 
-SRC_URI = "svn://ossie.wireless.vt.edu/repos/ossie/SigProc/trunk;module=SigProc;proto=https"
+SRC_URI = "svn://svn.geekisp.com/opensdr/sca/SigProc;module=trunk;proto=https"
 
 inherit autotools pkgconfig
 

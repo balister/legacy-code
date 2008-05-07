@@ -9,9 +9,9 @@ PV = "0.0.0+svnr${SRCREV}"
 
 DEPENDS = "alsa-lib ossie-cf ossie-standardinterfaces"
 
-S = "${WORKDIR}/Sound_out"
+S = "${WORKDIR}/trunk"
 
-SRC_URI = "svn://ossie.wireless.vt.edu/repos/ossie/platform/Sound_out/trunk;module=Sound_out;proto=https"
+SRC_URI = "svn://svn.geekisp.com/sca/platform/Sound_out;module=trunk;proto=https"
 
 prefix="/sdr"
 
