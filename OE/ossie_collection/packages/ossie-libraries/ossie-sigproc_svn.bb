@@ -14,7 +14,7 @@ SRC_URI = "svn://svn.geekisp.com/opensdr/sca/SigProc;module=trunk;proto=https"
 
 inherit autotools pkgconfig
 
-EXTRA_OECONF_append_arm = " --enable-fpm=arm"
+EXTRA_OECONF_append_armv5 = " --enable-fpm=arm"
 EXTRA_OECONF_append_powerpc = " --enable-fpm=ppc"
 
 do_stage () {
