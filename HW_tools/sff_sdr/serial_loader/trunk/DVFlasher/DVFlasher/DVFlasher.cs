@@ -237,7 +237,7 @@ namespace DVFlasher
                           "\n\t\t"+"-useMyUBL         \tUse your own provided Flash UBL file instead of the internal UBL." +
                           "\n\t\t"+"                  \tExamples of this usage are shown above." +
                           "\n\t\t"+"-p \"<PortName>\" \tUse <PortName> as the serial port (e.g. COM2, /dev/ttyS1)."+
-                          "\n\t\t"+"-s \"<LoadAddr>\"\tUse <LoadAddr>(hex) as the load address of the application"+
+                          "\n\t\t"+"-l \"<LoadAddr>\"\tUse <LoadAddr>(hex) as the load address of the application"+
                           "\n\t\t"+"-s \"<StartAddr>\"\tUse <StartAddr>(hex) as the entry point of the application");
         }   
  
@@ -275,8 +275,8 @@ namespace DVFlasher
             myCmdParams.UARTUBLExecAddr = 0x0100;
             myCmdParams.UARTUBLUsed = true;
             
-            myCmdParams.NORUBLExecAddr = 0x2a74;
-            myCmdParams.NANDUBLExecAddr = 0x26a8;
+            myCmdParams.NORUBLExecAddr = 0x2aa0;
+            myCmdParams.NANDUBLExecAddr = 0x26ec;
 
             myCmdParams.APPMagicFlag = MagicFlags.UBL_MAGIC_SAFE;
             myCmdParams.APPFileName = null;
