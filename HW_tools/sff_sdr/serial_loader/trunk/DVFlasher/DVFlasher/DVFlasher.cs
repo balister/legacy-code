@@ -237,7 +237,8 @@ namespace DVFlasher
                           "\n\t\t"+"-useMyUBL         \tUse your own provided Flash UBL file instead of the internal UBL." +
                           "\n\t\t"+"                  \tExamples of this usage are shown above." +
                           "\n\t\t"+"-p \"<PortName>\" \tUse <PortName> as the serial port (e.g. COM2, /dev/ttyS1)."+
-                          "\n\t\t"+"-s \"<StartAddr>\"\tUse <StartAddr>(hex) as the point of execution for the system");
+                          "\n\t\t"+"-s \"<LoadAddr>\"\tUse <LoadAddr>(hex) as the load address of the application"+
+                          "\n\t\t"+"-s \"<StartAddr>\"\tUse <StartAddr>(hex) as the entry point of the application");
         }   
  
         /// <summary>
@@ -376,6 +377,17 @@ namespace DVFlasher
                             else
                                 myCmdParams.APPEntryPoint = UInt32.Parse(args[i + 1], NumberStyles.AllowHexSpecifier);
                             Console.WriteLine("Using {0:x8} as the execution address.", myCmdParams.APPEntryPoint);
+                            argsHandled[i+1] = true;
+                            numHandledArgs++;
+                            break;
+                        case "l":
+                            if (args[i + 1].Contains("0x"))
+                                myCmdParams.APPLoadAddr = UInt32.Parse(args[i + 1].Replace("0x", ""), NumberStyles.AllowHexSpecifier);
+                            else if (args[i + 1].Contains("0X"))
+                                myCmdParams.APPLoadAddr = UInt32.Parse(args[i + 1].Replace("0X", ""), NumberStyles.AllowHexSpecifier);
+                            else
+                                myCmdParams.APPLoadAddr = UInt32.Parse(args[i + 1], NumberStyles.AllowHexSpecifier);
+                            Console.WriteLine("Using {0:x8} as the application load address.", myCmdParams.APPLoadAddr);
                             argsHandled[i+1] = true;
                             numHandledArgs++;
                             break;
@@ -806,7 +818,7 @@ namespace DVFlasher
             }
 
             // Open file and setup the binary stream reader
-            fs = File.Open(cmdParams.APPFileName, FileMode.Open, FileAccess.Read);
+            fs = File.Open(filename, FileMode.Open, FileAccess.Read);
 
             // Check to see if the file is an s-record file
             if (isFileSrec(fs))
@@ -1179,8 +1191,8 @@ namespace DVFlasher
                     goto BOOTPSPSEQ2;
 
                 // Wait for third ^^^DONE that indicates booting
-                waitForSequence("   DONE\0", "BOOTPSP\0", MySP,true);
-                                
+                if (!waitForSequence("   DONE\0", "BOOTPSP\0", MySP, true))
+                    throw new Exception("Final DONE not returned.  Command failed on DM644x.");
             }
             catch (ObjectDisposedException e)
             {

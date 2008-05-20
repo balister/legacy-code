@@ -1,7 +1,7 @@
 #############################################################
 # Makefile for TI UBL project.                              #
 #   Generates the Host executable file that is used in      #
-#   in conjunction with the UBL to send and boot over UART. #
+#   conjunction with the UBL to send and boot over UART.    #
 #   This executable is dependent on the UBL binary having   #
 #   been generated first.                                   #
 #############################################################
@@ -10,7 +10,7 @@
 #       v1.10 on 01-Feb-2007
 #		v1.11 on 07-Mar-2007
 #		v1.12 on 14-Mar-2007
-VER=1_12
+VER=1_13
 
 MONOCOMPILE=gmcs
 DOTNETCOMPILE=csc
@@ -31,17 +31,14 @@ DM6441: $(EXECUTABLE)
 DM6441_LV: $(EXECUTABLE)
 
 $(EXECUTABLE): $(SOURCES) $(NORUBLIMAGE) $(NANDUBLIMAGE)
-		@echo "Adjusting binary entry point addresses in the host source code."
-		sed -i 's/\([:space:]*myCmdParams\.NORUBLExecAddr = 0x\)\([0-9a-fA-F]\{4\}\)/\1$(NORUBLSTARTADDR)/' ./DVFlasher.cs
-		sed -i 's/\([:space:]*myCmdParams\.NANDUBLExecAddr = 0x\)\([0-9a-fA-F]\{4\}\)/\1$(NANDUBLSTARTADDR)/' ./DVFlasher.cs
+	@echo "Adjusting binary entry point addresses in the host source code."
+	sed -i 's/\([:space:]*myCmdParams\.NORUBLExecAddr = 0x\)\([0-9a-fA-F]\{4\}\)/\1$(NORUBLSTARTADDR)/' ./DVFlasher.cs
+	sed -i 's/\([:space:]*myCmdParams\.NANDUBLExecAddr = 0x\)\([0-9a-fA-F]\{4\}\)/\1$(NANDUBLSTARTADDR)/' ./DVFlasher.cs
 ifeq ($(shell uname),Linux)
-		@$(MONOCOMPILE) -t:exe -resource:$(NORUBLIMAGE) -resource:$(NANDUBLIMAGE) -out:$(EXECUTABLE) $(SOURCES)
+	@$(MONOCOMPILE) -t:exe -resource:$(NORUBLIMAGE) -resource:$(NANDUBLIMAGE) -out:$(EXECUTABLE) $(SOURCES)
 else
-		@$(DOTNETCOMPILE) /t:exe /resource:$(NORUBLIMAGE) /resource:$(NANDUBLIMAGE) /out:$(EXECUTABLE) $(SOURCES)
+	@$(DOTNETCOMPILE) /t:exe /resource:$(NORUBLIMAGE) /resource:$(NANDUBLIMAGE) /out:$(EXECUTABLE) $(SOURCES)
 endif
 
 clean:
-		-rm -f -v $(EXECUTABLE)
-
-
-
+	-rm -f -v $(EXECUTABLE)
