@@ -59,7 +59,7 @@ Uint32 UARTSendInt(Uint32 value)
 		seq[i] = temp + 48;	
 	}
 	seq[8] = 0;
-	return UARTSendData(seq, FALSE);
+	return UARTSendData((Uint8 *)seq, FALSE);
 }
 
 // Get string length by finding null terminating char
@@ -212,11 +212,11 @@ Uint32 UARTGetHeaderAndData(UART_ACK_HEADER* ackHeader)
 
     UARTSendData((Uint8*) "Magic Number = ",FALSE);
     UARTSendInt(ackHeader->magicNum);
-    UARTSendData((Uint8*) "/r/nApplication start address = ",FALSE);
+    UARTSendData((Uint8*) "\r\nApplication start address = ",FALSE);
     UARTSendInt(ackHeader->appStartAddr);
-    UARTSendData((Uint8*) "/r/nSREC Byte Count = ",FALSE);
+    UARTSendData((Uint8*) "\r\nSREC Byte Count = ",FALSE);
     UARTSendInt(ackHeader->srecByteCnt);
-    UARTSendData((Uint8*) "/r/n",FALSE);
+    UARTSendData((Uint8*) "\r\n",FALSE);
 
     // Verify that the S-record's size is appropriate
     if((ackHeader->srecByteCnt == 0) || (ackHeader->srecByteCnt > MAX_IMAGE_SIZE))

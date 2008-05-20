@@ -260,20 +260,23 @@ Uint32 NAND_WaitForStatus(Uint32 timeout) {
 Uint32 NAND_ECCReadAndRestart (PNAND_INFO pNandInfo)
 {
     Uint32 retval;
-    // Read and mask appropriate (based on CSn space flash is in) ECC regsiter
+    // Read and mask appropriate (based on CSn space flash is in) ECC register
     retval = ((Uint32*)(&(AEMIF->NANDF1ECC)))[pNandInfo->CSOffset] & pNandInfo->ECCMask;
     
     //UARTSendData((Uint8 *)"Value read from ECC register = ", FALSE);
     //UARTSendInt(retval);
     //UARTSendData((Uint8 *)"\r\n", FALSE);
-    UARTSendData((Uint8 *)".", FALSE);
+    //UARTSendData((Uint8 *)".", FALSE);
+    
+    /* If the above debug messages are removed, this delay is necessary. */
+    waitloop(200);
 
-    // Write appropriate bit to start ECC calcualtions 
+    // Write appropriate bit to start ECC calculations
     AEMIF->NANDFCR |= (1<<(8 + (pNandInfo->CSOffset)));   
     return retval;
 }
 
-// Initialze NAND interface and find the details of the NAND used
+// Initialize NAND interface and find the details of the NAND used
 Uint32 NAND_Init()
 {
     Uint32 width, *CSRegs;
@@ -519,7 +522,7 @@ Uint32 NAND_ReadPage(Uint32 block, Uint32 page, Uint8 *dest) {
             return E_FAIL;
         }
     }
-    UARTSendData((Uint8 *)"\r\nDone reading a page from NAND flash\r\n", FALSE);
+    //UARTSendData((Uint8 *)"\r\nDone reading a page from NAND flash\r\n", FALSE);
     
     // Return status check result
 	return NAND_WaitForStatus(NAND_TIMEOUT);
@@ -614,7 +617,7 @@ Uint32 NAND_VerifyPage(Uint32 block, Uint32 page, Uint8* src, Uint8* dest)
 {
     Uint32 i;
 
-    UARTSendData((Uint8 *)"In NAND_VerifyPage\r\n", FALSE);
+    //UARTSendData((Uint8 *)"In NAND_VerifyPage\r\n", FALSE);
 
     if (NAND_ReadPage(block, page, dest) != E_PASS)
         return E_FAIL;
@@ -632,7 +635,11 @@ Uint32 NAND_VerifyPage(Uint32 block, Uint32 page, Uint8* src, Uint8* dest)
         // Check for data read errors
         if (src[i] != dest[i])
         {
-            UARTSendData((Uint8 *)"Data mismatch! Verification failed.\r\n", FALSE);
+            UARTSendData((Uint8 *)"NAND verification failed at block ", FALSE);
+            UARTSendInt(block);
+            UARTSendData((Uint8 *)", page ", FALSE);
+            UARTSendInt(page);
+            UARTSendData((Uint8 *)"\r\n", FALSE);
             return E_FAIL;
         }
     }

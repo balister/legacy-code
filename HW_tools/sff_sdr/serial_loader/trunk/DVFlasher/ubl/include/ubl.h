@@ -21,7 +21,7 @@
 #include "tistdtypes.h"
 
 //UBL version number
-#define UBL_VERSION_STRING "1.11"
+#define UBL_VERSION_STRING "1.12"
 #ifdef UBL_NAND
 #define UBL_FLASH_TYPE "NAND"
 #else
@@ -61,7 +61,7 @@
 
 /* Set details of RAM */
 #define RAM_START_ADDR		(0x80000000)
-#define RAM_END_ADDR		(0x83FFFFFF)
+#define RAM_END_ADDR		(0x87FFFFFF) /* SFFSDR has 128 Mb of DDR-II */
 
 typedef struct {
 	Uint32 magicNum;	/* Expected magic number */

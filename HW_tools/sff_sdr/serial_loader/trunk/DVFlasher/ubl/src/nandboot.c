@@ -142,14 +142,14 @@ NAND_retry:
 					   (Uint32 *) &entryPoint2,
 		               (Uint32 *) &temp ) != E_PASS)
 		{
-		    UARTSendData("S-record decode failure.", FALSE);
+		    UARTSendData((Uint8 *)"S-record decode failure.", FALSE);
 			return E_FAIL;
 		}
 		
 		if (gEntryPoint != entryPoint2)
 		{
-			UARTSendData("WARNING: S-record entrypoint does not match header entrypoint.\r\n", FALSE);
-			UARTSendData("WARNING: Using header entrypoint - results may be unexpected.\r\n", FALSE);
+			UARTSendData((Uint8 *)"WARNING: S-record entrypoint does not match header entrypoint.\r\n", FALSE);
+			UARTSendData((Uint8 *)"WARNING: Using header entrypoint - results may be unexpected.\r\n", FALSE);
 		}
 	}
 	

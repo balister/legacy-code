@@ -303,15 +303,15 @@ Uint32 NOR_Init()
     }
     else
     {
-        UARTSendData("CFI query failed.\r\n", FALSE);
+        UARTSendData((Uint8 *)"CFI query failed.\r\n", FALSE);
         return E_FAIL;
     }
     
     // Setup function pointers
     
-    UARTSendData("NOR Initialization:\r\n", FALSE);
+    UARTSendData((Uint8 *)"NOR Initialization:\r\n", FALSE);
     
-    UARTSendData("\tCommand Set: ", FALSE);    
+    UARTSendData((Uint8 *)"\tCommand Set: ", FALSE);    
     switch (gNorInfo.commandSet)
     {
         case AMD_BASIC_CMDSET:
@@ -320,7 +320,7 @@ Uint32 NOR_Init()
             Flash_BufferWrite    = &AMD_BufferWrite;
             Flash_Write          = &AMD_Write;
             Flash_ID             = &AMD_ID;
-            UARTSendData("AMD\r\n", FALSE);
+            UARTSendData((Uint8 *)"AMD\r\n", FALSE);
             break;
         case INTEL_BASIC_CMDSET:
         case INTEL_EXT_CMDSET:
@@ -328,52 +328,52 @@ Uint32 NOR_Init()
             Flash_BufferWrite    = &Intel_BufferWrite;
             Flash_Write          = &Intel_Write;
             Flash_ID             = &Intel_ID;
-            UARTSendData("Intel\r\n", FALSE);
+            UARTSendData((Uint8 *)"Intel\r\n", FALSE);
             break;
         default:
             Flash_Write          = &Unsupported_Write;
             Flash_BufferWrite    = &Unsupported_BufferWrite;
             Flash_Erase          = &Unsupported_Erase;
             Flash_ID             = &Unsupported_ID;
-            UARTSendData("Unknown\r\n", FALSE);
+            UARTSendData((Uint8 *)"Unknown\r\n", FALSE);
             break;
     }
     
     if ( (*Flash_ID)(gNorInfo.flashBase) != E_PASS)
     {
-        UARTSendData("NOR ID failed.\r\n", FALSE);
+        UARTSendData((Uint8 *)"NOR ID failed.\r\n", FALSE);
         return E_FAIL;
     }
         
-    UARTSendData("\tManufacturer: ", FALSE);
+    UARTSendData((Uint8 *)"\tManufacturer: ", FALSE);
     switch(gNorInfo.manfID)
     {
         case AMD:
-            UARTSendData("AMD", FALSE);
+            UARTSendData((Uint8 *)"AMD", FALSE);
             break;
         case FUJITSU:
-            UARTSendData("FUJITSU", FALSE);
+            UARTSendData((Uint8 *)"FUJITSU", FALSE);
             break;
         case INTEL:
-            UARTSendData("INTEL", FALSE);
+            UARTSendData((Uint8 *)"INTEL", FALSE);
             break;
         case MICRON:
-            UARTSendData("MICRON", FALSE);
+            UARTSendData((Uint8 *)"MICRON", FALSE);
             break;
         case SAMSUNG:
-            UARTSendData("SAMSUNG", FALSE);
+            UARTSendData((Uint8 *)"SAMSUNG", FALSE);
             break;
         case SHARP:
-            UARTSendData("SHARP", FALSE);
+            UARTSendData((Uint8 *)"SHARP", FALSE);
             break;
         default:
-            UARTSendData("Unknown", FALSE);
+            UARTSendData((Uint8 *)"Unknown", FALSE);
             break;
     }
-    UARTSendData("\r\n", FALSE);
-    UARTSendData("\tSize (in bytes): 0x", FALSE);
+    UARTSendData((Uint8 *)"\r\n", FALSE);
+    UARTSendData((Uint8 *)"\tSize (in bytes): 0x", FALSE);
     UARTSendInt( gNorInfo.flashSize );
-    UARTSendData("\r\n", FALSE);
+    UARTSendData((Uint8 *)"\r\n", FALSE);
     
     return E_PASS;    
 }
@@ -766,7 +766,7 @@ Uint32 AMD_Write( Uint32 address, VUint32 data )
 			{
 				if ( (flash_read_data(address, 0 ) & (BIT7 | BIT15) ) != (data & (BIT7 | BIT15) ) )
 				{
-				    UARTSendData("Timeout ocurred.\r\n",FALSE);
+				    UARTSendData((Uint8 *)"Timeout ocurred.\r\n",FALSE);
 					retval = E_FAIL;
 				}
 			    break;				
@@ -831,7 +831,7 @@ Uint32 AMD_BufferWrite(Uint32 address, VUint8 data[], Uint32 numBytes )
 			{
 				if( (flash_read_data(address, 0 ) & (BIT7 | BIT15)) != (data_temp & (BIT7 | BIT15) ) )
 				{
-				    UARTSendData("Timeout ocurred.\r\n",FALSE);
+				    UARTSendData((Uint8 *)"Timeout ocurred.\r\n",FALSE);
 					retval = E_FAIL;
 				}
 				break;
@@ -841,7 +841,7 @@ Uint32 AMD_BufferWrite(Uint32 address, VUint8 data[], Uint32 numBytes )
 			{
 				if( (flash_read_data(address, 0 ) & (BIT7 | BIT15)) != (data_temp & (BIT7 | BIT15) ) )
 				{
-				    UARTSendData("Abort ocurred.\r\n",FALSE);
+				    UARTSendData((Uint8 *)"Abort ocurred.\r\n",FALSE);
 					retval = E_FAIL;
 					AMD_Write_Buf_Abort_Reset_Flash ();
 				}
@@ -921,9 +921,9 @@ Uint32 NOR_Erase(VUint32 start_address, VUint32 size)
 		//Increment to the next block
 	    if ( (*Flash_Erase)(blockAddr) != E_PASS)
 	    {
-	        UARTSendData("Erase failure at block address 0x",FALSE);
+	        UARTSendData((Uint8 *)"Erase failure at block address 0x",FALSE);
 	        UARTSendInt(blockAddr);
-	        UARTSendData("\r\n", FALSE);
+	        UARTSendData((Uint8 *)"\r\n", FALSE);
 	        return E_FAIL;
 	    }
 	    addr = blockAddr + blockSize;
@@ -966,7 +966,7 @@ Uint32 NOR_WriteBytes( Uint32 writeAddress,
 		{
 			if ((*Flash_Write)(writeAddress, flash_read_data(readAddress,0) ) != E_PASS)
 			{
-			    UARTSendData("\r\nNormal Write Failed.\r\n", FALSE);
+			    UARTSendData((Uint8 *)"\r\nNormal Write Failed.\r\n", FALSE);
 			    retval = E_FAIL;
 			}
 			else
@@ -992,7 +992,7 @@ Uint32 NOR_WriteBytes( Uint32 writeAddress,
 				{
                     if ((*Flash_Write)(writeAddress, flash_read_data(readAddress,0) ) != E_PASS)
 					{
-						UARTSendData("\r\nNormal write also failed\r\n", FALSE);
+						UARTSendData((Uint8 *)"\r\nNormal write also failed\r\n", FALSE);
 						retval = E_FAIL;
 						break;
 					}

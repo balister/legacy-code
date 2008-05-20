@@ -201,7 +201,7 @@ UART_tryAgain:
 			// Initialize the NAND Flash
 			if (NAND_Init() != E_PASS)
 			{
-			    UARTSendData("NAND_Init() failed!", FALSE);
+			    UARTSendData((Uint8 *)"NAND_Init() failed!", FALSE);
 			    goto UART_tryAgain;
 			}   
 
@@ -289,7 +289,7 @@ UART_tryAgain:
 			// Initialize the NAND Flash
 			if (NAND_Init() != E_PASS)
 			{
-			    UARTSendData("NAND_Init() failed!", FALSE);
+			    UARTSendData((Uint8 *)"NAND_Init() failed!", FALSE);
 			    goto UART_tryAgain;
 			}
 

@@ -96,7 +96,7 @@ void boot()
     // Jump to entry point
 	APPEntry = (void*) gEntryPoint;
     UARTSendData((Uint8 *) "About to jump to: ",FALSE);
-    UARTSendInt(APPEntry);
+    UARTSendInt((Uint32)APPEntry);
     UARTSendData((Uint8 *) "\n\r",FALSE);
 
     (*APPEntry)();	
@@ -184,7 +184,8 @@ UARTBOOT:	UART_Boot();
 	}
 		
 	UARTSendData((Uint8*)"   DONE", TRUE);
-	
+        UARTSendData((Uint8 *) "\r\n", FALSE);
+
 	waitloop(10000);
 
 	// Disabling UART timeout timer
