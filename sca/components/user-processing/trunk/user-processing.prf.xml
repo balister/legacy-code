@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "../dtd/properties.dtd">
+<!--Created with OSSIE WaveDev Beta Version 0.6.0b-->
+<!--Powered by Python-->
+<properties>
+    <simple type="string" id="DCE:389ecccd-7e45-4d9b-85b3-0d4baac1f437" name="PlaceHolder" mode="readonly">
+        <description>Provide a template for adding properties</description> 
+        <value>foo</value> 
+        <kind kindtype="configure"/>
+    </simple>
+</properties>

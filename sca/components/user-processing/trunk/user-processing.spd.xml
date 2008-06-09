@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE softpkg SYSTEM "../dtd/softpkg.dtd">
+<softpkg type="sca_compliant" name="user-processing" id="DCE:3de46f25-a5b2-4530-9060-5521b411fa38">
+    <title>User processing component</title>
+    <description>Provide a skeleton component for people needing a place to do signal processing, with creating new components and waveforms</description>
+    <author>
+        <name>Philip Balister</name> 
+        <company>OpenSDR</company> 
+        <webpage>http://www.opensdr.com</webpage> 
+    </author>
+    <propertyfile type="PRF">
+        <localfile name="user-processing.prf.xml"/>
+    </propertyfile>
+    <descriptor>
+        <localfile name="user-processing.scd.xml"/>
+    </descriptor>
+    <implementation id="DCE:f059d7fb-4341-4780-a497-f7f6938b9cf1" aepcompliance="aep_compliant">
+        <description>Default implementation description</description> 
+        <code type="Executable">
+            <localfile name="/bin/user-processing"/>
+        </code>
+        <processor name="x86"/>
+    </implementation>
+</softpkg>
