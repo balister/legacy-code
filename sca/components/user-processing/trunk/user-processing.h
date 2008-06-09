@@ -37,14 +37,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 void process_data(void *data);
 
-class user-processing_i : public virtual Resource_impl
+class user_processing_i : public virtual Resource_impl
 {
 
     public:
-        user-processing_i(const char *uuid, omni_condition *sem);
-        ~user-processing_i(void);
+        user_processing_i(const char *uuid, omni_condition *sem);
+        ~user_processing_i(void);
 
-	static void run_process_data(void *data) { ((user-processing_i *)data)->process_data(); };
+	static void run_process_data(void *data) { ((user_processing_i *)data)->process_data(); };
 
         void start() throw (CF::Resource::StartError, CORBA::SystemException);
         void stop() throw (CF::Resource::StopError, CORBA::SystemException);
@@ -56,10 +56,13 @@ class user-processing_i : public virtual Resource_impl
         void initialize() throw (CF::LifeCycle::InitializeError, CORBA::SystemException);
         void configure(const CF::Properties&) throw (CORBA::SystemException, CF::PropertySet::InvalidConfiguration, CF::PropertySet::PartialConfiguration);
 
+        void query (CF::Properties & configProperties) throw (CORBA::SystemException, CF::UnknownProperties);
+    
+        void runTest (CORBA::ULong _number, CF::Properties & _props) throw (CORBA::SystemException, CF::TestableObject::UnknownTest, CF::UnknownProperties);
 
     private:
-        user-processing_i();
-        user-processing_i(user-processing_i&);
+        user_processing_i();
+        user_processing_i(user_processing_i&);
    
 	void process_data();
 

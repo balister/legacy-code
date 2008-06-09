@@ -20,10 +20,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 ****************************************************************************/
 
+#include <iostream>
+
+#include <math.h>
 
 #include "user-processing.h"
+#include "ossie/debug.h"
 
-user-processing_i::user-processing_i(const char *uuid, omni_condition *condition) : Resource_impl(uuid), component_running(condition) 
+user_processing_i::user_processing_i(const char *uuid, omni_condition *condition) : Resource_impl(uuid), component_running(condition) 
 {
     dataIn_0 = new standardInterfaces_i::complexShort_p("DataIn");
 
@@ -33,14 +37,14 @@ user-processing_i::user-processing_i(const char *uuid, omni_condition *condition
 
 }
 
-user-processing_i::~user-processing_i(void)
+user_processing_i::~user_processing_i(void)
 {   
     delete dataIn_0;
 }
 
-CORBA::Object_ptr user-processing_i::getPort( const char* portName ) throw (CORBA::SystemException, CF::PortSupplier::UnknownPort)
+CORBA::Object_ptr user_processing_i::getPort( const char* portName ) throw (CORBA::SystemException, CF::PortSupplier::UnknownPort)
 {
-    DEBUG(3, user-processing, "getPort called with : " << portName);
+    DEBUG(3, user_processing, "getPort called with : " << portName);
     
     CORBA::Object_var p;
 
@@ -53,44 +57,52 @@ CORBA::Object_ptr user-processing_i::getPort( const char* portName ) throw (CORB
     throw CF::PortSupplier::UnknownPort();
 }
 
-void user-processing_i::start() throw (CORBA::SystemException, CF::Resource::StartError)
+void user_processing_i::start() throw (CORBA::SystemException, CF::Resource::StartError)
 {
-    DEBUG(3, user-processing, "Start called");
+    DEBUG(3, user_processing, "Start called");
 }
 
-void user-processing_i::stop() throw (CORBA::SystemException, CF::Resource::StopError) 
+void user_processing_i::stop() throw (CORBA::SystemException, CF::Resource::StopError) 
 {  
-    DEBUG(3, user-processing, "Stop called");
+    DEBUG(3, user_processing, "Stop called");
 }
 
-void user-processing_i::releaseObject() throw (CORBA::SystemException, CF::LifeCycle::ReleaseError)
+void user_processing_i::releaseObject() throw (CORBA::SystemException, CF::LifeCycle::ReleaseError)
 {
-    DEBUG(3, user-processing, "releaseObject called");
+    DEBUG(3, user_processing, "releaseObject called");
     
     component_running->signal();
 }
 
-void user-processing_i::initialize() throw (CF::LifeCycle::InitializeError, CORBA::SystemException)
+void user_processing_i::initialize() throw (CF::LifeCycle::InitializeError, CORBA::SystemException)
 {
-    DEBUG(3, user-processing, "initialize called");
+    DEBUG(3, user_processing, "initialize called");
 }
 
-void user-processing_i::configure(const CF::Properties& props) throw (CORBA::SystemException, CF::PropertySet::InvalidConfiguration, CF::PropertySet::PartialConfiguration)
+void user_processing_i::configure(const CF::Properties& props) throw (CORBA::SystemException, CF::PropertySet::InvalidConfiguration, CF::PropertySet::PartialConfiguration)
 {
-    DEBUG(3, user-processing, "configure called");
+    DEBUG(3, user_processing, "configure called");
     
-    std::cout << "props length : " << props.length() << std::endl;
+    DEBUG(4, user_processing, "props length : " << props.length());
 
     for (unsigned int i = 0; i <props.length(); i++)
     {
-        DEBUG(4, user-processing, "Property id : " << props[i].id);
+        DEBUG(4, user_processing, "Property id : " << props[i].id);
 
     }
 }
 
-void user-processing_i::process_data()
+void user_processing_i::query (CF::Properties & configProperties) throw (CORBA::SystemException, CF::UnknownProperties)
 {
-    DEBUG(3, user-processing, "process_data thread started");
+}
+
+void user_processing_i::runTest (CORBA::ULong _number, CF::Properties & _props) throw (CORBA::SystemException, CF::TestableObject::UnknownTest, CF::UnknownProperties)
+{
+}
+
+void user_processing_i::process_data()
+{
+    DEBUG(3, user_processing, "process_data thread started");
 
     PortTypes::ShortSequence *I_in(NULL), *Q_in(NULL);
     unsigned int len(0);
@@ -116,4 +128,3 @@ void user-processing_i::process_data()
     }
 }
 
-    

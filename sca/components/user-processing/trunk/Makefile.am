@@ -2,13 +2,12 @@ AM_CXXFLAGS = -Wall
 
 ossieName = user-processing
 
-bin_PROGRAMS = $(ossieName)
+bin_PROGRAMS = user-processing
 
-bindir = $(prefix)/dom/bin
+user_processing_SOURCES = user-processing.cpp user-processing.h main.cpp
 
-UserProcessing_SOURCES = $(ossieName).cpp $(ossieName).h main.cpp
-
-dist_xml_DATA = $(ossieName).prf.xml $(ossieName).scd.xml \
 xmldir = $(prefix)/dom/xml/$(ossieName)
+bindir = $(prefix)/dom/bin
+dist_xml_DATA = $(ossieName).prf.xml $(ossieName).scd.xml \
 $(ossieName).spd.xml 
 

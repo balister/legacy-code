@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <iostream>
 
 #include "ossie/ossieSupport.h"
+#include "ossie/ossieResource.h"
 #include "ossie/debug.h"
 
 #include "user-processing.h"
@@ -33,11 +34,11 @@ int main(int argc, char* argv[])
 {
     ossieDebugLevel = 3;
 
-    DEBUG(3, user-processing, "Starting component.");
+    DEBUG(3, user_processing, "Starting component.");
 
-    ossieResource<user-processing_i> user-processing(argc, argv);
+    ossieResource<user_processing_i> user_processing(argc, argv);
 
-    user-processing.run();
+    user_processing.run();
 
 
 }
