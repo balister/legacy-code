@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE softwareassembly SYSTEM "../../../xml/dtd/softwareassembly.dtd">
+<!--Created with OSSIE WaveDev Beta Version 0.6.0b-->
+<!--Powered by Python-->
+<softwareassembly name="OSSIE::Log_Data" id="DCE:3ad3ecc7-91b1-45a0-9d0a-656deb30bc64">
+    <componentfiles>
+        <componentfile type="SPD" id="USRP_Ctrl_6e2c23be-c1ea-493d-a6cc-1f4bd0f9896a">
+            <localfile name="../../xml/USRP_Ctrl/USRP_Ctrl.spd.xml"/>
+        </componentfile>
+        <componentfile type="SPD" id="FileOutput_4f935c67-2a6c-44bb-b7ec-05ae36e29d6c">
+            <localfile name="../../xml/FileOutput/FileOutput.spd.xml"/>
+        </componentfile>
+    </componentfiles>
+    <partitioning>
+        <componentplacement>
+            <componentfileref refid="USRP_Ctrl_6e2c23be-c1ea-493d-a6cc-1f4bd0f9896a"/>
+            <componentinstantiation id="DCE:4ed820fd-7d51-48ac-89aa-04958a9f34c4">
+                <usagename>USRP_Ctrl1</usagename> 
+                <componentproperties>
+                    <!--[Component USRP_Ctrl1, Attribute RX_Frequency]--> 
+                    <simpleref refid="DCE:9efa6c44-40d7-468a-a2c2-b6a758eb4fc7" value="2480000000"/>
+                    <!--[Component USRP_Ctrl1, Attribute TX_Frequency]--> 
+                    <simpleref refid="DCE:582c398a-7a9d-430a-87db-de34065cb93b" value="2480000000"/>
+                    <!--[Component USRP_Ctrl1, Attribute RX_Packet_Size]--> 
+                    <simpleref refid="DCE:ad9155d9-0c72-4c1f-b248-2e19c91cc81f" value="1024"/>
+                    <!--[Component USRP_Ctrl1, Attribute RX_Gain]--> 
+                    <simpleref refid="DCE:9608e597-b45b-4844-a100-877f2b5b1e66" value="20"/>
+                    <!--[Component USRP_Ctrl1, Attribute RX_Gain_max]--> 
+                    <simpleref refid="DCE:fc04c842-ef65-4758-9f10-f53baae689de" value="20"/>
+                </componentproperties>
+                <findcomponent>
+                    <namingservice name="DomainName1/USRP_Ctrl1"/>
+                </findcomponent>
+            </componentinstantiation>
+        </componentplacement>
+        <componentplacement>
+            <componentfileref refid="FileOutput_4f935c67-2a6c-44bb-b7ec-05ae36e29d6c"/>
+            <componentinstantiation id="DCE:fff0b18c-8215-4f6b-bb5f-d9a130d3969f">
+                <usagename>FileOutput1</usagename> 
+                <componentproperties>
+                    <!--[Component FileOutput1, Attribute FileName]--> 
+                    <simpleref refid="DCE:c2654772-ac2c-42be-8f0b-d6c7a4b0fa49" value="BPSK"/>
+                    <!--[Component FileOutput1, Attribute NumberFiles]--> 
+                    <simpleref refid="DCE:773dbb56-df04-4238-951d-5bd8611d63c2" value="5"/>
+                    <!--[Component FileOutput1, Attribute TriggerThreshold]--> 
+                    <simpleref refid="DCE:bb262bb3-6e91-4756-894f-45d1e8122365" value="31"/>
+                </componentproperties>
+                <findcomponent>
+                    <namingservice name="DomainName1/FileOutput1"/>
+                </findcomponent>
+            </componentinstantiation>
+        </componentplacement>
+    </partitioning>
+    <assemblycontroller>
+        <componentinstantiationref refid="DCE:4ed820fd-7d51-48ac-89aa-04958a9f34c4"/>
+    </assemblycontroller>
+    <connections>
+        <connectinterface id="DCE:33180df2-9110-40cb-9d28-44d0f62cf783">
+            <usesport>
+                <usesidentifier>USRP_RX_Ctrl</usesidentifier> 
+                <findby>
+                    <namingservice name="DomainName1/USRP_Ctrl1"/>
+                </findby>
+            </usesport>
+            <findby>
+                <namingservice name="DomainName1/RX_Control"/>
+            </findby>
+        </connectinterface>
+        <connectinterface id="DCE:e874eb20-0662-482e-896a-a67eb76bf717">
+            <usesport>
+                <usesidentifier>RX_Data_1</usesidentifier> 
+                <findby>
+                    <namingservice name="DomainName1/USRP1"/>
+                </findby>
+            </usesport>
+            <providesport>
+                <providesidentifier>DataIn</providesidentifier> 
+                <findby>
+                    <namingservice name="DomainName1/FileOutput1"/>
+                </findby>
+            </providesport>
+        </connectinterface>
+    </connections>
+</softwareassembly>
