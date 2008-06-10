@@ -121,8 +121,9 @@ void user_processing_i::process_data()
 	    else
 		energy += abs((*Q_in)[i]);
 	}
-	energy = 10*log10(energy/len);
+//	energy = 10*log10(energy/len);
 
+        DEBUG(1, user-processing, "Packet energy = " << energy);
 
         dataIn_0->bufferEmptied();
     }
