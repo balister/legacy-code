@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "../dtd/properties.dtd">
+<!--Created with OSSIE WaveDev Beta Version 0.5.0b-->
+<!--Powered by Python-->
+<properties>
+    <simple type="float" id="DCE:3efc3930-2739-40b4-8c02-ecfb1b0da9ee" name="rx_rreq" mode="readwrite">
+        <description>Receiver Frequency</description> 
+        <value>0</value> 
+        <kind kindtype="configure"/>
+    </simple>
+    <simple type="float" id="DCE:6a2d6952-ca11-4787-afce-87a89b882b7b" name="tx_freq" mode="readwrite">
+        <description>Transmitter Frequency</description> 
+        <value>0</value> 
+        <kind kindtype="configure"/>
+    </simple>
+    <simple type="short" id="DCE:9ca12c0e-ba65-40cf-9ef3-6e7ac671ab5d" name="tx_interp" mode="readonly">
+        <description>Transmitter Interpolation Factor</description> 
+        <value>512</value> 
+        <kind kindtype="configure"/>
+    </simple>
+    <simple type="short" id="DCE:92ec2b80-8040-47c7-a1d8-4c9caa4a4ed2" name="rx_decim" mode="readwrite">
+        <description>Receiver Decimation Factor</description> 
+        <value>256</value> 
+        <kind kindtype="configure"/>
+    </simple>
+    <simple type="ulong" id="DCE:93324adf-14f6-4406-ba92-a3650089857f" name="rx_size" mode="readonly">
+        <description>Receiver Data Packet Size</description> 
+        <value>8192</value> 
+        <kind kindtype="configure"/>
+    </simple>
+    <simple type="float" id="DCE:99d586b6-7764-4dc7-83fa-72270d0f1e1b" name="rx_gain" mode="readwrite">
+        <description>Receiver Gain</description>  
+        <value>0</value>   
+        <kind kindtype="configure"/> 
+    </simple>
+    <simple type="short" id="DCE:2d9c5ee4-a6f3-4ab9-834b-2b5c95818e53" name="rx_gain_max" mode="readwrite">
+        <description>If 1 sets the RX Gain to max. If set to 1, the Receiver Gain property is ignored</description>  
+        <value>1</value>   
+        <kind kindtype="configure"/> 
+    </simple>
+    <simple type="short" id="DCE:0a9b8c8c-f130-4a8f-9ef8-bba023128a4b" name="tx_start" mode="readonly">
+        <description>Start the transmitter when the component starts</description> 
+        <value>0</value> 
+        <kind kindtype="configure"/>
+    </simple>
+    <simple type="short" id="DCE:fd42344f-4d87-465b-9e6f-e1d7ae48afd6" name="rx_start" mode="readonly">
+        <description>Start the receiver when the component starts</description> 
+        <value>1</value> 
+        <kind kindtype="configure"/>
+    </simple>
+</properties>
+

@@ -1,0 +1,81 @@
+/****************************************************************************
+
+Copyright 2007 Virginia Polytechnic Institute and State University
+
+This file is part of the OSSIE USRP Commander.
+
+OSSIE USRP Commander is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+OSSIE USRP Commander is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with OSSIE USRP Commander; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+****************************************************************************/
+
+/*! \mainpage USRP Commander
+
+\section description Basic description
+The USRP Commander components creates a simple way to interface with the USRP
+device for transmitting and receiving signals over the air.
+
+\section properties Properties
+
+\subsection prop_rx_freq RX frequency
+Sets the receiver center frequency
+  - DCE:3efc3930-2739-40b4-8c02-ecfb1b0da9ee
+
+\subsection prop_tx_freq TX frequency
+Sets the transmitter center frequency
+  - DCE:6a2d6952-ca11-4787-afce-87a89b882b7b
+
+\subsection prop_tx_interp TX interpolation
+Sets the transmit interpolation factor in the FPGA
+  - DCE:9ca12c0e-ba65-40cf-9ef3-6e7ac671ab5d
+
+\subsection prop_rx_decim RX decimation
+Sets the receiver decimation factor in the FPGA
+  - DCE:92ec2b80-8040-47c7-a1d8-4c9caa4a4ed2
+
+\subsection prop_rx_size RX packet size
+Sets the number of samples to hold before pushing
+  - DCE:93324adf-14f6-4406-ba92-a3650089857f
+
+\subsection prop_rx_gain RX gain
+Sets the receiver gain
+  - DCE:99d586b6-7764-4dc7-83fa-72270d0f1e1b
+
+\subsection prop_rx_gain_max RX max gain
+If this value is 1, \ref prop_rx_gain will be set to maximum and \ref
+prop_rx_gain will be ingored
+  - DCE:2d9c5ee4-a6f3-4ab9-834b-2b5c95818e53
+
+\subsection prop_tx_start TX start
+If true (1) the USRP Commander will start the transmitter process in the USRP
+device
+  - DCE:0a9b8c8c-f130-4a8f-9ef8-bba023128a4b
+
+\subsection prop_rx_start RX start
+If true (1) the USRP Commander will start the receiver process in the USRP
+device
+  - DCE:fd42344f-4d87-465b-9e6f-e1d7ae48afd6
+
+\section interfaces Interfaces
+
+\section dependencies Software build dependencies
+  - Standard Interfaces
+
+\section algorithm Detailed Description of Algorithm
+
+\section status Status and history
+
+\section references References
+
+*/

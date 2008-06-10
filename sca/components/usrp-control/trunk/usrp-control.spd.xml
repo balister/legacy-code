@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE softpkg SYSTEM "../dtd/softpkg.dtd">
+<!--Created with OSSIE WaveDev Beta Version 0.6.0b-->
+<!--Powered by Python-->
+<softpkg type="sca_compliant" name="USRP Control" id="DCE:20f9d65a-7f38-48ce-87cf-d106b34be02a">
+    <title>USRP commander</title>
+    <description>Controller for the USRP device, both transmit and receive</description>
+    <author>
+        <name>Philip Balister</name> 
+        <company>OpenSDR</company> 
+        <webpage>http://www.opensdr.com</webpage> 
+    </author>
+    <propertyfile type="PRF">
+        <localfile name="usrp-control.prf.xml"/>
+    </propertyfile>
+    <descriptor>
+        <localfile name="usrp-control.scd.xml"/>
+    </descriptor>
+    <implementation id="DCE:00e84b76-1c47-4b87-8ebc-50459c8a5c43" aepcompliance="aep_compliant">
+        <description>Default implementation description</description> 
+        <code type="Executable">
+            <localfile name="/bin/USRP_Commander"/>
+        </code>
+        <processor name="x86"/>
+    </implementation>
+</softpkg>
