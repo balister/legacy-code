@@ -5,10 +5,10 @@
 <softwareassembly name="OSSIE::Log_Data" id="DCE:3ad3ecc7-91b1-45a0-9d0a-656deb30bc64">
     <componentfiles>
         <componentfile type="SPD" id="USRP_Ctrl_6e2c23be-c1ea-493d-a6cc-1f4bd0f9896a">
-            <localfile name="../../xml/USRP_Ctrl/USRP_Ctrl.spd.xml"/>
+            <localfile name="/xml/USRP_Ctrl/USRP_Ctrl.spd.xml"/>
         </componentfile>
         <componentfile type="SPD" id="FileOutput_4f935c67-2a6c-44bb-b7ec-05ae36e29d6c">
-            <localfile name="../../xml/FileOutput/FileOutput.spd.xml"/>
+            <localfile name="/xml/FileOutput/FileOutput.spd.xml"/>
         </componentfile>
     </componentfiles>
     <partitioning>
