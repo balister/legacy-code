@@ -41,7 +41,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 class usrp_control_i : public virtual Resource_impl
 {
   public:
-    usrp-control_i(const char *uuid, omni_condition *sem);
+    usrp_control_i(const char *uuid, omni_condition *sem);
 
     void start() throw (CF::Resource::StartError, CORBA::SystemException);
     void stop() throw (CF::Resource::StopError, CORBA::SystemException);
@@ -59,6 +59,9 @@ class usrp_control_i : public virtual Resource_impl
         throw (CORBA::SystemException,
                CF::PropertySet::InvalidConfiguration,
                CF::PropertySet::PartialConfiguration);
+    void query (CF::Properties & configProperties) throw (CORBA::SystemException, CF::UnknownProperties);
+    
+    void runTest (CORBA::ULong _number, CF::Properties & _props) throw (CORBA::SystemException, CF::TestableObject::UnknownTest, CF::UnknownProperties);
 
   private:
     usrp_control_i();

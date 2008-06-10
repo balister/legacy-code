@@ -1,21 +1,22 @@
 /****************************************************************************
 
 Copyright 2007 Virginia Polytechnic Institute and State University
+Copyright 2008 Philip Balister, philip@opensdr.com
 
-This file is part of the OSSIE USRP_Commander.
+This file is part of the usrp-control.
 
-OSSIE USRP_Commander is free software; you can redistribute it and/or modify
+usrp-control is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 2 of the License, or
 (at your option) any later version.
 
-OSSIE USRP_Commander is distributed in the hope that it will be useful,
+usrp-control is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with OSSIE USRP_Commander; if not, write to the Free Software
+along with usrp-control; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 ****************************************************************************/
@@ -27,12 +28,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "ossie/cf.h"
 #include "ossie/PortTypes.h"
 #include "ossie/debug.h"
-
-#include "USRP_Commander.h"
-
 #include "ossie/Resource_impl.h"
 
-USRP_Commander_i::USRP_Commander_i(const char *uuid, omni_condition *condition) :
+#include "usrp-control.h"
+
+usrp_control_i::usrp_control_i(const char *uuid, omni_condition *condition) :
     Resource_impl(uuid),
     component_running(condition),
     tx_interp(0),
@@ -52,10 +52,10 @@ USRP_Commander_i::USRP_Commander_i(const char *uuid, omni_condition *condition) 
     data_control = new standardInterfaces_i::Resource_u("Data_Control");
 }
 
-CORBA::Object_ptr USRP_Commander_i::getPort( const char* portName )
+CORBA::Object_ptr usrp_control_i::getPort( const char* portName )
     throw (CORBA::SystemException, CF::PortSupplier::UnknownPort)
 {
-    DEBUG(3, USRP_Commander, "getPort called with : " << portName)
+    DEBUG(3, usrp-control, "getPort called with : " << portName)
     
     CORBA::Object_var p;
 
@@ -74,16 +74,16 @@ CORBA::Object_ptr USRP_Commander_i::getPort( const char* portName )
     if (!CORBA::is_nil(p))
         return p._retn();
 
-    std::cerr << "USRP Commander::getPort() unknown port: " << portName << std::endl;
+    DEBUG(3, usrp-control, "getPort() unknown port: " << portName);
     throw CF::PortSupplier::UnknownPort();
 
     // This will never happen, but gcc complains if nothing is returned at this point
     return p;
 }
 
-void USRP_Commander_i::start() throw (CORBA::SystemException, CF::Resource::StartError)
+void usrp_control_i::start() throw (CORBA::SystemException, CF::Resource::StartError)
 {
-    DEBUG(3, USRP_Commander, "start called on USRP_Commander")
+    DEBUG(3, usrp-control, "start called")
 
     // Call start on remote resources
     CF::Resource_var r = data_control->getRef();
@@ -147,9 +147,9 @@ void USRP_Commander_i::start() throw (CORBA::SystemException, CF::Resource::Star
 
 }
 
-void USRP_Commander_i::stop() throw (CORBA::SystemException, CF::Resource::StopError) 
+void usrp_control_i::stop() throw (CORBA::SystemException, CF::Resource::StopError) 
 {  
-    DEBUG(3, USRP_Commander, "stop called on USRP_Commander")
+    DEBUG(3, usrp-control, "stop called")
 
     // Call stop on remote resources
     CF::Resource_var r = data_control->getRef();
@@ -160,16 +160,16 @@ void USRP_Commander_i::stop() throw (CORBA::SystemException, CF::Resource::StopE
     TXControl->stop(DEFAULT_USRP_TX_CHANNEL);
 }
 
-void USRP_Commander_i::releaseObject() throw (CORBA::SystemException, CF::LifeCycle::ReleaseError)
+void usrp_control_i::releaseObject() throw (CORBA::SystemException, CF::LifeCycle::ReleaseError)
 {
-    DEBUG(3, USRP_Commander, "releaseObject called on USRP_Commander")
+    DEBUG(3, USRP_Commander, "releaseObject called")
     
     component_running->signal();
 }
 
-void USRP_Commander_i::initialize() throw (CF::LifeCycle::InitializeError, CORBA::SystemException)
+void usrp_control_i::initialize() throw (CF::LifeCycle::InitializeError, CORBA::SystemException)
 {
-    DEBUG(3, USRP_Commander, "initialize called on USRP_Commander")
+    DEBUG(3, usrp-control, "initialize called")
     
     // Initialize USRP TX properties
     tx_interp = 256;        // TX interpolation factor
@@ -188,60 +188,60 @@ void USRP_Commander_i::initialize() throw (CF::LifeCycle::InitializeError, CORBA
 
 
 
-void USRP_Commander_i::configure(const CF::Properties& props)
+void usrp_control_i::configure(const CF::Properties& props)
     throw (CORBA::SystemException,
            CF::PropertySet::InvalidConfiguration,
            CF::PropertySet::PartialConfiguration)
 {
-    DEBUG(3, USRP_Commander, "configure called on USRP_Commander")
+    DEBUG(3, usrp-control, "configure called")
     
-    DEBUG(3, USRP_Commander, "props length : " << props.length())
+    DEBUG(3, usrp-control, "props length : " << props.length())
 
     RXControl->set_number_of_channels(1);
 
     for (unsigned int i = 0; i < props.length(); i++) {
-        DEBUG(3, USRP_Commander, "Property id : " << props[i].id)
+        DEBUG(3, usrp-control, "Property id : " << props[i].id)
 
         if (strcmp(props[i].id, "DCE:3efc3930-2739-40b4-8c02-ecfb1b0da9ee") == 0) {
             // RX Frequency
             CORBA::Float F;
             props[i].value >>= F;
-            DEBUG(3, USRP_Commander, "RX Frequency property= " << F)
+            DEBUG(3, usrp-control, "RX Frequency property= " << F)
             rx_freq = F;
             RXControl->set_frequency(DEFAULT_USRP_RX_CHANNEL, rx_freq);
         } else if (strcmp(props[i].id, "DCE:6a2d6952-ca11-4787-afce-87a89b882b7b") == 0) {
             // TX Frequency
             CORBA::Float F;
             props[i].value >>= F;
-            DEBUG(3, USRP_Commander, "TX Frequency property= " << F)
+            DEBUG(3, usrp-control, "TX Frequency property= " << F)
             tx_freq = F;
             TXControl->set_frequency(DEFAULT_USRP_TX_CHANNEL, tx_freq);
         } else if (strcmp(props[i].id, "DCE:9ca12c0e-ba65-40cf-9ef3-6e7ac671ab5d") == 0) {
             // Transmitter Interpolation Factor
             CORBA::Short M;
             props[i].value >>= M;
-            DEBUG(3, USRP_Commander, "TX Interpolation Factor property= " << M)
+            DEBUG(3, usrp-control, "TX Interpolation Factor property= " << M)
             tx_interp = M;
             TXControl->set_interpolation_rate(DEFAULT_USRP_TX_CHANNEL, tx_interp);
         } else if (strcmp(props[i].id, "DCE:92ec2b80-8040-47c7-a1d8-4c9caa4a4ed2") == 0) {
             // RX Decimation factor
             CORBA::Short D;
             props[i].value >>= D;
-            DEBUG(3, USRP_Commander, "RX Decimation Factor property= " << D)
+            DEBUG(3, usrp-control, "RX Decimation Factor property= " << D)
             rx_decim = D;
             RXControl->set_decimation_rate(DEFAULT_USRP_RX_CHANNEL, rx_decim);
         } else if (strcmp(props[i].id, "DCE:93324adf-14f6-4406-ba92-a3650089857f") == 0) {
             // RX Data Packet size
             CORBA::ULong L;
             props[i].value >>= L;
-            DEBUG(3, USRP_Commander, "RX Data Packet size property= " << L)
+            DEBUG(3, usrp-control, "RX Data Packet size property= " << L)
             rx_size = L;
             RXControl->set_data_packet_size(DEFAULT_USRP_RX_CHANNEL, rx_size);
         } else if (strcmp(props[i].id, "DCE:99d586b6-7764-4dc7-83fa-72270d0f1e1b") == 0) {
             //Rx Gain
             CORBA::Float G;
             props[i].value >>= G;
-            DEBUG(3, USRP_Commander, "RX Gain property= " << G)
+            DEBUG(3, usrp-control, "RX Gain property= " << G)
             rx_gain = G;
             RXControl->set_gain(DEFAULT_USRP_RX_CHANNEL, rx_gain);
         } else if (strcmp(props[i].id, "DCE:2d9c5ee4-a6f3-4ab9-834b-2b5c95818e53") == 0) {
@@ -249,15 +249,15 @@ void USRP_Commander_i::configure(const CF::Properties& props)
             ///\todo check gain values, perhaps get rid of this property
             CORBA::Short v;
             props[i].value >>= v;
-            DEBUG(3, USRP_Commander, "RX Gain Max property= " << v)
-            DEBUG(3, USRP_Commander, "  ::::  WARNING: RX Gain Max property ignored!  ::::")
+            DEBUG(3, usrp-control, "RX Gain Max property= " << v)
+            DEBUG(3, usrp-control, "  ::::  WARNING: RX Gain Max property ignored!  ::::")
             rx_gain_max = v;
         } else if (strcmp(props[i].id, "DCE:fd42344f-4d87-465b-9e6f-e1d7ae48afd6") == 0) {
             // rx_start
             CORBA::Short v;
             props[i].value >>= v;
             rx_start = (v==0) ? false : true;
-            DEBUG(3, USRP_Commander, "RX start set  to " << rx_start)
+            DEBUG(3, usrp-control, "RX start set  to " << rx_start)
             //if (rx_start)
             //    RXControl->start(DEFAULT_USRP_RX_CHANNEL);
         } else if (strcmp(props[i].id, "DCE:0a9b8c8c-f130-4a8f-9ef8-bba023128a4b") == 0) {
@@ -265,13 +265,23 @@ void USRP_Commander_i::configure(const CF::Properties& props)
             CORBA::Short v;
             props[i].value >>= v;
             tx_start = (v==0) ? false : true;
-            DEBUG(3, USRP_Commander, "TX Start set to " << tx_start)
+            DEBUG(3, usrp-control, "TX Start set to " << tx_start)
             //if (tx_start)
             //    TXControl->start(DEFAULT_USRP_TX_CHANNEL);
         } else {
-            std::cerr << "ERROR: USRP Commander::configure(), unknown property: " << props[i].id << std::endl;
+            std::cerr << "ERROR: usrp_control::configure(), unknown property: " << props[i].id << std::endl;
             throw CF::PropertySet::InvalidConfiguration();
         }
     }
 
 }
+
+void usrp_control_i::query (CF::Properties & configProperties) throw (CORBA::SystemException, CF::UnknownProperties)
+{
+}
+
+void usrp_control_i::runTest (CORBA::ULong _number, CF::Properties & _props) throw (CORBA::SystemException, CF::TestableObject::UnknownTest, CF::UnknownProperties)
+{
+}
+
+

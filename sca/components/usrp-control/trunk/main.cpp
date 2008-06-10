@@ -35,10 +35,10 @@ int main(int argc, char* argv[])
 
     ossieDebugLevel = 3;
 
-    DEBUG(3, usrp-control, "Starting component.");
+    DEBUG(3, usrp_control, "Starting component.");
 
-    ossieResource<usrp-control_i> usrp-control(argc, argv);
+    ossieResource<usrp_control_i> usrp_control(argc, argv);
 
-    usrp-control.run();
+    usrp_control.run();
 
 }
