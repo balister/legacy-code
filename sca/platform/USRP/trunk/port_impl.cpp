@@ -1,6 +1,7 @@
 /****************************************************************************
 
 Copyright 2005,2006, 2007 Virginia Polytechnic Institute and State University
+Copyright 2008 Philip Balister, philip@opensdr.com
 
 This file is part of the OSSIE USRP Device.
 

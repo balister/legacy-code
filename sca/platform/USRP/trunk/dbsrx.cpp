@@ -99,7 +99,10 @@ dbsrx::dbsrx(usrp_standard_rx *_urx, unsigned int _w):db_base(_urx, _w)
     //u->_write_fpga_reg(40 + slot, 1); //Enable refclk?
     urx->_write_fpga_reg(ref_clkreg, (refclk_divisor() & REFCLK_DIVISOR_MASK) | REFCLK_ENABLE);//0x90
     
-    
+    float gmin, gmax, gstep;
+    get_gain_range(gmin, gmax, gstep);
+    set_gain((gmin+gmax)/2.0);
+ 
 }
 
 //NEED TO FIGURE THIS ONE OUT####################################################
