@@ -14,9 +14,6 @@
         <componentfile type="SPD" id="USRP1_7c322634-e859-11db-8ffa-00123f573a7f">
             <localfile name="/xml/USRP/USRP.spd.xml"/>
         </componentfile>
-        <componentfile type="SPD" id="32d3bc8c-13e2-11dc-be81-00123f63025f">
-            <localfile name="/xml/soundCardCapture/soundCardCapture.spd.xml"/>
-        </componentfile>
         <componentfile type="SPD" id="32555252-13e2-11dc-94ec-00123f63025f">
             <localfile name="/xml/soundCardPlayback/soundCardPlayback.spd.xml"/>
         </componentfile>
@@ -32,12 +29,6 @@
             <componentfileref refid="USRP1_7c322634-e859-11db-8ffa-00123f573a7f"/>
             <componentinstantiation id="DCE:5ba336ee-bbbb-bbbb-bbbb-00123f573a7f">
                 <usagename>USRP1</usagename> 
-            </componentinstantiation>
-        </componentplacement>
-        <componentplacement>
-            <componentfileref refid="32d3bc8c-13e2-11dc-be81-00123f63025f"/>
-            <componentinstantiation id="DCE:459811e2-cccc-cccc-cccc-00123f63025f">
-                <usagename>soundCardCapture1</usagename> 
             </componentinstantiation>
         </componentplacement>
         <componentplacement>
