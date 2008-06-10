@@ -29,7 +29,7 @@
                     <simpleref refid="DCE:fc04c842-ef65-4758-9f10-f53baae689de" value="20"/>
                 </componentproperties>
                 <findcomponent>
-                    <namingservice name="DomainName1/usrp-control1"/>
+                    <namingservice name="usrp-control1"/>
                 </findcomponent>
             </componentinstantiation>
         </componentplacement>
@@ -42,7 +42,7 @@
                     <simpleref refid="DCE:c615ef0d-11fc-4bd1-820d-4088f55cb054" value="foo"/>
                 </componentproperties>
                 <findcomponent>
-                    <namingservice name="DomainName1/user-processing1"/>
+                    <namingservice name="user-processing1"/>
                 </findcomponent>
             </componentinstantiation>
         </componentplacement>
@@ -53,9 +53,9 @@
     <connections>
         <connectinterface id="DCE:e0f47fc4-99e0-497b-937c-8393e497b2e0">
             <usesport>
-                <usesidentifier>USRP_RX_Ctrl</usesidentifier> 
+                <usesidentifier>RX_Control</usesidentifier> 
                 <findby>
-                    <namingservice name="DomainName1/usrp-control1"/>
+                    <namingservice name="usrp-control1"/>
                 </findby>
             </usesport>
             <findby>
@@ -72,7 +72,7 @@
             <providesport>
                 <providesidentifier>DataIn</providesidentifier> 
                 <findby>
-                    <namingservice name="DomainName1/user-processing1"/>
+                    <namingservice name="user-processing1"/>
                 </findby>
             </providesport>
         </connectinterface>
