@@ -1,6 +1,6 @@
 
 ossieName = user-processing
 
-waveformdir = $(prefix)/waveforms/$(ossieName)
+waveformdir = $(prefix)/dom/waveforms
 dist_waveform_DATA = $(ossieName).sad.xml $(ossieName)_DAS.xml
 

@@ -5,12 +5,12 @@
     <application name="Name" id="DCE:438bffd7-cf7d-4f29-b0bc-e66303d25a84"/>
     <deviceassignmentsequence>
         <deviceassignmenttype>
-            <componentid>DCE:4ed820fd-7d51-48ac-89aa-04958a9f34c4</componentid> 
-            <assigndeviceid>DCE:8957fba2-abe2-45c6-b840-859608291db9</assigndeviceid> 
+            <componentid>DCE:f4e663cb-d272-4dee-8c17-0e7e7e59f7e2</componentid> 
+            <assigndeviceid>DCE:5ba336ee-aaaa-aaaa-aaaa-00123f573a7f</assigndeviceid> 
         </deviceassignmenttype>
         <deviceassignmenttype>
-            <componentid>DCE:fff0b18c-8215-4f6b-bb5f-d9a130d3969f</componentid> 
-            <assigndeviceid>DCE:8957fba2-abe2-45c6-b840-859608291db9</assigndeviceid> 
+            <componentid>DCE:01755aaf-6421-4585-b89d-8d1159cedd18</componentid> 
+            <assigndeviceid>DCE:5ba336ee-aaaa-aaaa-aaaa-00123f573a7f</assigndeviceid> 
         </deviceassignmenttype>
     </deviceassignmentsequence>
 </deploymentenforcement>
