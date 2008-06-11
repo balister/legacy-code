@@ -204,7 +204,7 @@ void usrp_control_i::configure(const CF::Properties& props)
             rx_decim = D;
 	    if (rx_decim > 0)
 		RXControl->set_decimation_rate(DEFAULT_USRP_RX_CHANNEL, rx_decim);
-        } else if (strcmp(props[i].id, "DCE:92ec2b80-8040-47c7-a1d8-4c9caa4a4ed2") == 0) {
+        } else if (strcmp(props[i].id, "DCE:58eaebdc-7f4d-416a-8c2f-1e82c93c11ca") == 0) {
             // Number of RX channels
             CORBA::Short nchan;
             props[i].value >>= nchan;
