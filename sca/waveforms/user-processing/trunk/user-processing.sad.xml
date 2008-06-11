@@ -17,16 +17,16 @@
             <componentinstantiation id="DCE:f4e663cb-d272-4dee-8c17-0e7e7e59f7e2">
                 <usagename>usrp-control1</usagename> 
                 <componentproperties>
-                    <!--[Component usrp-control1, Attribute RX_Frequency]--> 
-                    <simpleref refid="DCE:9efa6c44-40d7-468a-a2c2-b6a758eb4fc7" value="2480000000"/>
-                    <!--[Component usrp-control1, Attribute TX_Frequency]--> 
-                    <simpleref refid="DCE:582c398a-7a9d-430a-87db-de34065cb93b" value="2480000000"/>
+                    <!--[Component usrp-control1, Attribute RX_Frequency1]--> 
+                    <simpleref refid="DCE:3efc3930-2739-40b4-8c02-ecfb1b0da9ee" value="2000000000"/>
+                    <!--[Component usrp-control1, Attribute RX_Frequency2]--> 
+                    <simpleref refid="DCE:e07f8d62-3063-4ccd-8a8c-220c4490fc0a" value="2480000000"/>
                     <!--[Component usrp-control1, Attribute RX_Packet_Size]--> 
-                    <simpleref refid="DCE:ad9155d9-0c72-4c1f-b248-2e19c91cc81f" value="1024"/>
-                    <!--[Component usrp-control1, Attribute RX_Gain]--> 
-                    <simpleref refid="DCE:9608e597-b45b-4844-a100-877f2b5b1e66" value="20"/>
-                    <!--[Component usrp-control1, Attribute RX_Gain_max]--> 
-                    <simpleref refid="DCE:fc04c842-ef65-4758-9f10-f53baae689de" value="20"/>
+                    <simpleref refid="DCE:93324adf-14f6-4406-ba92-a3650089857f" value="1024"/>
+                    <!--[Component usrp-control1, Attribute rx_nchan]--> 
+                    <simpleref refid="DCE:58eaebdc-7f4d-416a-8c2f-1e82c93c11ca" value="2"/>
+                    <!--[Component usrp-control1, Attribute RX_Decimation]--> 
+                    <simpleref refid="DCE:92ec2b80-8040-47c7-a1d8-4c9caa4a4ed2" value="256"/>
                 </componentproperties>
                 <findcomponent>
                     <namingservice name="usrp-control1"/>
