@@ -161,8 +161,6 @@ void usrp_control_i::configure(const CF::Properties& props)
     
     DEBUG(3, usrp-control, "props length : " << props.length())
 
-    RXControl->set_number_of_channels(1);
-
     for (unsigned int i = 0; i < props.length(); i++) {
         DEBUG(3, usrp-control, "Property id : " << props[i].id)
 
@@ -206,6 +204,13 @@ void usrp_control_i::configure(const CF::Properties& props)
             rx_decim = D;
 	    if (rx_decim > 0)
 		RXControl->set_decimation_rate(DEFAULT_USRP_RX_CHANNEL, rx_decim);
+        } else if (strcmp(props[i].id, "DCE:92ec2b80-8040-47c7-a1d8-4c9caa4a4ed2") == 0) {
+            // Number of RX channels
+            CORBA::Short nchan;
+            props[i].value >>= nchan;
+            DEBUG(3, usrp-control, "Number of RX channels property= " << nchan)
+	    if (nchan > 0)
+		RXControl->set_number_of_channels(nchan);
         } else if (strcmp(props[i].id, "DCE:93324adf-14f6-4406-ba92-a3650089857f") == 0) {
             // RX Data Packet size
             CORBA::ULong L;

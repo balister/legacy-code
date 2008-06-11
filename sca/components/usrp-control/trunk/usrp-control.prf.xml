@@ -28,6 +28,11 @@
         <value>-1</value> 
         <kind kindtype="configure"/>
     </simple>
+    <simple type="short" id="DCE:58eaebdc-7f4d-416a-8c2f-1e82c93c11ca" name="rx_nchan" mode="readwrite">
+        <description>Number of Receiver Channels</description> 
+        <value>-1</value> 
+        <kind kindtype="configure"/>
+    </simple>
     <simple type="ulong" id="DCE:93324adf-14f6-4406-ba92-a3650089857f" name="rx_size" mode="readonly">
         <description>Receiver Data Packet Size</description> 
         <value>-1</value> 
