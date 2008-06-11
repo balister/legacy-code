@@ -1,6 +1,7 @@
 /****************************************************************************
 
 Copyright 2005, 2006, 2007, 2008 Virginia Polytechnic Institute and State University
+Copyright 2008 Philip Balister, philip@opensdr.com
 
 This file is part of the OSSIE USRP Device.
 
@@ -55,7 +56,7 @@ USRP_i::USRP_i(char *id, char *label, char *profile) :
     rx_packet_count(1024),
     rx_packet_size(1024),
     rx_data_size(2),
-    number_of_channels(1),
+    rx_channels(1),
     complex(true),
     rx_overruns(0),
     rx_active(0),
@@ -591,7 +592,7 @@ void USRP_i::rx_data_process()
 
     ///\todo this assumes USRP is sending shorts, fix to match USRP config
     ///\todo assumes one channel operation
-    unsigned int buf_size = rx_packet_size * number_of_channels * (complex ? 2 : 1);
+    unsigned int buf_size = rx_packet_size * rx_channels * (complex ? 2 : 1);
 
     rx_buffer = new short[buf_size*2];
 

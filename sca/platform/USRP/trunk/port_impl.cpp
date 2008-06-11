@@ -240,6 +240,7 @@ void USRP_RX_Control_i::set_number_of_channels(CORBA::ULong nchan)
 {
     DEBUG(3, USRP, "Setting number of channels to " << nchan)
     omni_mutex_lock l(usrp->rx_control_access);
+    usrp->rx_channels = nchan;
     usrp->usrp_rx->set_nchannels(nchan);
 }
 
