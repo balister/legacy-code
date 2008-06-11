@@ -113,17 +113,15 @@ void user_processing_i::process_data()
         len = I_in->length();
 
 
-	// calculate energy
-	unsigned long energy(0);
-	for (unsigned int i(0); i < len; ++i) {
-	    if (abs((*I_in)[i]) > abs((*Q_in)[i])) 
-		energy += abs((*I_in)[i]);
-	    else
-		energy += abs((*Q_in)[i]);
+	// calculate energy, assume two channels
+	unsigned long energy1(0), energy2(0);
+	for (unsigned int i(0); i < len; i+=2) {
+	    energy1 += sqrt((*I_in)[i]*(*I_in)[i] + (*Q_in)[i]*(*Q_in)[i]);
+	    energy2 += sqrt((*I_in)[i+1]*(*I_in)[i+1] + (*Q_in)[i+1]*(*Q_in)[i+1]);
 	}
 //	energy = 10*log10(energy/len);
 
-        DEBUG(1, user-processing, "Packet energy = " << energy);
+        DEBUG(1, user-processing, "Packet energy 1 = " << energy1 << ", Packet energy 2 = " << energy2);
 
         dataIn_0->bufferEmptied();
     }
