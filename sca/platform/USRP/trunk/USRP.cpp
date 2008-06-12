@@ -616,7 +616,7 @@ void USRP_i::rx_data_process()
 
         for (unsigned int i = 0; i < rx_packet_size * 2; i += 2) {
             if (i < 10)
-                DEBUG(5, USRP, "I - " << rx_buffer[i] << "  Q -  " << rx_buffer[i+1])
+                DEBUG(6, USRP, "I - " << rx_buffer[i] << "  Q -  " << rx_buffer[i+1])
             I[i/2] = (CORBA::Short) rx_buffer[i];
             Q[i/2] = (CORBA::Short) rx_buffer[i+1];
         }

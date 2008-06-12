@@ -40,7 +40,7 @@ int main(int argc, char* argv[])
         exit (-1);
     }
 
-    ossieDebugLevel = 6;
+    ossieDebugLevel = 5;
 
     struct sched_param prio;
 
