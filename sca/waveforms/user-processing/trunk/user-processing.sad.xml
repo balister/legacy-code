@@ -20,7 +20,7 @@
                     <!--[Component usrp-control1, Attribute RX_Frequency1]--> 
                     <simpleref refid="DCE:3efc3930-2739-40b4-8c02-ecfb1b0da9ee" value="2000000000"/>
                     <!--[Component usrp-control1, Attribute RX_Frequency2]--> 
-                    <simpleref refid="DCE:e07f8d62-3063-4ccd-8a8c-220c4490fc0a" value="2480000000"/>
+                    <simpleref refid="DCE:e07f8d62-3063-4ccd-8a8c-220c4490fc0a" value="2000000000"/>
                     <!--[Component usrp-control1, Attribute RX_Packet_Size]--> 
                     <simpleref refid="DCE:93324adf-14f6-4406-ba92-a3650089857f" value="1024"/>
                     <!--[Component usrp-control1, Attribute rx_nchan]--> 
