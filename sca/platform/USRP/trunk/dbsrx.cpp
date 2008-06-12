@@ -272,6 +272,7 @@ bool dbsrx::set_db_freq(float lo_freq, float &actual_freq)
 
 void dbsrx::set_gain(float gain)
 {    
+    DEBUG(3, USRP, "DBSRX set_gain to " << gain);
     int gc1 = 0;
     int gc2 = 0;
     int dl = 0;
