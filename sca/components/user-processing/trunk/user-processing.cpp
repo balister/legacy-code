@@ -106,7 +106,6 @@ void user_processing_i::process_data()
 
     PortTypes::ShortSequence *I_in(NULL), *Q_in(NULL);
     unsigned int len(0);
-
     unsigned int packet_count(0);
 
     while(1) {
@@ -120,7 +119,6 @@ void user_processing_i::process_data()
 	packet_count = 0;
 
         len = I_in->length();
-
 
 	// calculate energy, assume two channels
 	float energy1(0), energy2(0);
