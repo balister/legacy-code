@@ -67,6 +67,9 @@ class usrp_control_i : public virtual Resource_impl
     usrp_control_i();
     usrp_control_i(usrp_control_i&);
 
+    void setup_rx_usrp(); // Send properties to USRP RX
+    void setup_tx_usrp(); // Send properties to USRP TX
+
     omni_condition *component_running;  ///< for component shutdown
 
     omni_mutex accessPrivateData;       ///< mutex lock for accessing private data
@@ -79,8 +82,9 @@ class usrp_control_i : public virtual Resource_impl
 
     // USRP RX properties
     short rx_decim;     ///< RX decimation factor
-    short rx_gain_max;  ///< Maximum RX gain
-    float rx_freq;      ///< RX frequency
+    short rx_nchan;     ///< Number of active receiver channels
+    float rx_freq1;     ///< RX frequency, channel 1
+    float rx_freq2;     ///< RX frequency, channel 2
     float rx_gain;      ///< RX gain
     long  rx_size;      ///< RX packet size
     bool  rx_start;     ///< Start receiver flag

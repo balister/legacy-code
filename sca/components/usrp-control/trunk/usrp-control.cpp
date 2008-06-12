@@ -40,8 +40,8 @@ usrp_control_i::usrp_control_i(const char *uuid, omni_condition *condition) :
     tx_gain(0),
     tx_start(false),
     rx_decim(0),
-    rx_gain_max(0),
-    rx_freq(0),
+    rx_freq1(0),
+    rx_freq2(0),
     rx_gain(0),
     rx_size(0),
     rx_start(true)
@@ -114,11 +114,13 @@ void usrp_control_i::start() throw (CORBA::SystemException, CF::Resource::StartE
 
     if (tx_start) {
         DEBUG(3, USRP_Commander, "starting USRP transmit process...");
+	setup_tx_usrp();
         TXControl->start(DEFAULT_USRP_TX_CHANNEL);
     }
 
     if (rx_start) {
         RXControl->start(DEFAULT_USRP_RX_CHANNEL);
+	setup_rx_usrp();
         DEBUG(3, USRP_Commander, "starting USRP receive process...");
     }
 
@@ -169,80 +171,67 @@ void usrp_control_i::configure(const CF::Properties& props)
             CORBA::Float F;
             props[i].value >>= F;
             DEBUG(3, usrp-control, "RX Frequency 1 property= " << F)
-            rx_freq = F;
-            if (rx_freq > 0)
-		RXControl->set_frequency(0, rx_freq);
+            rx_freq1 = F;
 	} else if (strcmp(props[i].id, "DCE:e07f8d62-3063-4ccd-8a8c-220c4490fc0a") == 0) {
             // RX Frequency 2
             CORBA::Float F;
             props[i].value >>= F;
             DEBUG(3, usrp-control, "RX Frequency 2 property= " << F)
-            rx_freq = F;
-            if (rx_freq > 0)
-		RXControl->set_frequency(1, rx_freq);
+            rx_freq2 = F;
         } else if (strcmp(props[i].id, "DCE:6a2d6952-ca11-4787-afce-87a89b882b7b") == 0) {
             // TX Frequency
             CORBA::Float F;
             props[i].value >>= F;
             DEBUG(3, usrp-control, "TX Frequency property= " << F)
             tx_freq = F;
-	    if (tx_freq > 0)
-		TXControl->set_frequency(DEFAULT_USRP_TX_CHANNEL, tx_freq);
         } else if (strcmp(props[i].id, "DCE:9ca12c0e-ba65-40cf-9ef3-6e7ac671ab5d") == 0) {
             // Transmitter Interpolation Factor
             CORBA::Short M;
             props[i].value >>= M;
             DEBUG(3, usrp-control, "TX Interpolation Factor property= " << M)
             tx_interp = M;
-	    if (tx_interp > 0)
-		TXControl->set_interpolation_rate(DEFAULT_USRP_TX_CHANNEL, tx_interp);
         } else if (strcmp(props[i].id, "DCE:92ec2b80-8040-47c7-a1d8-4c9caa4a4ed2") == 0) {
             // RX Decimation factor
             CORBA::Short D;
             props[i].value >>= D;
             DEBUG(3, usrp-control, "RX Decimation Factor property= " << D)
             rx_decim = D;
-	    if (rx_decim > 0)
-		RXControl->set_decimation_rate(DEFAULT_USRP_RX_CHANNEL, rx_decim);
         } else if (strcmp(props[i].id, "DCE:58eaebdc-7f4d-416a-8c2f-1e82c93c11ca") == 0) {
             // Number of RX channels
             CORBA::Short nchan;
             props[i].value >>= nchan;
+	    rx_nchan = nchan;
             DEBUG(3, usrp-control, "Number of RX channels property= " << nchan)
-	    if (nchan > 0)
-		RXControl->set_number_of_channels(nchan);
         } else if (strcmp(props[i].id, "DCE:93324adf-14f6-4406-ba92-a3650089857f") == 0) {
             // RX Data Packet size
             CORBA::ULong L;
             props[i].value >>= L;
             DEBUG(3, usrp-control, "RX Data Packet size property= " << L)
             rx_size = L;
-	    if (rx_size > 0)
-		RXControl->set_data_packet_size(DEFAULT_USRP_RX_CHANNEL, rx_size);
         } else if (strcmp(props[i].id, "DCE:99d586b6-7764-4dc7-83fa-72270d0f1e1b") == 0) {
             //Rx Gain
             CORBA::Float G;
             props[i].value >>= G;
             DEBUG(3, usrp-control, "RX Gain property= " << G)
             rx_gain = G;
-	    if (rx_gain > -999)
-		RXControl->set_gain(DEFAULT_USRP_RX_CHANNEL, rx_gain);
         } else if (strcmp(props[i].id, "DCE:fd42344f-4d87-465b-9e6f-e1d7ae48afd6") == 0) {
             // rx_start
             CORBA::Short v;
             props[i].value >>= v;
-            rx_start = (v==0) ? false : true;
+            if (v)
+		rx_start = true;
+	    else
+		rx_start = false;
             DEBUG(3, usrp-control, "RX start set  to " << rx_start)
-            //if (rx_start)
-            //    RXControl->start(DEFAULT_USRP_RX_CHANNEL);
         } else if (strcmp(props[i].id, "DCE:0a9b8c8c-f130-4a8f-9ef8-bba023128a4b") == 0) {
             // tx_start
             CORBA::Short v;
             props[i].value >>= v;
-            tx_start = (v==0) ? false : true;
+            if (v)
+		tx_start = true;
+	    else
+		tx_start = false;
             DEBUG(3, usrp-control, "TX Start set to " << tx_start)
-            //if (tx_start)
-            //    TXControl->start(DEFAULT_USRP_TX_CHANNEL);
         } else {
             std::cerr << "ERROR: usrp_control::configure(), unknown property: " << props[i].id << std::endl;
             throw CF::PropertySet::InvalidConfiguration();
@@ -259,4 +248,34 @@ void usrp_control_i::runTest (CORBA::ULong _number, CF::Properties & _props) thr
 {
 }
 
+void usrp_control_i::setup_rx_usrp()
+{
 
+    if (rx_freq1 > 0)
+	RXControl->set_frequency(0, rx_freq1);
+
+    if (rx_freq2 > 0)
+	RXControl->set_frequency(1, rx_freq2);
+
+    if (rx_decim > 0)
+	RXControl->set_decimation_rate(DEFAULT_USRP_RX_CHANNEL, rx_decim);
+
+    if (rx_nchan > 0)
+	RXControl->set_number_of_channels(rx_nchan);
+
+    if (rx_size > 0)
+	RXControl->set_data_packet_size(DEFAULT_USRP_RX_CHANNEL, rx_size);
+
+    if (rx_gain > -999)
+	RXControl->set_gain(DEFAULT_USRP_RX_CHANNEL, rx_gain);
+}
+
+void usrp_control_i::setup_tx_usrp()
+{
+
+    if (tx_freq > 0)
+	TXControl->set_frequency(DEFAULT_USRP_TX_CHANNEL, tx_freq);
+
+    if (tx_interp > 0)
+	TXControl->set_interpolation_rate(DEFAULT_USRP_TX_CHANNEL, tx_interp);
+}
