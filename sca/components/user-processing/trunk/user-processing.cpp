@@ -107,19 +107,30 @@ void user_processing_i::process_data()
     PortTypes::ShortSequence *I_in(NULL), *Q_in(NULL);
     unsigned int len(0);
 
+    unsigned int packet_count(0);
+
     while(1) {
         dataIn_0->getData(I_in, Q_in);
+
+	packet_count++;
+	if (packet_count < 100) {
+	    dataIn_0->bufferEmptied();
+	    continue;
+	}
+	packet_count = 0;
 
         len = I_in->length();
 
 
 	// calculate energy, assume two channels
-	unsigned long energy1(0), energy2(0);
+	float energy1(0), energy2(0);
 	for (unsigned int i(0); i < len; i+=2) {
 	    energy1 += sqrt((*I_in)[i]*(*I_in)[i] + (*Q_in)[i]*(*Q_in)[i]);
 	    energy2 += sqrt((*I_in)[i+1]*(*I_in)[i+1] + (*Q_in)[i+1]*(*Q_in)[i+1]);
 	}
-//	energy = 10*log10(energy/len);
+
+	energy1 = 10*log10(energy1/len/2);
+	energy2 = 10*log10(energy2/len/2);
 
         DEBUG(1, user-processing, "Packet energy 1 = " << energy1 << ", Packet energy 2 = " << energy2);
 
