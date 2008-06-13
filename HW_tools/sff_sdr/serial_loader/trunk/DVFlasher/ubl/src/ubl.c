@@ -32,6 +32,8 @@
 #include "nand.h"
 #endif
 
+#define C1_IC           (1<<12)         /* icache off/on */
+
 Uint32 gEntryPoint;
 BootMode gBootMode;
 
@@ -72,6 +74,49 @@ void fake_entry()
     boot();
 }
 
+/* read co-processor 15, register #1 (control register) */
+static unsigned long read_p15_c1 (void)
+{
+        unsigned long value;
+
+        __asm__ __volatile__(
+                "mrc    p15, 0, %0, c1, c0, 0   @ read control reg\n"
+                : "=r" (value)
+                :
+                : "memory");
+
+        return value;
+}
+
+/* write to co-processor 15, register #1 (control register) */
+static void write_p15_c1 (unsigned long value)
+{
+        __asm__ __volatile__(
+                "mcr    p15, 0, %0, c1, c0, 0   @ write it back\n"
+                :
+                : "r" (value)
+                : "memory");
+
+        read_p15_c1 ();
+}
+
+static void cp_delay (void)
+{
+        volatile int i;
+
+        /* copro seems to need some delay between reading and writing */
+        for (i = 0; i < 100; i++);
+}
+
+void icache_enable (void)
+{
+	Uint32 reg;
+
+        reg = read_p15_c1 ();           /* get control reg. */
+        cp_delay ();
+        write_p15_c1 (reg | C1_IC);
+}
+
 void boot()
 {   
 	asm(" MRS	r0, cpsr");
@@ -92,6 +137,8 @@ void boot()
 	
     // Call to main code
     main();
+    
+    icache_enable();
     
     // Jump to entry point
 	APPEntry = (void*) gEntryPoint;
