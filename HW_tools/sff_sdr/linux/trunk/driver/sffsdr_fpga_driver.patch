@@ -1,0 +1,12 @@
+diff --git a/drivers/char/Makefile b/drivers/char/Makefile
+index fe4cb4e..c01c1f2 100644
+--- a/drivers/char/Makefile
++++ b/drivers/char/Makefile
+@@ -109,6 +109,7 @@ obj-$(CONFIG_HANGCHECK_TIMER)	+= hangcheck-timer.o
+ obj-$(CONFIG_TCG_TPM)		+= tpm/
+ obj-$(CONFIG_DAVINCI_RTC)	+= davinci-rtc.o
+ 
++obj-$(CONFIG_LYRTECH_SFFSDR_FPGA)	+= sffsdr_fpga/
+ obj-$(CONFIG_PS3_FLASH)		+= ps3flash.o
+ 
+ obj-$(CONFIG_JS_RTC)		+= js-rtc.o

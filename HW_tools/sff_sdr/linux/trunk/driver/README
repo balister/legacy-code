@@ -1,0 +1,19 @@
+Installation of sffsdr_fpga driver:
+
+1. CD to your linux kernel tree.
+2. Copy the sffsdr_fpga folder to drivers/char inside
+   your linux kernel tree.
+3. Apply the patch sffsdr_fpga_driver.patch:
+   $> patch -Np1 -i <path to patch file>
+4. Run:
+   $> make menuconfig
+   And select the SFFSDR_FPGA driver under:
+     Device drivers --> Character devices
+5. Compile your kernel.
+6. Copy your FPGA bitstream to /lib/firmware
+   under your Linux filesystem (normally on
+   your NFS server).
+   NOTE: your bitstream MUSt be named sffsdr_fpga1.bit
+7. Boot Linux on your SFFSDR board.
+8. Run:
+   $> modprobe sffsdr_fpga
