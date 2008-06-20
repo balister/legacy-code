@@ -66,12 +66,41 @@
 #define FPGA_FULL_RESET_VAL	3
 #define FPGA_PARTIAL_RESET_VAL	2
 
+#define BITSTREAM_SYNC_BYTE1		(0xAA)
+#define BITSTREAM_SYNC_BYTE2		(0x99)
+#define BITSTREAM_SYNC_BYTE3		(0x55)
+#define BITSTREAM_SYNC_BYTE4 		(0x66)
+
+#define BITSTREAM_PACKET_HEADER_TYPE1	(1)
+#define BITSTREAM_PACKET_HEADER_TYPE2	(2)
+
+#define BITSTREAM_TYPE1_OPCODE_WRITE	(2)
+
+#define BITSTREAM_TYPE1_REG_ADDR_FDRI	(2)
+
 /* Access of FPGA register through EMIF (mmio). */
 #define FPGA_ACCESS_REG(x)	(*((volatile u8 *)(x)))
 
 /* The Virtex-4 device only drives BUSY during readback.
  * Define this to check the state of thwe BUSY pin before each write. */
 #undef SFFSDR_FPGA_CHECK_BUSY_PIN
+
+/* Structure of a TYPE1 packet. */
+struct type1_packet_t {
+	uint32_t word_count:11;
+	uint32_t reserved2:2;
+	uint32_t address:5;
+	uint32_t reserved1:9;
+	uint32_t opcode:2;
+	uint32_t header:3;
+};
+
+/* Structure of a TYPE2 packet. */
+struct type2_packet_t {
+	uint32_t word_count:27;
+	uint32_t opcode:2; /* Reserved. */
+	uint32_t header:3;
+};
 
 static void *fpga_mmio_addr;
 
@@ -154,53 +183,65 @@ static int
 fpga_bitstream_parse_header( u8 *buffer, size_t length )
 {
 	int index = 0;
-	size_t payload_size;
-	
-	/* Search and skip Xilinx header. */
-	while ( ( buffer[0+index] != 0xFF ||
-		  buffer[1+index] != 0xFF ||
-		  buffer[2+index] != 0xFF ||
-		  buffer[3+index] != 0xFF ||
-		  buffer[4+index] != 0xAA ||
-		  buffer[5+index] != 0x99 ||
-		  buffer[6+index] != 0x55 ||
-		  buffer[7+index] != 0x66 ) &&
-		(index < length)) {
-		index++;
+	int found;
+	size_t payload_size = 0;
+
+	/* Search for bitstream sync word. */
+	found = false;
+	while((index < length) && (found == false)) {
+		if ((buffer[index + 0] == BITSTREAM_SYNC_BYTE1) &&
+		    (buffer[index + 1] == BITSTREAM_SYNC_BYTE2) &&
+		    (buffer[index + 2] == BITSTREAM_SYNC_BYTE3) &&
+		    (buffer[index + 3] == BITSTREAM_SYNC_BYTE4)) {
+			found = true;
+		}
+		else
+			index++;
 	}
 	
-	if (index == length) {
-		/* Error, Xilinx header not found in the buffer. */
+	if (found == false) {
+		DBGMSG("Error, Xilinx header not found in bitstream file.");
 		return BITSTREAM_MODE_UNKNOWN;
 	}
 	
-	/* Now find the length of the payload data by
-	 * searching for Packet Type 1 : 0x30004000 (FDRI) and
-	 * beginning of packet 2. */
-	while ( ( buffer[0+index]!=0x30 ||
-		  buffer[1+index]!=0x00 ||
-		  buffer[2+index]!=0x40 ||
-		  buffer[3+index]!=0x00 ||
-		  ( ( buffer[4+index] & 0xE0 ) != 0x40 ) ) &&
-		(index < length)) {
-		index++;
+	/* Find the payload size. */
+	while (index < length) {
+		u32 temp = ntohl(*((u32 *) &buffer[index]));
+		struct type1_packet_t *type1_packet = (struct type1_packet_t *) &temp;
+
+		/* Search for type 1 packet header. */
+		if ((type1_packet->header == BITSTREAM_PACKET_HEADER_TYPE1) &&
+		    (type1_packet->opcode == BITSTREAM_TYPE1_OPCODE_WRITE) &&
+		    (type1_packet->address == BITSTREAM_TYPE1_REG_ADDR_FDRI)) {
+			if (type1_packet->word_count != 0) {
+				payload_size = type1_packet->word_count;
+				break;
+			}
+			else {
+				u32 temp2 = ntohl(*((u32 *) &buffer[index+4]));
+				struct type2_packet_t *type2_packet = (struct type2_packet_t *) &temp2;
+
+				/* Search for type 2 packet header just after type1 packet. */
+				if ((type2_packet->header == BITSTREAM_PACKET_HEADER_TYPE2)) {
+					payload_size = type2_packet->word_count;
+					break;
+				}
+			}
+		}
+		
+		index += 4; /* u32 aligned when sync word has been found. */
 	}
 	
-	if (index == length) {
-		/* Error, payload size not found in the buffer. */
+	if (index >= length) {
+		DBGMSG("Error, payload size not found in bitstream file.");
 		return BITSTREAM_MODE_UNKNOWN;
 	}
 
-	payload_size =
-		(buffer[4+index] & 0x03 << 24) |
-		(buffer[5+index] << 16) |
-		(buffer[6+index] << 8) |
-		(buffer[7+index]); /* Length in u32. */
 	payload_size *= 4; /* Length in bytes. */
 
-	DBGMSG("Bitstream payload size: %d kbytes", payload_size / 1024 );
+	DBGMSG("Bitstream payload size: %d bytes", payload_size );
 	
-	/* Is it a full of a partial bitstream? */
+	/* Is it a full or a partial bitstream? */
 	if (payload_size == BITSTREAM_LENGTH_SX35) {
 		DBGMSG("Bitstream type: FULL");
 		return BITSTREAM_MODE_FULL;
