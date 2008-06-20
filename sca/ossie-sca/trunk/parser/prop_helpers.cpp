@@ -1,6 +1,7 @@
 /*******************************************************************************
 
 Copyright 2005, 2006, Virginia Polytechnic Institute and State University
+Copyright 2008, Philip Balister philip@opensdr.com
 
 This file is part of the OSSIE Parser.
 
@@ -22,6 +23,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include <string>
 #include <vector>
+
+#include <stdlib.h>
 
 #ifdef HAVE_OMNIORB4_CORBA_H
 #include "omniORB4/CORBA.h"

@@ -1,6 +1,7 @@
 /*******************************************************************************
 
 Copyright 2004, Virginia Polytechnic Institute and State University
+Copyright 2008, Philip Balister philip@opensdr.com
 
 This file is part of the OSSIE Parser.
 
@@ -30,6 +31,7 @@ see: http://www.crc.ca/en/html/rmsc/home/sdr/projects/scari
 #include <iostream>
 #include <sstream>
 
+#include <stdlib.h>
 #include <assert.h>
 
 #include "ossie/orb_wrap.h"
