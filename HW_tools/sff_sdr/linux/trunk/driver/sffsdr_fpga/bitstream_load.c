@@ -42,22 +42,13 @@
 
 #include "common.h"
 #include "bitstream_load.h"
-#include "dvregs.h"
-
 
 #define BITSTREAM_LENGTH_SX35	(4*426810) /* Length in bytes of a
 					    * full bitstream. */
+#define BITSTREAM_LENGTH_LX25	(4*243048) /* Length in bytes of a
+					    * full bitstream. */
+
 #define FPGA_DONE_TIMEOUT	100000
-
-#define FPGA_DONE_MASK		0x80
-#define FPGA_BUSY_MASK		0x400
-#define FPGA_PROG_B_MASK	0x20
-#define FPGA_INIT_MASK		0x100
-
-#define GPIO_FPGA_PROGRAM_B	GPIO(37)
-#define GPIO_FPGA_DONE		GPIO(39)
-#define GPIO_FPGA_INIT		GPIO(40)
-#define GPIO_FPGA_DOUT_BUSY	GPIO(42)
 
 #define BITSTREAM_MODE_UNKNOWN	0
 #define BITSTREAM_MODE_FULL	1
@@ -103,6 +94,10 @@ struct type2_packet_t {
 };
 
 static void *fpga_mmio_addr;
+static uint8_t fpga_program_b_gpio;
+static uint8_t fpga_done_gpio;
+static uint8_t fpga_init_gpio;
+static uint8_t fpga_busy_gpio;
 
 /* Reset the inside logic of the FPGA according to the
  * bitstream mode. This is done when the bitstream has
@@ -150,7 +145,7 @@ select_map_write_byte( u8 data )
 {
 #ifdef SFFSDR_FPGA_CHECK_BUSY_PIN
 	/* Making sure BUSY is high. */
-	if (gpio_get_value(GPIO_FPGA_DOUT_BUSY) == 0) {
+	if (gpio_get_value(fpga_busy_gpio) == 0) {
 		FAILMSG("Error: FPGA BUSY.");
 	}	
 #endif
@@ -253,21 +248,66 @@ fpga_bitstream_parse_header( u8 *buffer, size_t length )
 }
 
 /* Init DaVinci GPIO to FPGA control pins for the Select MAP mode. */
-static void
-dv_init_control_pins( void )
+static int
+dv_init_control_pins( int board_type )
 {
-	u32 value;
+	int retval;
 
-	gpio_set_value(GPIO_FPGA_PROGRAM_B, 1); /* FPGA_PROGRAM_B is HIGH. */
+	/* NOTE: This code should be eventually be moved to the board init section. */
 
-	value = davinci_readl(DAVINCI_GPIO_BASE + DIR23);
+	switch( board_type ) {
+	case BOARD_TYPE_SFFSDR:
+		fpga_program_b_gpio = GPIO(37);
+		fpga_done_gpio      = GPIO(39);
+		fpga_init_gpio      = GPIO(40);
+		fpga_busy_gpio      = GPIO(42);
+		break;
+	case BOARD_TYPE_FEMTO_BASE_STATION:
+		fpga_program_b_gpio = GPIO(51);
+		fpga_done_gpio      = GPIO(46);
+		fpga_init_gpio      = GPIO(50);
+		fpga_busy_gpio      = GPIO(45);
+		break;
+	default:
+		FAILMSG("Error: Unknown board type.");
+		return FPGA_LOAD_INVALID_BOARD_TYPE;
+	}
 
-	/* Configure input pins. */
-	value |= FPGA_DONE_MASK | FPGA_BUSY_MASK | FPGA_INIT_MASK;
-	/* Configure output pins. */
-	value &= ~FPGA_PROG_B_MASK;
+	/* Configure FPGA PROGRAM_B GPIO. */
+        retval = gpio_request(fpga_program_b_gpio, "fpga_program_b");
+	if( retval == 0 )
+		retval = gpio_direction_output(fpga_program_b_gpio, 1); /* FPGA_PROGRAM_B is initially HIGH. */
+	if( retval != 0 )
+		goto error;
+	
+	/* Configure FPGA INIT GPIO. */
+        retval = gpio_request(fpga_init_gpio, "fpga_init");
+	if( retval == 0 )
+		retval = gpio_direction_input(fpga_init_gpio);
+	if( retval != 0 )
+		goto error;
 
-	davinci_writel(value, DAVINCI_GPIO_BASE + DIR23);
+	/* Configure FPGA DONE GPIO. */
+        retval = gpio_request(fpga_done_gpio, "fpga_done");
+	if( retval == 0 )
+		retval = gpio_direction_input(fpga_done_gpio);
+	if( retval != 0 )
+		goto error;
+
+#ifdef SFFSDR_FPGA_CHECK_BUSY_PIN
+	/* Configure FPGA BUSY GPIO. */
+        retval = gpio_request(fpga_busy_gpio, "fpga_busy");
+	if( retval == 0 )
+		retval = gpio_direction_input(fpga_busy_gpio);
+	if( retval != 0 )
+		goto error;
+#endif
+
+	return 0;
+
+error:
+	FAILMSG("Error configuring GPIO pins.");
+	return -1;
 }
 
 /*
@@ -275,17 +315,20 @@ dv_init_control_pins( void )
  * full bitstream that supports partial must be generated with option Perist = true.
  */
 int
-bitstream_load( void *mmio_addr, u8 *data, size_t size )
+bitstream_load( int board_type, void *mmio_addr, u8 *data, size_t size )
 {
 	int k;
+	int retval;
 	int timeout_counter = 0;
 	int bitstream_mode;
 
 	fpga_mmio_addr = mmio_addr;
 
 	/* Initialize DSP to FPGA control pins (GPIOs). */
-	dv_init_control_pins();
-
+	retval = dv_init_control_pins(board_type);
+	if(  retval < 0 )
+		return retval;
+	
 	bitstream_mode = fpga_bitstream_parse_header( data, size );
 	if( bitstream_mode == BITSTREAM_MODE_UNKNOWN ) {
 		FAILMSG("Error: Unknown bitstream mode.");
@@ -294,16 +337,16 @@ bitstream_load( void *mmio_addr, u8 *data, size_t size )
 
 	if (bitstream_mode == BITSTREAM_MODE_FULL) {
 		/* Toggle PROG_B Pin and wait at least 300nS before proceeding. */
-		gpio_set_value(GPIO_FPGA_PROGRAM_B, 0); /* FPGA_PROGRAM_B is LOW. */
+		gpio_set_value(fpga_program_b_gpio, 0); /* FPGA_PROGRAM_B is LOW. */
 		udelay(1);
 	}
 	
 	/* For partial bitstream, PROGRAM_B is already high. */
 	select_map_make_clock(3);
-	gpio_set_value(GPIO_FPGA_PROGRAM_B, 1); /* FPGA_PROGRAM_B is HIGH. */
+	gpio_set_value(fpga_program_b_gpio, 1); /* FPGA_PROGRAM_B is HIGH. */
 	
 	/* Wait for INIT pin to go high. */
-	while (gpio_get_value(GPIO_FPGA_INIT) == 0) {
+	while (gpio_get_value(fpga_init_gpio) == 0) {
 		select_map_make_clock(3);
 	}
 	
@@ -311,7 +354,7 @@ bitstream_load( void *mmio_addr, u8 *data, size_t size )
 	for ( k = 0; k < size; k++) {
 		select_map_write_byte(data[k]);
 		
-		if (gpio_get_value(GPIO_FPGA_INIT) == 0) {
+		if (gpio_get_value(fpga_init_gpio) == 0) {
 			/* Error if INIT goes low during programming. */
 			FAILMSG("Error: INIT LOW during programming.");
 			return FPGA_LOAD_INIT_ERROR;
@@ -322,11 +365,11 @@ bitstream_load( void *mmio_addr, u8 *data, size_t size )
 	select_map_make_clock(10);
 	
 	/* FPGA DONE pin must go high. */
-	while ((gpio_get_value(GPIO_FPGA_DONE) == 0) && (timeout_counter < FPGA_DONE_TIMEOUT)) {
+	while ((gpio_get_value(fpga_done_gpio) == 0) && (timeout_counter < FPGA_DONE_TIMEOUT)) {
 		timeout_counter ++;
 	}
     
-	if (gpio_get_value(GPIO_FPGA_DONE) == 0) {
+	if (gpio_get_value(fpga_done_gpio) == 0) {
 		/* Timeout error. */
 		FAILMSG("Error: timeout while waiting for DONE to go HIGH.");
 		return FPGA_LOAD_TIMEOUT;

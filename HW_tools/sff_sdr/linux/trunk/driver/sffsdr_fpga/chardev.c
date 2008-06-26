@@ -125,7 +125,7 @@ sffsdr_fpga_init( void )
 
 	DBGMSG("fw_entry->size = %d kb", fw_entry->size / 1024 );
 
-	retval = bitstream_load(sffsdr_fpga.mmio_addr, fw_entry->data, fw_entry->size);
+	retval = bitstream_load(BOARD_TYPE_SFFSDR, sffsdr_fpga.mmio_addr, fw_entry->data, fw_entry->size);
 	release_firmware(fw_entry);
 	if (retval < 0) {
 		FAILMSG("Firmware not loaded in FPGA.");

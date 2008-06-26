@@ -26,8 +26,13 @@
 #define FPGA_LOAD_ERROR		-1
 #define FPGA_LOAD_INIT_ERROR	-2
 #define FPGA_LOAD_TIMEOUT	-3
+#define FPGA_LOAD_INVALID_BOARD_TYPE	-4
+
+/* Board types. */
+#define BOARD_TYPE_SFFSDR		0
+#define BOARD_TYPE_FEMTO_BASE_STATION	1
 
 int
-bitstream_load( void *mmio_addr, u8 *data, size_t size );
+bitstream_load( int board_type, void *mmio_addr, u8 *data, size_t size );
 
 #endif /* BITSTREAM_LOAD_H */
