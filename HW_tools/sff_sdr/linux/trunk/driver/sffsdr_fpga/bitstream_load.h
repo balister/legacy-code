@@ -32,7 +32,15 @@
 #define BOARD_TYPE_SFFSDR		0
 #define BOARD_TYPE_FEMTO_BASE_STATION	1
 
-int
-bitstream_load( int board_type, void *mmio_addr, u8 *data, size_t size );
+#define BITSTREAM_LENGTH_SX35	(4*426810) /* Length in bytes of a
+					    * full bitstream. */
+#define BITSTREAM_LENGTH_LX25	(4*243048) /* Length in bytes of a
+					    * full bitstream. */
+
+int select_map_init_gpio_pins(int board_type);
+
+void select_map_release_gpio_pins(void);
+
+int bitstream_load(void *mmio_addr, u8 *data, size_t size);
 
 #endif /* BITSTREAM_LOAD_H */

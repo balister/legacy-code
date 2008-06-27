@@ -43,11 +43,6 @@
 #include "common.h"
 #include "bitstream_load.h"
 
-#define BITSTREAM_LENGTH_SX35	(4*426810) /* Length in bytes of a
-					    * full bitstream. */
-#define BITSTREAM_LENGTH_LX25	(4*243048) /* Length in bytes of a
-					    * full bitstream. */
-
 #define FPGA_DONE_TIMEOUT	100000
 
 #define BITSTREAM_MODE_UNKNOWN	0
@@ -102,8 +97,7 @@ static uint8_t fpga_busy_gpio;
 /* Reset the inside logic of the FPGA according to the
  * bitstream mode. This is done when the bitstream has
  * been programmed and is Lyrtech SFF-SDR specific. */
-static void
-fpga_reset( int bitstream_mode )
+static void fpga_reset(int bitstream_mode)
 {
 	u32 value;
 
@@ -119,13 +113,12 @@ fpga_reset( int bitstream_mode )
 }
 
 /* Swap bits inside a byte. */
-static u8
-swapbits( u8 c) 
+static u8 swapbits(u8 c) 
 {
 	int i;
 	u8 result = 0;
 	
-        for( i = 0; i < 8; ++i ) {
+        for (i = 0; i < 8; ++i) {
 		result = result << 1; 
                 result |= (c & 1); 
                 c = c >> 1; 
@@ -140,8 +133,7 @@ swapbits( u8 c)
  * the FPGA address space (CS3), and when we write a byte
  * to that address, the CCLK line will be toggled.
  */
-static void
-select_map_write_byte( u8 data )
+static void select_map_write_byte(u8 data)
 {
 #ifdef SFFSDR_FPGA_CHECK_BUSY_PIN
 	/* Making sure BUSY is high. */
@@ -158,8 +150,7 @@ select_map_write_byte( u8 data )
  * This function toggles the CCLK line on the select map
  * interface the number of times specified by <cycles>.
  */
-static void
-select_map_make_clock( int cycles )
+static void select_map_make_clock(int cycles)
 {
 	int k;
 	
@@ -168,14 +159,91 @@ select_map_make_clock( int cycles )
 	}
 }
 
+static int select_map_select_gpio_pins(int board_type)
+{
+	switch (board_type) {
+	case BOARD_TYPE_SFFSDR:
+		fpga_program_b_gpio = GPIO(37);
+		fpga_done_gpio      = GPIO(39);
+		fpga_init_gpio      = GPIO(40);
+		fpga_busy_gpio      = GPIO(42);
+		break;
+	case BOARD_TYPE_FEMTO_BASE_STATION:
+		fpga_program_b_gpio = GPIO(51);
+		fpga_done_gpio      = GPIO(46);
+		fpga_init_gpio      = GPIO(50);
+		fpga_busy_gpio      = GPIO(45);
+		break;
+	default:
+		FAILMSG("Error: Unknown board type.");
+		return FPGA_LOAD_INVALID_BOARD_TYPE;
+	}
+
+	return 0;
+}
+
+/* Init DaVinci GPIO to FPGA control pins for the Select MAP mode.
+ * NOTE: This code should be eventually be moved to the board init section. */
+int select_map_init_gpio_pins(int board_type)
+{
+	int retval;
+
+	retval = select_map_select_gpio_pins(board_type);
+	if (retval != 0)
+		goto error;
+
+	/* Configure FPGA PROGRAM_B GPIO. */
+        retval = gpio_request(fpga_program_b_gpio, "fpga_program_b");
+	if (retval == 0)
+		retval = gpio_direction_output(fpga_program_b_gpio, 1); /* FPGA_PROGRAM_B is initially HIGH. */
+	if (retval != 0)
+		goto error;
+	
+	/* Configure FPGA INIT GPIO. */
+        retval = gpio_request(fpga_init_gpio, "fpga_init");
+	if (retval == 0)
+		retval = gpio_direction_input(fpga_init_gpio);
+	if (retval != 0)
+		goto error;
+
+	/* Configure FPGA DONE GPIO. */
+        retval = gpio_request(fpga_done_gpio, "fpga_done");
+	if (retval == 0)
+		retval = gpio_direction_input(fpga_done_gpio);
+	if (retval != 0)
+		goto error;
+
+	/* Configure FPGA BUSY GPIO. */
+        retval = gpio_request(fpga_busy_gpio, "fpga_busy");
+	if (retval == 0)
+		retval = gpio_direction_input(fpga_busy_gpio);
+	if (retval != 0)
+		goto error;
+
+	return 0;
+
+error:
+	FAILMSG("Error configuring GPIO pins.");
+	return -1;
+}
+
+/* Release DaVinci GPIO to FPGA control pins for the Select MAP mode.
+ * NOTE: This code should be eventually be moved to the board init section. */
+void select_map_release_gpio_pins(void)
+{
+	gpio_free(fpga_busy_gpio);
+	gpio_free(fpga_done_gpio);
+	gpio_free(fpga_init_gpio);
+	gpio_free(fpga_program_b_gpio);
+}
+
 /*
  * Return value:
  *   0: Error
  *   1: Full bitstream
  *   2: Partial bitstream
  */
-static int
-fpga_bitstream_parse_header( u8 *buffer, size_t length )
+static int bitstream_parse_header(u8 *buffer, size_t length)
 {
 	int index = 0;
 	int found;
@@ -183,7 +251,7 @@ fpga_bitstream_parse_header( u8 *buffer, size_t length )
 
 	/* Search for bitstream sync word. */
 	found = false;
-	while((index < length) && (found == false)) {
+	while ((index < length) && (found == false)) {
 		if ((buffer[index + 0] == BITSTREAM_SYNC_BYTE1) &&
 		    (buffer[index + 1] == BITSTREAM_SYNC_BYTE2) &&
 		    (buffer[index + 2] == BITSTREAM_SYNC_BYTE3) &&
@@ -215,7 +283,7 @@ fpga_bitstream_parse_header( u8 *buffer, size_t length )
 			else {
 				u32 temp2 = ntohl(*((u32 *) &buffer[index+4]));
 				struct type2_packet_t *type2_packet = (struct type2_packet_t *) &temp2;
-
+				
 				/* Search for type 2 packet header just after type1 packet. */
 				if ((type2_packet->header == BITSTREAM_PACKET_HEADER_TYPE2)) {
 					payload_size = type2_packet->word_count;
@@ -234,7 +302,7 @@ fpga_bitstream_parse_header( u8 *buffer, size_t length )
 
 	payload_size *= 4; /* Length in bytes. */
 
-	DBGMSG("Bitstream payload size: %d bytes", payload_size );
+	DBGMSG("Bitstream payload size: %d bytes", payload_size);
 	
 	/* Is it a full or a partial bitstream? */
 	if (payload_size == BITSTREAM_LENGTH_SX35) {
@@ -247,98 +315,31 @@ fpga_bitstream_parse_header( u8 *buffer, size_t length )
 	}
 }
 
-/* Init DaVinci GPIO to FPGA control pins for the Select MAP mode. */
-static int
-dv_init_control_pins( int board_type )
-{
-	int retval;
-
-	/* NOTE: This code should be eventually be moved to the board init section. */
-
-	switch( board_type ) {
-	case BOARD_TYPE_SFFSDR:
-		fpga_program_b_gpio = GPIO(37);
-		fpga_done_gpio      = GPIO(39);
-		fpga_init_gpio      = GPIO(40);
-		fpga_busy_gpio      = GPIO(42);
-		break;
-	case BOARD_TYPE_FEMTO_BASE_STATION:
-		fpga_program_b_gpio = GPIO(51);
-		fpga_done_gpio      = GPIO(46);
-		fpga_init_gpio      = GPIO(50);
-		fpga_busy_gpio      = GPIO(45);
-		break;
-	default:
-		FAILMSG("Error: Unknown board type.");
-		return FPGA_LOAD_INVALID_BOARD_TYPE;
-	}
-
-	/* Configure FPGA PROGRAM_B GPIO. */
-        retval = gpio_request(fpga_program_b_gpio, "fpga_program_b");
-	if( retval == 0 )
-		retval = gpio_direction_output(fpga_program_b_gpio, 1); /* FPGA_PROGRAM_B is initially HIGH. */
-	if( retval != 0 )
-		goto error;
-	
-	/* Configure FPGA INIT GPIO. */
-        retval = gpio_request(fpga_init_gpio, "fpga_init");
-	if( retval == 0 )
-		retval = gpio_direction_input(fpga_init_gpio);
-	if( retval != 0 )
-		goto error;
-
-	/* Configure FPGA DONE GPIO. */
-        retval = gpio_request(fpga_done_gpio, "fpga_done");
-	if( retval == 0 )
-		retval = gpio_direction_input(fpga_done_gpio);
-	if( retval != 0 )
-		goto error;
-
-#ifdef SFFSDR_FPGA_CHECK_BUSY_PIN
-	/* Configure FPGA BUSY GPIO. */
-        retval = gpio_request(fpga_busy_gpio, "fpga_busy");
-	if( retval == 0 )
-		retval = gpio_direction_input(fpga_busy_gpio);
-	if( retval != 0 )
-		goto error;
-#endif
-
-	return 0;
-
-error:
-	FAILMSG("Error configuring GPIO pins.");
-	return -1;
-}
-
 /*
  * mode: Full or partial.
  * full bitstream that supports partial must be generated with option Perist = true.
  */
-int
-bitstream_load( int board_type, void *mmio_addr, u8 *data, size_t size )
+int bitstream_load(void *mmio_addr, u8 *data, size_t size)
 {
 	int k;
-	int retval;
 	int timeout_counter = 0;
 	int bitstream_mode;
 
 	fpga_mmio_addr = mmio_addr;
 
-	/* Initialize DSP to FPGA control pins (GPIOs). */
-	retval = dv_init_control_pins(board_type);
-	if(  retval < 0 )
-		return retval;
-	
-	bitstream_mode = fpga_bitstream_parse_header( data, size );
-	if( bitstream_mode == BITSTREAM_MODE_UNKNOWN ) {
+	bitstream_mode = bitstream_parse_header(data, size);
+	switch (bitstream_mode) {
+	case BITSTREAM_MODE_UNKNOWN:
 		FAILMSG("Error: Unknown bitstream mode.");
 		return FPGA_LOAD_ERROR;
-	}
-
-	if (bitstream_mode == BITSTREAM_MODE_FULL) {
+		break;
+	case BITSTREAM_MODE_FULL:
 		/* Toggle PROG_B Pin and wait at least 300nS before proceeding. */
 		gpio_set_value(fpga_program_b_gpio, 0); /* FPGA_PROGRAM_B is LOW. */
 		udelay(1);
+		break;
+	case BITSTREAM_MODE_PARTIAL:
+		break;
 	}
 	
 	/* For partial bitstream, PROGRAM_B is already high. */
@@ -351,7 +352,7 @@ bitstream_load( int board_type, void *mmio_addr, u8 *data, size_t size )
 	}
 	
 	/* Send actual bitstream data to FPGA one byte at a time. */
-	for ( k = 0; k < size; k++) {
+	for (k = 0; k < size; k++) {
 		select_map_write_byte(data[k]);
 		
 		if (gpio_get_value(fpga_init_gpio) == 0) {

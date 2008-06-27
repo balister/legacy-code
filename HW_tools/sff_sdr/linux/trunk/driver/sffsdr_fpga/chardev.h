@@ -27,9 +27,8 @@
 
 #include <linux/ioctl.h>
 
-/* The major device number. We can't rely on dynamic registration any more,
- * because ioctls need to know it. */
-#define SFFSDR_FPGA_DEVICE_MAJOR 250
+/* Use 'h' as magic number */
+#define SFFSDR_IOCTL_MAGIC_NUMBER 'h'
 
 /*
  * _IOR means that we're creating an ioctl command number for passing
@@ -43,8 +42,7 @@
  * Third argument:  The type we want to get from the process to the kernel, or
  *                  vice-versa.
  */
-#define IOCTL_SFFSDR_FPGA_RELOAD      _IO (SFFSDR_FPGA_DEVICE_MAJOR, 0)
-#define IOCTL_SFFSDR_FPGA_READ_REG    _IOW(SFFSDR_FPGA_DEVICE_MAJOR, 4, int32_t *)
-#define IOCTL_SFFSDR_FPGA_WRITE_REG   _IOW(SFFSDR_FPGA_DEVICE_MAJOR, 4, int32_t *)
+#define IOCTL_SFFSDR_FPGA_READ_REG    _IOW(SFFSDR_IOCTL_MAGIC_NUMBER, 0, int32_t *)
+#define IOCTL_SFFSDR_FPGA_WRITE_REG   _IOW(SFFSDR_IOCTL_MAGIC_NUMBER, 1, int32_t *)
 
 #endif /* CHARDEV_H */
