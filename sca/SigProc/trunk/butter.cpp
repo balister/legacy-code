@@ -36,6 +36,8 @@
  *
  */
 
+#include <stdlib.h>
+
 #include "SigProc.h"
 
 namespace SigProc {
