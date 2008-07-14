@@ -260,7 +260,7 @@ class USRP_i : public virtual POA_CF::Device
 
     long set_rx_packet_count;
     long rx_packet_count;           ///< Number of packets to collect from USRP, -1 is forever
-    unsigned int rx_packet_size;    ///< Number of samples to send to clients
+    unsigned long rx_packet_size;    ///< Number of samples to send to clients
     unsigned int rx_data_size;      ///< Size of words coming from USRP
     unsigned int rx_channels;
     bool complex;                   ///< True for complex data from USRP
