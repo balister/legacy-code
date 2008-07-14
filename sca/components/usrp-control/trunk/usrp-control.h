@@ -86,7 +86,7 @@ class usrp_control_i : public virtual Resource_impl
     float rx_freq1;     ///< RX frequency, channel 1
     float rx_freq2;     ///< RX frequency, channel 2
     float rx_gain;      ///< RX gain
-    long  rx_size;      ///< RX packet size
+    unsigned long  rx_size;      ///< RX packet size
     bool  rx_start;     ///< Start receiver flag
 
     
