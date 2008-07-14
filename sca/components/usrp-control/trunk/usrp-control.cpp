@@ -119,9 +119,9 @@ void usrp_control_i::start() throw (CORBA::SystemException, CF::Resource::StartE
     }
 
     if (rx_start) {
-        RXControl->start(DEFAULT_USRP_RX_CHANNEL);
-	setup_rx_usrp();
         DEBUG(3, USRP_Commander, "starting USRP receive process...");
+	setup_rx_usrp();
+        RXControl->start(DEFAULT_USRP_RX_CHANNEL);
     }
 
 }
