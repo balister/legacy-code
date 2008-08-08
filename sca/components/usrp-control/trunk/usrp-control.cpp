@@ -112,6 +112,34 @@ void usrp_control_i::start() throw (CORBA::SystemException, CF::Resource::StartE
 
     RXControl->set_values(rx_config);
 
+#if 1  // Be really careful with this code, it can kill daughterboards and/or the USRP
+
+    CORBA::ULong val;
+
+    val = 0xFFFFFFFF; // Set IO pins to all output, this specific case is
+                      // OK for the dsbrx since one is already an output
+                      // and the rest are not connected.
+
+    rx_config.length(1);
+
+    rx_config[0].id = CORBA::string_dup("WRITE_OE");
+    rx_config[0].value <<= val;
+    RXControl->set_values(rx_config);
+
+    CORBA::UShortSeq io(4);
+
+    io.length(4);
+    io[3] = 0xFFFE;
+    io[1] = 0xFFFE;
+
+    io[2] = 2;
+    io[0] = 2;
+
+    rx_config[0].id = CORBA::string_dup("WRITE_IO");
+    rx_config[0].value <<= io;
+    RXControl->set_values(rx_config);
+#endif
+
     if (tx_start) {
         DEBUG(3, USRP_Commander, "starting USRP transmit process...");
 	setup_tx_usrp();
