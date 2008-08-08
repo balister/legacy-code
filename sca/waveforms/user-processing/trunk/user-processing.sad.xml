@@ -62,6 +62,17 @@
                 <namingservice name="DomainName1/RX_Control"/>
             </findby>
         </connectinterface>
+        <connectinterface id="DCE:3891f288-73a9-4b37-bb10-d4c9f0731e6a">
+            <usesport>
+                <usesidentifier>RX_Control</usesidentifier> 
+                <findby>
+                    <namingservice name="user-processing1"/>
+                </findby>
+            </usesport>
+            <findby>
+                <namingservice name="DomainName1/RX_Control"/>
+            </findby>
+        </connectinterface>
         <connectinterface id="DCE:178a6001-ae9f-4ce5-84cc-bfd25782fc63">
             <usesport>
                 <usesidentifier>RX_Data_1</usesidentifier> 
