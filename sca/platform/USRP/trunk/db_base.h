@@ -1,6 +1,7 @@
 /****************************************************************************
 
 Copyright 2005,2006 Virginia Polytechnic Institute and State University
+Copyright 2008      philip@opensdr.com
 
 This file is part of the OSSIE USRP Device.
 
@@ -54,6 +55,8 @@ public:
 
   void get_pga_gain_range(float &pga_min, float &pga_max, float &pga_step);
   void set_pga_gain(int which, float gain);
+  void write_oe(int value, int mask);
+  void write_io(int value, int mask);
 
   virtual bool is_quadrature() = 0;
   virtual bool i_and_q_swapped() { return false; };

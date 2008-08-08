@@ -1,6 +1,7 @@
 /****************************************************************************
 
 Copyright 2005,2006 Virginia Polytechnic Institute and State University
+Copyright 2008      philip@opensdr.com
 
 This file is part of the OSSIE USRP Device.
 
@@ -110,5 +111,25 @@ void db_base::set_pga_gain(int which, float gain)
     else if (utx)
         utx->set_pga(which, gain);
     else
+        ;  // This should never happen
+}
+
+void db_base::write_oe(int value, int mask)
+{
+    if (urx) {
+	urx->_write_oe(which, value, mask); 
+    } else if (utx) {
+	utx->_write_oe(which, value, mask); 
+    } else
+        ;  // This should never happen
+}
+
+void db_base::write_io(int value, int mask)
+{
+    if (urx) {
+	urx->write_io(which, value, mask); 
+    } else if (utx) {
+	utx->write_io(which, value, mask); 
+    } else
         ;  // This should never happen
 }

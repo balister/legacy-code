@@ -410,7 +410,44 @@ void USRP_RX_Control_i::set_values(const CF::Properties &values)
             omni_mutex_lock l(usrp->rx_control_access);
             if (usrp->rx_db0_control)
                 usrp->rx_db0_control->select_rx_antenna(ant);
-        }
+        } else if (strcmp(values[i].id, "WRITE_OE") == 0 ) {
+	    CORBA::ULong oe;
+	    values[i].value >>= oe;
+	    DEBUG(3, USRP, "Write_OE = " << oe);
+
+	    int oe1, oe2;
+
+	    oe2 = (oe & 0xFFFF0000) >> 16;
+	    oe1 = (oe & 0x0000FFFF);
+
+	    DEBUG(3, USRP, "oe2 = " << oe2 << "; oe1 = " << oe1);
+
+	    if (usrp->rx_db0_control)
+		usrp->rx_db0_control->write_oe(oe1, 0xffff);
+	    if (usrp->rx_db1_control)
+		usrp->rx_db1_control->write_oe(oe2, 0xffff);
+
+        } else if (strcmp(values[i].id, "WRITE_IO") == 0 ) {
+	    CORBA::UShortSeq *io;
+
+	    values[i].value >>= io;
+	    DEBUG(3, USRP, "Write_IO received");
+
+	    int mask1, mask2, val1, val2;
+
+	    mask2 = (*io)[3];
+	    mask1 = (*io)[1];
+	    val2  = (*io)[2];
+	    val1  = (*io)[0];
+
+	    DEBUG(3, USRP, "mask 2 = " << mask2 << "; val2 = " << val2 << "; Mask1 = " << mask1 << "; val1 = " << val1);
+
+	    if (usrp->rx_db0_control)
+		usrp->rx_db0_control->write_io(val1, mask1);
+	    if (usrp->rx_db1_control)
+		usrp->rx_db1_control->write_io(val2, mask2);
+
+	}
     }
 }
 
