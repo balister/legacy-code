@@ -32,6 +32,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "ossie/PortTypes.h"
 
 #include "standardinterfaces/complexShort_p.h"
+#include "standardinterfaces/Radio_Control_u.h"
 
 #include "ossie/Resource_impl.h"
 
@@ -71,6 +72,7 @@ class user_processing_i : public virtual Resource_impl
     	
         //list components provides and uses ports
         standardInterfaces_i::complexShort_p *dataIn_0;
-        
+	standardInterfaces_i::RX_Control_u *RXControl;
+  
 };
 #endif
