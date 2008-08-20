@@ -9,7 +9,7 @@
 # 		v1.11 on 7-Mar-2007
 #		v1.12 on 14-Mar-2007
 
-CROSSCOMPILE=arm-angstrom-linux-gnueabi-
+CROSSCOMPILE=arm-linux-
 CC=$(CROSSCOMPILE)gcc
 OBJCOPY=$(CROSSCOMPILE)objcopy
 OBJDUMP=$(CROSSCOMPILE)objdump
@@ -44,25 +44,23 @@ all: $(BINARY) $(START)
 
 .PHONY : clean objclean
 clean:
-		-rm -f -v $(OBJECTS) $(BINARY) $(EXECUTABLE) $(START)
-		
+	-rm -f -v $(OBJECTS) $(BINARY) $(EXECUTABLE) $(START)
+
 objclean:
-		-rm -f -v $(OBJECTS)
-		
+	-rm -f -v $(OBJECTS)
+
 $(START): $(EXECUTABLE)
-		@$(OBJDUMP) -t $< | grep -E '[0-9a-f]{8}*[0-9a-f]{8} boot' | sed  's/^\([0-9a-f]\{4\}\)\([0-9a-f]\{4\}\).*/\2/' > $@
+	@$(OBJDUMP) -t $< | grep -E '[0-9a-f]{8}*[0-9a-f]{8} boot' | sed  's/^\([0-9a-f]\{4\}\)\([0-9a-f]\{4\}\).*/\2/' > $@
 
 $(BINARY): $(EXECUTABLE)
-		$(OBJCOPY) $(OBJCOPYFLAGS) -O binary $< $@
-		@echo -n "The entry point of the binary is 0x"
-		@$(OBJDUMP) -t $< | grep -E '[0-9a-f]{8}*[0-9a-f]{8} boot' | sed  's/^\([0-9a-f]\{4\}\)\([0-9a-f]\{4\}\).*/\2/'
+	$(OBJCOPY) $(OBJCOPYFLAGS) -O binary $< $@
+	@echo -n "The entry point of the binary is 0x"
+	@$(OBJDUMP) -t $< | grep -E '[0-9a-f]{8}*[0-9a-f]{8} boot' | sed  's/^\([0-9a-f]\{4\}\)\([0-9a-f]\{4\}\).*/\2/'
 
 $(EXECUTABLE): $(OBJECTS)
-		$(CC) $(LDFLAGS) $(OBJECTS) -o $@
-		
+	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
+
 %_$(FLASH).o : %.c $(wildcard *.h)
-		$(CC) $(CFLAGS) $< -o $@
+	$(CC) $(CFLAGS) $< -o $@
 
 vpath %.h $(INCLUDEDIR)
-		
-

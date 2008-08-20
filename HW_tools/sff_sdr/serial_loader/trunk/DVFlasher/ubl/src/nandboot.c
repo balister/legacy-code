@@ -27,27 +27,27 @@
 extern NAND_INFO gNandInfo;
 
 // Entrypoint for application we are decoding out of flash
-extern Uint32 gEntryPoint;
+extern uint32_t gEntryPoint;
 
 // structure for holding details about UBL stored in NAND
 volatile NAND_BOOT	gNandBoot;
 
 // Function to find out where the application is and copy to RAM
-Uint32 NAND_Copy() {
-	Uint32 count,blockNum;
-	Uint32 i;
-	Uint32 magicNum;
-	Uint8 *rxBuf;		// RAM receive buffer
-	Uint32 entryPoint2,temp;
-	Uint32 block,page;
-	Uint32 readError = E_FAIL;
+uint32_t NAND_Copy() {
+	uint32_t count,blockNum;
+	uint32_t i;
+	uint32_t magicNum;
+	uint8_t *rxBuf;		// RAM receive buffer
+	uint32_t entryPoint2,temp;
+	uint32_t block,page;
+	uint32_t readError = E_FAIL;
 	Bool failedOnceAlready = FALSE;
 
     // Maximum application size, in S-record form, is 16 MB
-	rxBuf = (Uint8*)ubl_alloc_mem((MAX_IMAGE_SIZE>>1));
+	rxBuf = (uint8_t*)ubl_alloc_mem((MAX_IMAGE_SIZE>>1));
 	blockNum = START_APP_BLOCK_NUM;
 
-	UARTSendData((Uint8 *)"Starting NAND Copy...\r\n", FALSE);
+	UARTSendData((uint8_t *)"Starting NAND Copy...\r\n", FALSE);
 	
 	// NAND Initialization
 	if (NAND_Init() != E_PASS)
@@ -64,12 +64,12 @@ NAND_startAgain:
 		if(NAND_ReadPage(count,0,rxBuf) != E_PASS)
 			continue;
 
-		magicNum = ((Uint32 *)rxBuf)[0];
+		magicNum = ((uint32_t *)rxBuf)[0];
 
 		/* Valid magic number found */
 		if((magicNum & 0xFFFFFF00) == MAGIC_NUMBER_VALID)
 		{
-			UARTSendData((Uint8 *) "Valid MagicNum found.\r\n", FALSE);
+			UARTSendData((uint8_t *) "Valid MagicNum found.\r\n", FALSE);
 			blockNum = count;
 			break;
 		}
@@ -83,11 +83,11 @@ NAND_startAgain:
 	}
 
 	// Fill in NandBoot header
-	gNandBoot.entryPoint = *(((Uint32 *)(&rxBuf[4])));/* The first "long" is entry point for Application */
-	gNandBoot.numPage = *(((Uint32 *)(&rxBuf[8])));	 /* The second "long" is the number of pages */
-	gNandBoot.block = *(((Uint32 *)(&rxBuf[12])));	 /* The third "long" is the block where Application is stored in NAND */
-	gNandBoot.page = *(((Uint32 *)(&rxBuf[16])));	 /* The fourth "long" is the page number where Application is stored in NAND */
-	gNandBoot.ldAddress = *(((Uint32 *)(&rxBuf[20])));	 /* The fifth "long" is the Application load address */
+	gNandBoot.entryPoint = *(((uint32_t *)(&rxBuf[4])));/* The first "long" is entry point for Application */
+	gNandBoot.numPage = *(((uint32_t *)(&rxBuf[8])));	 /* The second "long" is the number of pages */
+	gNandBoot.block = *(((uint32_t *)(&rxBuf[12])));	 /* The third "long" is the block where Application is stored in NAND */
+	gNandBoot.page = *(((uint32_t *)(&rxBuf[16])));	 /* The fourth "long" is the page number where Application is stored in NAND */
+	gNandBoot.ldAddress = *(((uint32_t *)(&rxBuf[20])));	 /* The fifth "long" is the Application load address */
 
 	// If the application is already in binary format, then our 
 	// received buffer can point to the specified load address
@@ -97,7 +97,7 @@ NAND_startAgain:
 	if ((magicNum == UBL_MAGIC_BIN_IMG) || (magicNum == UBL_MAGIC_DMA))
 	{
 	    // Set the copy location to final run location
-		rxBuf = (Uint8 *)gNandBoot.ldAddress;
+		rxBuf = (uint8_t *)gNandBoot.ldAddress;
 		// Free temp memory rxBuf used to point to
 		set_current_mem_loc(get_current_mem_loc() - (MAX_IMAGE_SIZE>>1));
 	}
@@ -137,19 +137,19 @@ NAND_retry:
 	if(magicNum == UBL_MAGIC_SAFE)
 	{
 		// Or do the decode of the S-record 
-		if(SRecDecode( (Uint8 *)rxBuf, 
+		if(SRecDecode( (uint8_t *)rxBuf, 
 		               gNandBoot.numPage * gNandInfo.bytesPerPage,
-					   (Uint32 *) &entryPoint2,
-		               (Uint32 *) &temp ) != E_PASS)
+					   (uint32_t *) &entryPoint2,
+		               (uint32_t *) &temp ) != E_PASS)
 		{
-		    UARTSendData((Uint8 *)"S-record decode failure.", FALSE);
+		    UARTSendData((uint8_t *)"S-record decode failure.", FALSE);
 			return E_FAIL;
 		}
 		
 		if (gEntryPoint != entryPoint2)
 		{
-			UARTSendData((Uint8 *)"WARNING: S-record entrypoint does not match header entrypoint.\r\n", FALSE);
-			UARTSendData((Uint8 *)"WARNING: Using header entrypoint - results may be unexpected.\r\n", FALSE);
+			UARTSendData((uint8_t *)"WARNING: S-record entrypoint does not match header entrypoint.\r\n", FALSE);
+			UARTSendData((uint8_t *)"WARNING: Using header entrypoint - results may be unexpected.\r\n", FALSE);
 		}
 	}
 	

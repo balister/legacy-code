@@ -14,15 +14,15 @@
 #include "util.h"
 #include "ubl.h"
 
-extern VUint32 gMagicFlag,gBootCmd;
-extern VUint32 gDecodedByteCount,gSrecByteCount;
+extern volatile uint32_t gMagicFlag,gBootCmd;
+extern volatile uint32_t gDecodedByteCount,gSrecByteCount;
 
 // Send specified number of bytes 
-Uint32 UARTSendData(Uint8* seq, Bool includeNull)
+uint32_t UARTSendData(uint8_t* seq, Bool includeNull)
 {
-	Uint32 status = 0;
-    Int32 i,numBytes;
-	Uint32 timerStatus = 1;
+	uint32_t status = 0;
+    int32_t i,numBytes;
+	uint32_t timerStatus = 1;
 	
 	numBytes = includeNull?(GetStringLen(seq)+1):(GetStringLen(seq));
 	
@@ -43,10 +43,10 @@ Uint32 UARTSendData(Uint8* seq, Bool includeNull)
 	return E_PASS;
 }
 
-Uint32 UARTSendInt(Uint32 value)
+uint32_t UARTSendInt(uint32_t value)
 {
 	char seq[9];
-	Uint32 i,shift,temp;
+	uint32_t i,shift,temp;
 
 	for( i = 0; i < 8; i++)
 	{
@@ -59,13 +59,13 @@ Uint32 UARTSendInt(Uint32 value)
 		seq[i] = temp + 48;	
 	}
 	seq[8] = 0;
-	return UARTSendData((Uint8 *)seq, FALSE);
+	return UARTSendData((uint8_t *)seq, FALSE);
 }
 
 // Get string length by finding null terminating char
-Int32 GetStringLen(Uint8* seq)
+int32_t GetStringLen(uint8_t* seq)
 {
-	Int32 i = 0;
+	int32_t i = 0;
 	while ((seq[i] != 0) && (i<MAXSTRLEN)){ i++;}
 	if (i == MAXSTRLEN)
 		return -1;
@@ -74,10 +74,10 @@ Int32 GetStringLen(Uint8* seq)
 }
 
 // Receive data from UART 
-Uint32 UARTRecvData(Uint32 numBytes, Uint8* seq)
+uint32_t UARTRecvData(uint32_t numBytes, uint8_t* seq)
 {
-	Uint32 i, status = 0;
-	Uint32 timerStatus = 1;
+	uint32_t i, status = 0;
+	uint32_t timerStatus = 1;
 	
 	for(i=0;i<numBytes;i++) {
 		
@@ -103,10 +103,10 @@ Uint32 UARTRecvData(Uint32 numBytes, Uint8* seq)
 }
 
 // More complex send / receive functions
-Uint32 UARTCheckSequence(Uint8* seq, Bool includeNull)
+uint32_t UARTCheckSequence(uint8_t* seq, Bool includeNull)
 {
-    Int32 i, numBytes;
-    Uint32  status = 0,timerStatus = 1;
+    int32_t i, numBytes;
+    uint32_t  status = 0,timerStatus = 1;
     
     numBytes = includeNull?(GetStringLen(seq)+1):(GetStringLen(seq));
     
@@ -127,12 +127,12 @@ Uint32 UARTCheckSequence(Uint8* seq, Bool includeNull)
     return E_PASS;
 }
 
-Uint32 UARTGetHexData(Uint32 numBytes, Uint32* data) {
+uint32_t UARTGetHexData(uint32_t numBytes, uint32_t* data) {
     
-    Uint32 i,j;
-    Uint32 temp[8];
-    Uint32 timerStatus = 1, status = 0;
-    Uint32 numLongs, numAsciiChar, shift;
+    uint32_t i,j;
+    uint32_t temp[8];
+    uint32_t timerStatus = 1, status = 0;
+    uint32_t numLongs, numAsciiChar, shift;
     
     if(numBytes == 2) {
         numLongs = 1;
@@ -174,9 +174,9 @@ Uint32 UARTGetHexData(Uint32 numBytes, Uint32* data) {
     return E_PASS;
 }
 
-Uint32 UARTGetCMD(Uint32* bootCmd)
+uint32_t UARTGetCMD(uint32_t* bootCmd)
 {
-    if(UARTCheckSequence((Uint8*)"    CMD", TRUE) != E_PASS)
+    if(UARTCheckSequence((uint8_t*)"    CMD", TRUE) != E_PASS)
     {
         return E_FAIL;
     }
@@ -189,39 +189,39 @@ Uint32 UARTGetCMD(Uint32* bootCmd)
     return E_PASS;
 }
 
-Uint32 UARTGetHeaderAndData(UART_ACK_HEADER* ackHeader)
+uint32_t UARTGetHeaderAndData(UART_ACK_HEADER* ackHeader)
 {
-    Uint32 error = E_FAIL;
+    uint32_t error = E_FAIL;
 
     // Send ACK command
-    error = UARTCheckSequence((Uint8*)"    ACK", TRUE);
+    error = UARTCheckSequence((uint8_t*)"    ACK", TRUE);
     if(error != E_PASS)
     {
         return E_FAIL;
     }
 
     // Get the ACK header elements
-    error =  UARTGetHexData( 4, (Uint32 *) &(ackHeader->magicNum)     );
-    error |= UARTGetHexData( 4, (Uint32 *) &(ackHeader->appStartAddr) );
-    error |= UARTGetHexData( 4, (Uint32 *) &(ackHeader->srecByteCnt)  );
-    error |= UARTCheckSequence((Uint8*)"0000", FALSE);
+    error =  UARTGetHexData( 4, (uint32_t *) &(ackHeader->magicNum)     );
+    error |= UARTGetHexData( 4, (uint32_t *) &(ackHeader->appStartAddr) );
+    error |= UARTGetHexData( 4, (uint32_t *) &(ackHeader->srecByteCnt)  );
+    error |= UARTCheckSequence((uint8_t*)"0000", FALSE);
     if(error != E_PASS)
     {
         return E_FAIL;
     }
 
-    UARTSendData((Uint8*) "Magic Number = ",FALSE);
+    UARTSendData((uint8_t*) "Magic Number = ",FALSE);
     UARTSendInt(ackHeader->magicNum);
-    UARTSendData((Uint8*) "\r\nApplication start address = ",FALSE);
+    UARTSendData((uint8_t*) "\r\nApplication start address = ",FALSE);
     UARTSendInt(ackHeader->appStartAddr);
-    UARTSendData((Uint8*) "\r\nSREC Byte Count = ",FALSE);
+    UARTSendData((uint8_t*) "\r\nSREC Byte Count = ",FALSE);
     UARTSendInt(ackHeader->srecByteCnt);
-    UARTSendData((Uint8*) "\r\n",FALSE);
+    UARTSendData((uint8_t*) "\r\n",FALSE);
 
     // Verify that the S-record's size is appropriate
     if((ackHeader->srecByteCnt == 0) || (ackHeader->srecByteCnt > MAX_IMAGE_SIZE))
     {
-        UARTSendData((Uint8*)" BADCNT", TRUE);/*trailing /0 will come along*/
+        UARTSendData((uint8_t*)" BADCNT", TRUE);/*trailing /0 will come along*/
         return E_FAIL;
     }
 
@@ -229,39 +229,39 @@ Uint32 UARTGetHeaderAndData(UART_ACK_HEADER* ackHeader)
     // to hold UBL entry point if this header describes a UBL)
     if( (ackHeader->appStartAddr < RAM_START_ADDR) || (ackHeader->appStartAddr > RAM_END_ADDR) )
     {
-        UARTSendData((Uint8*)"BADADDR", TRUE);/*trailing /0 will come along*/
+        UARTSendData((uint8_t*)"BADADDR", TRUE);/*trailing /0 will come along*/
         return E_FAIL;
     }
 
     // Allocate storage for S-record
-    ackHeader->srecAddr = (Uint32) ubl_alloc_mem(ackHeader->srecByteCnt);
+    ackHeader->srecAddr = (uint32_t) ubl_alloc_mem(ackHeader->srecByteCnt);
 
     // Send BEGIN command
-    if ( UARTSendData((Uint8*)"  BEGIN", TRUE) != E_PASS )
+    if ( UARTSendData((uint8_t*)"  BEGIN", TRUE) != E_PASS )
         return E_FAIL;
 
     // Receive the data over UART
-    if ( UARTRecvData(ackHeader->srecByteCnt, (Uint8*)(ackHeader->srecAddr)) != E_PASS )
+    if ( UARTRecvData(ackHeader->srecByteCnt, (uint8_t*)(ackHeader->srecAddr)) != E_PASS )
     {
-        UARTSendData((Uint8*)"\r\nUART Receive Error\r\n", FALSE);
+        UARTSendData((uint8_t*)"\r\nUART Receive Error\r\n", FALSE);
         return E_FAIL;
     }
 
     // Return DONE when all data arrives
-    if ( UARTSendData((Uint8*)"   DONE", TRUE) != E_PASS )
+    if ( UARTSendData((uint8_t*)"   DONE", TRUE) != E_PASS )
         return E_FAIL;
 
     // Now decode the S-record
-    if ( SRecDecode(    (Uint8 *)(ackHeader->srecAddr),
+    if ( SRecDecode(    (uint8_t *)(ackHeader->srecAddr),
                         ackHeader->srecByteCnt,
                         &(ackHeader->binAddr),
                         &(ackHeader->binByteCnt) ) != E_PASS )
     {
-        UARTSendData((Uint8*)"\r\nS-record Decode Failed.\r\n", FALSE);
+        UARTSendData((uint8_t*)"\r\nS-record Decode Failed.\r\n", FALSE);
         return E_FAIL;
     }
 
-    if ( UARTSendData((Uint8*)"   DONE", TRUE) != E_PASS )
+    if ( UARTSendData((uint8_t*)"   DONE", TRUE) != E_PASS )
         return E_FAIL;
 
 

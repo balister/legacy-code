@@ -17,18 +17,18 @@
 #include "util.h"
 #include "uart.h"
 
-extern Uint32 gEntryPoint;
+extern uint32_t gEntryPoint;
 extern NOR_INFO gNorInfo;
 
 /* Function to find out where the Application is and copy to DRAM */
-Uint32 NOR_Copy() {
-	volatile NOR_BOOT	*hdr = 0;
-	VUint32		*appStartAddr = 0;
-	VUint32		count = 0;
-	VUint32		*ramPtr = 0;
-	Uint32      blkSize, blkAddress;
+uint32_t NOR_Copy() {
+	volatile NOR_BOOT *hdr = 0;
+	volatile uint32_t *appStartAddr = 0;
+	volatile uint32_t count = 0;
+	volatile uint32_t *ramPtr = 0;
+	uint32_t blkSize, blkAddress;
 
-	UARTSendData((Uint8 *) "Starting NOR Copy...\r\n", FALSE);
+	UARTSendData((uint8_t *) "Starting NOR Copy...\r\n", FALSE);
 	
 	// Nor Initialization
 	if (NOR_Init() != E_PASS)
@@ -45,11 +45,11 @@ Uint32 NOR_Copy() {
 	}
 
 	/* Set the Start Address */
-	appStartAddr = (Uint32 *)(((Uint8*)hdr) + sizeof(NOR_BOOT));
+	appStartAddr = (uint32_t *)(((uint8_t*)hdr) + sizeof(NOR_BOOT));
 
 	if(hdr->magicNum == UBL_MAGIC_BIN_IMG)
 	{
-		ramPtr = (Uint32 *) hdr->ldAddress;
+		ramPtr = (uint32_t *) hdr->ldAddress;
 
 		/* Copy data to RAM */
 		for(count = 0; count < ((hdr->appSize + 3)/4); count ++)
@@ -61,7 +61,7 @@ Uint32 NOR_Copy() {
 		return E_PASS;
 	}
 
-	if(SRecDecode((Uint8 *)appStartAddr, hdr->appSize, (Uint32 *)&gEntryPoint, (Uint32 *)&count ) != E_PASS)
+	if(SRecDecode((uint8_t *)appStartAddr, hdr->appSize, (uint32_t *)&gEntryPoint, (uint32_t *)&count ) != E_PASS)
 	{
 		return E_FAIL;
 	}

@@ -9,30 +9,33 @@
  	     v1.00 completion 							 						      
  	          Daniel Allred - Jan-22-2007                                              
  ----------------------------------------------------------------------------- */
+
+#include <stdint.h>
+
 #include "ubl.h"
 #include "dm644x.h"
 #include "uart.h"
 #include "util.h"
 
 // Memory allocation stuff
-static VUint32 current_mem_loc;
-VUint8 DDRMem[0] __attribute__((section (".ddrram")));;
+static volatile uint32_t current_mem_loc;
+volatile uint8_t DDRMem[0] __attribute__((section (".ddrram")));;
 
 // DDR Memory allocation routines (for storing large data)
-Uint32 get_current_mem_loc()
+uint32_t get_current_mem_loc()
 {
 	return current_mem_loc;
 }
 
-void set_current_mem_loc(Uint32 value)
+void set_current_mem_loc(uint32_t value)
 {
 	current_mem_loc = value;
 }
 
-void *ubl_alloc_mem (Uint32 size)
+void *ubl_alloc_mem (uint32_t size)
 {
 	void *cPtr;
-	Uint32 size_temp;
+	uint32_t size_temp;
 
 	// Ensure word boundaries
 	size_temp = ((size + 4) >> 2 ) << 2;
@@ -50,11 +53,11 @@ void *ubl_alloc_mem (Uint32 size)
 
 
 // S-record Decode stuff
-Uint32 GetHexData(Uint8 *src, Uint32 numBytes, Uint8* seq)
+uint32_t GetHexData(uint8_t *src, uint32_t numBytes, uint8_t* seq)
 {
-	Uint32 i;
-	Uint8 temp[2];
-	Uint32 checksum = 0;
+	uint32_t i;
+	uint8_t temp[2];
+	uint32_t checksum = 0;
 
 	for(i=0;i<numBytes;i++)
 	{
@@ -77,21 +80,21 @@ Uint32 GetHexData(Uint8 *src, Uint32 numBytes, Uint8* seq)
 	return checksum;
 }
 
-Uint32 GetHexAddr(Uint8 *src, Uint32* addr)
+uint32_t GetHexAddr(uint8_t *src, uint32_t* addr)
 {
-	Uint32 checksum;
-	checksum = GetHexData(src,4,(Uint8 *)addr);
+	uint32_t checksum;
+	checksum = GetHexData(src,4,(uint8_t *)addr);
 	*addr = ENDIAN_SWAP(*addr);
 	return checksum;
 }
 
-Uint32 SRecDecode(Uint8 *srecAddr, Uint32 srecByteCnt, Uint32 *binAddr, Uint32 *binByteCnt)
+uint32_t SRecDecode(uint8_t *srecAddr, uint32_t srecByteCnt, uint32_t *binAddr, uint32_t *binByteCnt)
 {
-	VUint32		index;
-	Uint8		cnt;
-	Uint32		dstAddr;
-	Uint32		totalCnt;
-	Uint32		checksum;
+	volatile uint32_t		index;
+	uint8_t		cnt;
+	uint32_t		dstAddr;
+	uint32_t		totalCnt;
+	uint32_t		checksum;
 
 	totalCnt = 0;
 	index = 0;
@@ -124,7 +127,7 @@ Uint32 SRecDecode(Uint8 *srecAddr, Uint32 srecByteCnt, Uint32 *binAddr, Uint32 *
 			cnt -=5;	
 
 			// Read cnt bytes to the to the determined destination address
-			checksum += GetHexData (srecAddr+index, cnt, (Uint8 *)dstAddr);
+			checksum += GetHexData (srecAddr+index, cnt, (uint8_t *)dstAddr);
 			index += (cnt << 1);
 			dstAddr += cnt;
 			totalCnt += cnt;
@@ -132,9 +135,9 @@ Uint32 SRecDecode(Uint8 *srecAddr, Uint32 srecByteCnt, Uint32 *binAddr, Uint32 *
 			/* Skip Checksum */
 			GetHexData (srecAddr+index, 1, &cnt);
 			index += 2;
-			if ( cnt != (Uint8)((~checksum) & 0xFF) )
+			if ( cnt != (uint8_t)((~checksum) & 0xFF) )
 			{
-				UARTSendData((Uint8 *) "S-record decode checksum failure.\r\n", FALSE);
+				UARTSendData((uint8_t *) "S-record decode checksum failure.\r\n", FALSE);
 				return E_FAIL;
 			}
 		}
@@ -144,7 +147,7 @@ Uint32 SRecDecode(Uint8 *srecAddr, Uint32 srecByteCnt, Uint32 *binAddr, Uint32 *
 		{
 			index += 2;
 
-			GetHexData (&srecAddr[index], 1, (Uint8 *)&cnt);
+			GetHexData (&srecAddr[index], 1, (uint8_t *)&cnt);
 			index += 2;
 
 			if (cnt == 5)
@@ -180,9 +183,9 @@ Uint32 SRecDecode(Uint8 *srecAddr, Uint32 srecByteCnt, Uint32 *binAddr, Uint32 *
 
 
 // Simple wait loop - comes in handy.
-void waitloop(Uint32 loopcnt)
+void waitloop(int32_t loopcnt)
 {
-	for (loopcnt = 0; loopcnt<1000; loopcnt++)
+	for (; loopcnt > 0; loopcnt--)
 	{
 		asm("   NOP");
 	}

@@ -18,25 +18,25 @@
 #include "nor.h"
 
 //External and global static variables
-extern Uint32 __NORFlash;
+extern uint32_t __NORFlash;
 volatile NOR_INFO gNorInfo;
 
 // ----------------- Bus Width Agnostic commands -------------------
-VUint8 *flash_make_addr (Uint32 blkAddr, Uint32 offset)
+volatile uint8_t *flash_make_addr (uint32_t blkAddr, uint32_t offset)
 {
-	return ((VUint8 *) ( blkAddr + (offset * gNorInfo.maxTotalWidth)));
+	return ((volatile uint8_t *) ( blkAddr + (offset * gNorInfo.maxTotalWidth)));
 }
 
-void flash_make_cmd (Uint8 cmd, void *cmdbuf)
+void flash_make_cmd (uint8_t cmd, void *cmdbuf)
 {
-	Int32 i;
-	Uint8 *cp = (Uint8 *) cmdbuf;
+	int32_t i;
+	uint8_t *cp = (uint8_t *) cmdbuf;
 
 	for (i = gNorInfo.busWidth; i > 0; i--)
 		*cp++ = (i & (gNorInfo.chipOperatingWidth - 1)) ? 0x00 : cmd;
 }
 
-void flash_write_cmd (Uint32 blkAddr, Uint32 offset, Uint8 cmd)
+void flash_write_cmd (uint32_t blkAddr, uint32_t offset, uint8_t cmd)
 {
 	volatile FLASHPtr addr;
 	FLASHData cmdword;
@@ -54,13 +54,13 @@ void flash_write_cmd (Uint32 blkAddr, Uint32 offset, Uint8 cmd)
 	}
 }
 
-void flash_write_data(Uint32 address, Uint32 data)
+void flash_write_data(uint32_t address, uint32_t data)
 {
 	volatile FLASHPtr pAddr;
 	FLASHData dataword;
 	dataword.l = data;
 
-	pAddr.cp = (VUint8*) address;
+	pAddr.cp = (volatile uint8_t*) address;
 	
 	switch (gNorInfo.busWidth)
 	{
@@ -73,14 +73,14 @@ void flash_write_data(Uint32 address, Uint32 data)
 	}
 }
 
-void flash_write_databuffer(Uint32* address, void* data, Uint32 numBytes)
+void flash_write_databuffer(uint32_t* address, void* data, uint32_t numBytes)
 {
     volatile FLASHPtr pAddr, pData;
-    VUint8* endAddress;
+    volatile uint8_t* endAddress;
 		
-	pData.cp = (VUint8*) data;
-	pAddr.cp = (VUint8*) *address;
-	endAddress =(VUint8*)((*address)+numBytes);
+	pData.cp = (volatile uint8_t*) data;
+	pAddr.cp = (volatile uint8_t*) *address;
+	endAddress =(volatile uint8_t*)((*address)+numBytes);
 	while (pAddr.cp < endAddress)
 	{
 	    switch (gNorInfo.busWidth)
@@ -98,23 +98,23 @@ void flash_write_databuffer(Uint32* address, void* data, Uint32 numBytes)
     switch (gNorInfo.busWidth)
     {
         case BUS_8BIT:
-            *address = (Uint32)(endAddress-1);
+            *address = (uint32_t)(endAddress-1);
             break;
         case BUS_16BIT:
-            *address = (Uint32)(endAddress-2);
+            *address = (uint32_t)(endAddress-2);
             break;
     }
 
 }
 
-Uint32 flash_verify_databuffer(Uint32 address, void* data, Uint32 numBytes)
+uint32_t flash_verify_databuffer(uint32_t address, void* data, uint32_t numBytes)
 {
     volatile FLASHPtr pAddr, pData;
-    VUint8* endAddress;
+    volatile uint8_t* endAddress;
 		
-	pData.cp = (VUint8*) data;
-	pAddr.cp = (VUint8*) address;
-	endAddress =(VUint8*)(address+numBytes);
+	pData.cp = (volatile uint8_t*) data;
+	pAddr.cp = (volatile uint8_t*) address;
+	endAddress =(volatile uint8_t*)(address+numBytes);
 	while (pAddr.cp < endAddress)
 	{
 	    switch (gNorInfo.busWidth)
@@ -132,7 +132,7 @@ Uint32 flash_verify_databuffer(Uint32 address, void* data, Uint32 numBytes)
     return E_PASS;
 }
 
-Uint32 flash_read_data(Uint32 address, Uint32 offset)
+uint32_t flash_read_data(uint32_t address, uint32_t offset)
 {
     volatile FLASHPtr pAddr;
 	FLASHData dataword;
@@ -153,11 +153,11 @@ Uint32 flash_read_data(Uint32 address, Uint32 offset)
 	return dataword.l;
 }
 
-FLASHData flash_read_CFI_bytes (Uint32 blkAddr, Uint32 offset, Uint8 numBytes)
+FLASHData flash_read_CFI_bytes (uint32_t blkAddr, uint32_t offset, uint8_t numBytes)
 {
-    Int32 i;
+    int32_t i;
 	FLASHData readword;
-	Uint8* pReadword = &readword.c;
+	uint8_t* pReadword = &readword.c;
 	
 	for (i = 0; i < numBytes; i++)
 	{
@@ -167,7 +167,7 @@ FLASHData flash_read_CFI_bytes (Uint32 blkAddr, Uint32 offset, Uint8 numBytes)
 	return readword;
 }
 
-Bool flash_data_isequal (Uint32 blkAddr, Uint32 offset, Uint32 val)
+Bool flash_data_isequal (uint32_t blkAddr, uint32_t offset, uint32_t val)
 {
 	FLASHData testword_a, testword_b;
 	Bool retval = FALSE;
@@ -187,7 +187,7 @@ Bool flash_data_isequal (Uint32 blkAddr, Uint32 offset, Uint32 val)
     return retval;
 }
 
-Bool flash_CFI_isequal (Uint32 blkAddr, Uint32 offset, Uint8 val)
+Bool flash_CFI_isequal (uint32_t blkAddr, uint32_t offset, uint8_t val)
 {
     volatile FLASHPtr addr;
 	FLASHData testword;
@@ -208,7 +208,7 @@ Bool flash_CFI_isequal (Uint32 blkAddr, Uint32 offset, Uint8 val)
     return retval;
 }
 
-Bool flash_issetall (Uint32 blkAddr, Uint32 offset, Uint8 mask)
+Bool flash_issetall (uint32_t blkAddr, uint32_t offset, uint8_t mask)
 {
     volatile FLASHPtr addr;
 	FLASHData maskword;
@@ -230,7 +230,7 @@ Bool flash_issetall (Uint32 blkAddr, Uint32 offset, Uint8 mask)
     return retval;
 }
 
-Bool flash_issetsome (Uint32 blkAddr, Uint32 offset, Uint8 mask)
+Bool flash_issetsome (uint32_t blkAddr, uint32_t offset, uint8_t mask)
 {
     volatile FLASHPtr addr;
 	FLASHData maskword;
@@ -252,9 +252,9 @@ Bool flash_issetsome (Uint32 blkAddr, Uint32 offset, Uint8 mask)
 }
 
 //Initialize the AEMIF subsystem and settings
-Uint32 NOR_Init()
+uint32_t NOR_Init()
 {
-    Uint8 width = ( ( (SYSTEM->BOOTCFG) >> 5) & 0x1 );
+    uint8_t width = ( ( (SYSTEM->BOOTCFG) >> 5) & 0x1 );
 
     // Select ASYNC EMIF Address Lines
     SYSTEM->PINMUX[0] = 0xC1F;
@@ -282,7 +282,7 @@ Uint32 NOR_Init()
         ;*/
                 
     //Init the FlashInfo structure
-    gNorInfo.flashBase = (Uint32) &(__NORFlash);
+    gNorInfo.flashBase = (uint32_t) &(__NORFlash);
     
     // Set width to 8 or 16
     gNorInfo.busWidth = (width)?BUS_16BIT:BUS_8BIT;
@@ -303,15 +303,15 @@ Uint32 NOR_Init()
     }
     else
     {
-        UARTSendData((Uint8 *)"CFI query failed.\r\n", FALSE);
+        UARTSendData((uint8_t *)"CFI query failed.\r\n", FALSE);
         return E_FAIL;
     }
     
     // Setup function pointers
     
-    UARTSendData((Uint8 *)"NOR Initialization:\r\n", FALSE);
+    UARTSendData((uint8_t *)"NOR Initialization:\r\n", FALSE);
     
-    UARTSendData((Uint8 *)"\tCommand Set: ", FALSE);    
+    UARTSendData((uint8_t *)"\tCommand Set: ", FALSE);    
     switch (gNorInfo.commandSet)
     {
         case AMD_BASIC_CMDSET:
@@ -320,7 +320,7 @@ Uint32 NOR_Init()
             Flash_BufferWrite    = &AMD_BufferWrite;
             Flash_Write          = &AMD_Write;
             Flash_ID             = &AMD_ID;
-            UARTSendData((Uint8 *)"AMD\r\n", FALSE);
+            UARTSendData((uint8_t *)"AMD\r\n", FALSE);
             break;
         case INTEL_BASIC_CMDSET:
         case INTEL_EXT_CMDSET:
@@ -328,61 +328,61 @@ Uint32 NOR_Init()
             Flash_BufferWrite    = &Intel_BufferWrite;
             Flash_Write          = &Intel_Write;
             Flash_ID             = &Intel_ID;
-            UARTSendData((Uint8 *)"Intel\r\n", FALSE);
+            UARTSendData((uint8_t *)"Intel\r\n", FALSE);
             break;
         default:
             Flash_Write          = &Unsupported_Write;
             Flash_BufferWrite    = &Unsupported_BufferWrite;
             Flash_Erase          = &Unsupported_Erase;
             Flash_ID             = &Unsupported_ID;
-            UARTSendData((Uint8 *)"Unknown\r\n", FALSE);
+            UARTSendData((uint8_t *)"Unknown\r\n", FALSE);
             break;
     }
     
     if ( (*Flash_ID)(gNorInfo.flashBase) != E_PASS)
     {
-        UARTSendData((Uint8 *)"NOR ID failed.\r\n", FALSE);
+        UARTSendData((uint8_t *)"NOR ID failed.\r\n", FALSE);
         return E_FAIL;
     }
         
-    UARTSendData((Uint8 *)"\tManufacturer: ", FALSE);
+    UARTSendData((uint8_t *)"\tManufacturer: ", FALSE);
     switch(gNorInfo.manfID)
     {
         case AMD:
-            UARTSendData((Uint8 *)"AMD", FALSE);
+            UARTSendData((uint8_t *)"AMD", FALSE);
             break;
         case FUJITSU:
-            UARTSendData((Uint8 *)"FUJITSU", FALSE);
+            UARTSendData((uint8_t *)"FUJITSU", FALSE);
             break;
         case INTEL:
-            UARTSendData((Uint8 *)"INTEL", FALSE);
+            UARTSendData((uint8_t *)"INTEL", FALSE);
             break;
         case MICRON:
-            UARTSendData((Uint8 *)"MICRON", FALSE);
+            UARTSendData((uint8_t *)"MICRON", FALSE);
             break;
         case SAMSUNG:
-            UARTSendData((Uint8 *)"SAMSUNG", FALSE);
+            UARTSendData((uint8_t *)"SAMSUNG", FALSE);
             break;
         case SHARP:
-            UARTSendData((Uint8 *)"SHARP", FALSE);
+            UARTSendData((uint8_t *)"SHARP", FALSE);
             break;
         default:
-            UARTSendData((Uint8 *)"Unknown", FALSE);
+            UARTSendData((uint8_t *)"Unknown", FALSE);
             break;
     }
-    UARTSendData((Uint8 *)"\r\n", FALSE);
-    UARTSendData((Uint8 *)"\tSize (in bytes): 0x", FALSE);
+    UARTSendData((uint8_t *)"\r\n", FALSE);
+    UARTSendData((uint8_t *)"\tSize (in bytes): 0x", FALSE);
     UARTSendInt( gNorInfo.flashSize );
-    UARTSendData((Uint8 *)"\r\n", FALSE);
+    UARTSendData((uint8_t *)"\r\n", FALSE);
     
     return E_PASS;    
 }
 
 // Query the chip to check for CFI table and data
-Uint32 QueryCFI( Uint32 baseAddress )
+uint32_t QueryCFI( uint32_t baseAddress )
 {                
-    Int32 i;
-    Uint32 blkVal; 
+    int32_t i;
+    uint32_t blkVal; 
     
     // Six possible NOR Flash Configurations of DM644x
     //  1) Bus in x8 mode, x8 only device
@@ -441,20 +441,20 @@ Uint32 QueryCFI( Uint32 baseAddress )
 // -------------------------------------------------------------------------
 
 // ------------------------  Default Empty  ---------------------------
-Uint32 Unsupported_Write( Uint32 address, VUint32 data)
+uint32_t Unsupported_Write( uint32_t address, volatile uint32_t data)
 {
     return E_FAIL;
 }
-Uint32 Unsupported_BufferWrite(Uint32 address, VUint8 data[], Uint32 length )
+uint32_t Unsupported_BufferWrite(uint32_t address, volatile uint8_t data[], uint32_t length )
 {
     return E_FAIL;
 }
-Uint32 Unsupported_Erase(Uint32 address)
+uint32_t Unsupported_Erase(uint32_t address)
 {
     return E_FAIL;
 }
 
-Uint32 Unsupported_ID(Uint32 address)
+uint32_t Unsupported_ID(uint32_t address)
 {
     return E_FAIL;
 }
@@ -463,7 +463,7 @@ Uint32 Unsupported_ID(Uint32 address)
 // -------------------- Begin of Intel specific commands -----------------------
 
 //ID flash
-Uint32 Intel_ID( Uint32 baseAddress )
+uint32_t Intel_ID( uint32_t baseAddress )
 {
     // Intel Exit back to read array mode
     Intel_Soft_Reset_Flash();
@@ -475,7 +475,7 @@ Uint32 Intel_ID( Uint32 baseAddress )
     gNorInfo.manfID = (MANFID) flash_read_data(baseAddress, INTEL_MANFID_ADDR);
     
     // Read Device ID
-    gNorInfo.devID1 = (Uint16) (MANFID) flash_read_data(baseAddress, INTEL_DEVID_ADDR);
+    gNorInfo.devID1 = (uint16_t) (MANFID) flash_read_data(baseAddress, INTEL_DEVID_ADDR);
     gNorInfo.devID2 = 0x0000;
         
     // Intel Exit back to read array mode
@@ -499,7 +499,7 @@ void Intel_Clear_Status()
 }
 
 // Remove block write protection
-Uint32 Intel_Clear_Lock(VUint32 blkAddr)
+uint32_t Intel_Clear_Lock(volatile uint32_t blkAddr)
 {
 
 	// Write the Clear Lock Command
@@ -512,7 +512,7 @@ Uint32 Intel_Clear_Lock(VUint32 blkAddr)
 }
 
 // Write-protect a block
-Uint32 Intel_Set_Lock(VUint32 blkAddr)
+uint32_t Intel_Set_Lock(volatile uint32_t blkAddr)
 {
 	// Write the Set Lock Command	
     flash_write_cmd(blkAddr,0,INTEL_LOCK_CMD0);            
@@ -528,14 +528,14 @@ void Intel_Wait_For_Status_Complete()
     while ( !flash_issetall(gNorInfo.flashBase, 0, BIT7) );
 }
 
-Uint32 Intel_Lock_Status_Check()
+uint32_t Intel_Lock_Status_Check()
 {
-    Uint32 retval = E_PASS;
-    //Uint8 status;
+    uint32_t retval = E_PASS;
+    //uint8_t status;
 
     Intel_Wait_For_Status_Complete();
 
-    //status = flash_read_uint16((Uint32)gNorInfo.flashBase,0);
+    //status = flash_read_uint16((uint32_t)gNorInfo.flashBase,0);
     //if ( status & BIT5 )
     if (flash_issetsome(gNorInfo.flashBase, 0, (BIT5 | BIT3)))
     {
@@ -566,9 +566,9 @@ Uint32 Intel_Lock_Status_Check()
 }
 
 // Erase Block
-Uint32 Intel_Erase(VUint32 blkAddr)
+uint32_t Intel_Erase(volatile uint32_t blkAddr)
 {
-	Uint32 retval = E_PASS;
+	uint32_t retval = E_PASS;
 	
 	// Clear Lock Bits
 	retval |= Intel_Clear_Lock(blkAddr);
@@ -591,9 +591,9 @@ Uint32 Intel_Erase(VUint32 blkAddr)
 }
 
 // Write data
-Uint32 Intel_Write( Uint32 address, VUint32 data )
+uint32_t Intel_Write( uint32_t address, volatile uint32_t data )
 {
-    Uint32 retval = E_PASS;
+    uint32_t retval = E_PASS;
 	
 	// Send Write command
 	flash_write_cmd(address,0,INTEL_WRITE_CMD);
@@ -619,11 +619,11 @@ Uint32 Intel_Write( Uint32 address, VUint32 data )
 }
 
 // Buffer write data
-Uint32 Intel_BufferWrite(Uint32 address, VUint8 data[], Uint32 numBytes )
+uint32_t Intel_BufferWrite(uint32_t address, volatile uint8_t data[], uint32_t numBytes )
 {
-    Uint32 startAddress = address;
-	Uint32 retval = E_PASS;
-	Uint32 timeoutCnt = 0, shift;
+    uint32_t startAddress = address;
+	uint32_t retval = E_PASS;
+	uint32_t timeoutCnt = 0, shift;
 
 	// Send Write_Buff_Load command   
     do {
@@ -677,7 +677,7 @@ Uint32 Intel_BufferWrite(Uint32 address, VUint8 data[], Uint32 numBytes )
 
 // -------------------- Begin of AMD specific commands -----------------------
 // Identify the Manufacturer and Device ID 
-Uint32 AMD_ID( Uint32 baseAddress )
+uint32_t AMD_ID( uint32_t baseAddress )
 {
     // Exit back to read array mode
     AMD_Soft_Reset_Flash();
@@ -690,7 +690,7 @@ Uint32 AMD_ID( Uint32 baseAddress )
     gNorInfo.manfID = (MANFID) flash_read_data(baseAddress, AMD_MANFID_ADDR);
     
     // Read device ID
-    gNorInfo.devID1 = (Uint16) flash_read_data(baseAddress, AMD_DEVID_ADDR0);
+    gNorInfo.devID1 = (uint16_t) flash_read_data(baseAddress, AMD_DEVID_ADDR0);
     
     // Read additional ID bytes if needed
     if ( (gNorInfo.devID1 & 0xFF ) == AMD_ID_MULTI )
@@ -720,9 +720,9 @@ void AMD_Prefix_Commands()
 }
 
 // Erase Block
-Uint32 AMD_Erase(Uint32 blkAddr)
+uint32_t AMD_Erase(uint32_t blkAddr)
 {
-    Uint32 retval = E_PASS;
+    uint32_t retval = E_PASS;
 
     // Send commands
 	AMD_Prefix_Commands();
@@ -744,9 +744,9 @@ Uint32 AMD_Erase(Uint32 blkAddr)
 }
 
 // AMD Flash Write
-Uint32 AMD_Write( Uint32 address, VUint32 data )
+uint32_t AMD_Write( uint32_t address, volatile uint32_t data )
 {
-	Uint32 retval = E_PASS;
+	uint32_t retval = E_PASS;
 	
 	// Send Commands
 	AMD_Prefix_Commands();
@@ -766,7 +766,7 @@ Uint32 AMD_Write( Uint32 address, VUint32 data )
 			{
 				if ( (flash_read_data(address, 0 ) & (BIT7 | BIT15) ) != (data & (BIT7 | BIT15) ) )
 				{
-				    UARTSendData((Uint8 *)"Timeout ocurred.\r\n",FALSE);
+				    UARTSendData((uint8_t *)"Timeout ocurred.\r\n",FALSE);
 					retval = E_FAIL;
 				}
 			    break;				
@@ -785,13 +785,13 @@ Uint32 AMD_Write( Uint32 address, VUint32 data )
 }
 
 // AMD flash buffered write
-Uint32 AMD_BufferWrite(Uint32 address, VUint8 data[], Uint32 numBytes )
+uint32_t AMD_BufferWrite(uint32_t address, volatile uint8_t data[], uint32_t numBytes )
 {
-    Uint32 startAddress = address;
-	Uint32 blkAddress, blkSize;
-	Uint32 data_temp;
-	Uint32 retval = E_PASS;
-	Uint32 shift;
+    uint32_t startAddress = address;
+	uint32_t blkAddress, blkSize;
+	uint32_t data_temp;
+	uint32_t retval = E_PASS;
+	uint32_t shift;
 	
 	// Get block base address and size
 	DiscoverBlockInfo(address, &blkSize, &blkAddress);
@@ -815,7 +815,7 @@ Uint32 AMD_BufferWrite(Uint32 address, VUint8 data[], Uint32 numBytes )
     flash_write_cmd(blkAddress, 0, AMD_WRT_BUF_CONF_CMD);                  
     
     // Read last data item                  
-    data_temp = flash_read_data((Uint32) (data + (address - startAddress)), 0);
+    data_temp = flash_read_data((uint32_t) (data + (address - startAddress)), 0);
         
 	while(TRUE)
 	{
@@ -831,7 +831,7 @@ Uint32 AMD_BufferWrite(Uint32 address, VUint8 data[], Uint32 numBytes )
 			{
 				if( (flash_read_data(address, 0 ) & (BIT7 | BIT15)) != (data_temp & (BIT7 | BIT15) ) )
 				{
-				    UARTSendData((Uint8 *)"Timeout ocurred.\r\n",FALSE);
+				    UARTSendData((uint8_t *)"Timeout ocurred.\r\n",FALSE);
 					retval = E_FAIL;
 				}
 				break;
@@ -841,7 +841,7 @@ Uint32 AMD_BufferWrite(Uint32 address, VUint8 data[], Uint32 numBytes )
 			{
 				if( (flash_read_data(address, 0 ) & (BIT7 | BIT15)) != (data_temp & (BIT7 | BIT15) ) )
 				{
-				    UARTSendData((Uint8 *)"Abort ocurred.\r\n",FALSE);
+				    UARTSendData((uint8_t *)"Abort ocurred.\r\n",FALSE);
 					retval = E_FAIL;
 					AMD_Write_Buf_Abort_Reset_Flash ();
 				}
@@ -868,12 +868,12 @@ void AMD_Write_Buf_Abort_Reset_Flash()
 
 
 // Get info on block address and sizes
-Uint32 DiscoverBlockInfo(Uint32 address,Uint32* blockSize, Uint32* blockAddr)
+uint32_t DiscoverBlockInfo(uint32_t address,uint32_t* blockSize, uint32_t* blockAddr)
 {
-    Int32 i;
-    Uint32 currRegionAddr, nextRegionAddr;
+    int32_t i;
+    uint32_t currRegionAddr, nextRegionAddr;
         
-    currRegionAddr = (Uint32) gNorInfo.flashBase;
+    currRegionAddr = (uint32_t) gNorInfo.flashBase;
     if ((address < currRegionAddr) || (address >= (currRegionAddr+gNorInfo.flashSize)))
     {
         return E_FAIL;
@@ -896,59 +896,59 @@ Uint32 DiscoverBlockInfo(Uint32 address,Uint32* blockSize, Uint32* blockAddr)
 // --------------------------- NOR API Functions -----------------------------
 
 //Global Erase NOR Flash
-Uint32 NOR_GlobalErase()
+uint32_t NOR_GlobalErase()
 {
-    return NOR_Erase( (VUint32) gNorInfo.flashBase, (VUint32) gNorInfo.flashSize );
+    return NOR_Erase( (volatile uint32_t) gNorInfo.flashBase, (volatile uint32_t) gNorInfo.flashSize );
 }
 
 // Erase Flash Block
-Uint32 NOR_Erase(VUint32 start_address, VUint32 size)
+uint32_t NOR_Erase(volatile uint32_t start_address, volatile uint32_t size)
 {
-	VUint32 addr  = start_address;
-	VUint32 range = start_address + size;
-	Uint32 blockSize, blockAddr;
+	volatile uint32_t addr  = start_address;
+	volatile uint32_t range = start_address + size;
+	uint32_t blockSize, blockAddr;
 	
-	UARTSendData((Uint8 *)"Erasing the NOR Flash\r\n", FALSE);
+	UARTSendData((uint8_t *)"Erasing the NOR Flash\r\n", FALSE);
 	
    	while (addr < range)
   	{
 	    if (DiscoverBlockInfo(addr, &blockSize, &blockAddr) != E_PASS)
 	    {
-	        UARTSendData((Uint8 *)"Address out of range", FALSE);
+	        UARTSendData((uint8_t *)"Address out of range", FALSE);
 	        return E_FAIL;
 	    }
 		
 		//Increment to the next block
 	    if ( (*Flash_Erase)(blockAddr) != E_PASS)
 	    {
-	        UARTSendData((Uint8 *)"Erase failure at block address 0x",FALSE);
+	        UARTSendData((uint8_t *)"Erase failure at block address 0x",FALSE);
 	        UARTSendInt(blockAddr);
-	        UARTSendData((Uint8 *)"\r\n", FALSE);
+	        UARTSendData((uint8_t *)"\r\n", FALSE);
 	        return E_FAIL;
 	    }
 	    addr = blockAddr + blockSize;
 	    
 	    // Show status messages
-	    UARTSendData((Uint8 *)"Erased through 0x", FALSE);
+	    UARTSendData((uint8_t *)"Erased through 0x", FALSE);
 		UARTSendInt(addr);
-		UARTSendData((Uint8 *)"\r\n", FALSE);
+		UARTSendData((uint8_t *)"\r\n", FALSE);
   	}
 
-	UARTSendData((Uint8 *)"Erase Completed\r\n", FALSE);
+	UARTSendData((uint8_t *)"Erase Completed\r\n", FALSE);
 
   	return(E_PASS);
 }
 
 // NOR_WriteBytes
-Uint32 NOR_WriteBytes( Uint32 writeAddress,
-					   Uint32 numBytes,
-					   Uint32 readAddress)
+uint32_t NOR_WriteBytes( uint32_t writeAddress,
+					   uint32_t numBytes,
+					   uint32_t readAddress)
 {
-	Uint32      blockSize, blockAddr;
-	Int32		i;
-	Uint32      retval = E_PASS;
+	uint32_t blockSize, blockAddr;
+	int i;
+	uint32_t retval = E_PASS;
 
-	UARTSendData((Uint8 *)"Writing the NOR Flash\r\n", FALSE);
+	UARTSendData((uint8_t *)"Writing the NOR Flash\r\n", FALSE);
 
 	// Make numBytes even if needed
 	if (numBytes & 0x00000001)
@@ -956,7 +956,7 @@ Uint32 NOR_WriteBytes( Uint32 writeAddress,
 		
     if (DiscoverBlockInfo(writeAddress, &blockSize, &blockAddr) != E_PASS)
     {
-        UARTSendData((Uint8 *)"Address out of range", FALSE);
+        UARTSendData((uint8_t *)"Address out of range", FALSE);
         return E_FAIL;
     }
 
@@ -966,7 +966,7 @@ Uint32 NOR_WriteBytes( Uint32 writeAddress,
 		{
 			if ((*Flash_Write)(writeAddress, flash_read_data(readAddress,0) ) != E_PASS)
 			{
-			    UARTSendData((Uint8 *)"\r\nNormal Write Failed.\r\n", FALSE);
+			    UARTSendData((uint8_t *)"\r\nNormal Write Failed.\r\n", FALSE);
 			    retval = E_FAIL;
 			}
 			else
@@ -979,7 +979,7 @@ Uint32 NOR_WriteBytes( Uint32 writeAddress,
 		else
 		{
 		    // Try to use buffered writes
-			if((*Flash_BufferWrite)(writeAddress, (VUint8 *)readAddress, gNorInfo.bufferSize) == E_PASS)
+			if((*Flash_BufferWrite)(writeAddress, (volatile uint8_t *)readAddress, gNorInfo.bufferSize) == E_PASS)
 			{
 				numBytes -= gNorInfo.bufferSize;
 				writeAddress += gNorInfo.bufferSize;
@@ -992,7 +992,7 @@ Uint32 NOR_WriteBytes( Uint32 writeAddress,
 				{
                     if ((*Flash_Write)(writeAddress, flash_read_data(readAddress,0) ) != E_PASS)
 					{
-						UARTSendData((Uint8 *)"\r\nNormal write also failed\r\n", FALSE);
+						UARTSendData((uint8_t *)"\r\nNormal write also failed\r\n", FALSE);
 						retval = E_FAIL;
 						break;
 					}
@@ -1011,20 +1011,20 @@ Uint32 NOR_WriteBytes( Uint32 writeAddress,
         {    
 	        if  ( ((writeAddress & (~((blockSize>>4)-1))) == writeAddress) || (numBytes == 0) )
 	        {
-	            UARTSendData((Uint8*) "NOR Write OK through 0x", FALSE);
+	            UARTSendData((uint8_t*) "NOR Write OK through 0x", FALSE);
 		        UARTSendInt(writeAddress);
-		        UARTSendData((Uint8*)"\r\n", FALSE);
+		        UARTSendData((uint8_t*)"\r\n", FALSE);
         		
 	            if (DiscoverBlockInfo(writeAddress, &blockSize, &blockAddr) != E_PASS)
                 {
-                    UARTSendData((Uint8 *)"Address out of range", FALSE);
+                    UARTSendData((uint8_t *)"Address out of range", FALSE);
                     return E_FAIL;
                 }
 	        }
 	    }
 	    else
 	    {
-		    UARTSendData((Uint8*) "NOR Write Failed...Aborting!\r\n", FALSE);
+		    UARTSendData((uint8_t*) "NOR Write Failed...Aborting!\r\n", FALSE);
 		    return E_FAIL;
 		}
   	}

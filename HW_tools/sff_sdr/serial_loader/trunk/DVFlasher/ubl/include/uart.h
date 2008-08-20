@@ -14,15 +14,17 @@
 #ifndef _UART_H_
 #define _UART_H_
 
+#include <stdint.h> 
+
 #define MAXSTRLEN 256
 
 typedef struct _UART_ACK_HEADER{
-    Uint32      magicNum;
-    Uint32      appStartAddr;
-    Uint32      srecByteCnt;
-    Uint32      srecAddr;
-    Uint32      binByteCnt;
-    Uint32      binAddr;
+    uint32_t      magicNum;
+    uint32_t      appStartAddr;
+    uint32_t      srecByteCnt;
+    uint32_t      srecAddr;
+    uint32_t      binByteCnt;
+    uint32_t      binAddr;
 } UART_ACK_HEADER;
 
 // ------ Function prototypes ------ 
@@ -30,15 +32,15 @@ typedef struct _UART_ACK_HEADER{
 void UART_Boot(void);
 
 // Simple send/recv functions
-Uint32 UARTSendData(Uint8* seq, Bool includeNull);
-Uint32 UARTSendInt(Uint32 value);
-Int32 GetStringLen(Uint8* seq);
-Uint32 UARTRecvData(Uint32 numBytes, Uint8* seq);
+uint32_t UARTSendData(uint8_t *seq, Bool includeNull);
+uint32_t UARTSendInt(uint32_t value);
+int32_t GetStringLen(uint8_t *seq);
+uint32_t UARTRecvData(uint32_t numBytes, uint8_t *seq);
 
 // Complex send/recv functions
-Uint32 UARTCheckSequence(Uint8* seq, Bool includeNull);
-Uint32 UARTGetHexData(Uint32 numBytes, Uint32* data);
-Uint32 UARTGetCMD(Uint32* bootCmd);
-Uint32 UARTGetHeaderAndData(UART_ACK_HEADER* ackHeader);
+uint32_t UARTCheckSequence(uint8_t *seq, Bool includeNull);
+uint32_t UARTGetHexData(uint32_t numBytes, uint32_t* data);
+uint32_t UARTGetCMD(uint32_t* bootCmd);
+uint32_t UARTGetHeaderAndData(UART_ACK_HEADER* ackHeader);
 
 #endif // End _UART_H_

@@ -126,89 +126,89 @@ typedef enum FlashCommandSet CMDSET;
 /*************************** Structs *********************************/
 // Struct to hold discovered flash parameters
 typedef struct _NOR_MEDIA_STRUCT_ {
-   Uint32       flashBase;                          // 32-bit address of flash start
-   Uint8        busWidth;                           // 8-bit or 16-bit bus width
-   Uint8        chipOperatingWidth;                 // The operating width of each chip
-   Uint8        maxTotalWidth;                      // Maximum extent of width of all chips combined - determines offset shifts
-   Uint32       flashSize;                          // Size of NOR flash regions in bytes (numberDevices * size of one device)
-   Uint32       bufferSize;                         // Size of write buffer
+   uint32_t       flashBase;                          // 32-bit address of flash start
+   uint8_t        busWidth;                           // 8-bit or 16-bit bus width
+   uint8_t        chipOperatingWidth;                 // The operating width of each chip
+   uint8_t        maxTotalWidth;                      // Maximum extent of width of all chips combined - determines offset shifts
+   uint32_t       flashSize;                          // Size of NOR flash regions in bytes (numberDevices * size of one device)
+   uint32_t       bufferSize;                         // Size of write buffer
    CMDSET       commandSet;                         // command set id (see CFI documentation)
-   Uint8        numberDevices;                      // Number of deives used in parallel
-   Uint8        numberRegions;                      // Number of regions of contiguous regions of same block size
-   Uint32       numberBlocks[CFI_MAXREGIONS];    // Number of blocks in a region
-   Uint32       blockSize[CFI_MAXREGIONS];       // Size of the blocks in a region
+   uint8_t        numberDevices;                      // Number of deives used in parallel
+   uint8_t        numberRegions;                      // Number of regions of contiguous regions of same block size
+   uint32_t       numberBlocks[CFI_MAXREGIONS];    // Number of blocks in a region
+   uint32_t       blockSize[CFI_MAXREGIONS];       // Size of the blocks in a region
    MANFID       manfID;                             // Manufacturer's ID
-   Uint16       devID1;                             // Device ID
-   Uint16       devID2;                             // Used for AMD 3-byte ID devices
+   uint16_t       devID1;                             // Device ID
+   uint16_t       devID2;                             // Used for AMD 3-byte ID devices
 } NOR_INFO, *PNOR_INFO;
 
 typedef union {
-	Uint8 c;
-	Uint16 w;
-	Uint32 l;
+	uint8_t c;
+	uint16_t w;
+	uint32_t l;
 } FLASHData;
 
 typedef union {
-	VUint8 *cp;
-	VUint16 *wp;
-	VUint32 *lp;
+	volatile uint8_t *cp;
+	volatile uint16_t *wp;
+	volatile uint32_t *lp;
 } FLASHPtr;
 
 
 /*************************** Function Prototypes *************************/
 
 // Global NOR commands
-Uint32 NOR_Init ();
-Uint32 NOR_Copy(void);
-Uint32 NOR_WriteBytes(Uint32 writeAddress, Uint32 numBytes, Uint32 readAddress);
-Uint32 NOR_GlobalErase();
-Uint32 NOR_Erase(Uint32 start_address, Uint32 size);
-Uint32 DiscoverBlockInfo(Uint32 address,Uint32* blockSize, Uint32* blockAddr);
+uint32_t NOR_Init ();
+uint32_t NOR_Copy(void);
+uint32_t NOR_WriteBytes(uint32_t writeAddress, uint32_t numBytes, uint32_t readAddress);
+uint32_t NOR_GlobalErase();
+uint32_t NOR_Erase(uint32_t start_address, uint32_t size);
+uint32_t DiscoverBlockInfo(uint32_t address,uint32_t* blockSize, uint32_t* blockAddr);
 
 // Flash Identification  and Discovery
-Uint32 QueryCFI( Uint32 baseAddress );
+uint32_t QueryCFI( uint32_t baseAddress );
 
 // Generic functions to access flash data and CFI tables
-VUint8 *flash_make_addr (Uint32 blkAddr, Uint32 offset);
-void flash_make_cmd (Uint8 cmd, void *cmdbuf);
-void flash_write_cmd (Uint32 blkAddr, Uint32 offset, Uint8 cmd);
-void flash_write_data(Uint32 address, Uint32 data);
-void flash_write_databuffer(Uint32* address, void* data, Uint32 numBytes);
-Uint32 flash_verify_databuffer(Uint32 address, void* data, Uint32 numBytes);
-Uint32 flash_read_data(Uint32 address, Uint32 offset);
-FLASHData flash_read_CFI_bytes (Uint32 blkAddr, Uint32 offset, Uint8 numBytes);
-Bool flash_isequal (Uint32 blkAddr, Uint32 offset, Uint8 val);
-Bool flash_issetall (Uint32 blkAddr, Uint32 offset, Uint8 mask);
-Bool flash_issetsome (Uint32 blkAddr, Uint32 offset, Uint8 mask);
+volatile uint8_t *flash_make_addr (uint32_t blkAddr, uint32_t offset);
+void flash_make_cmd (uint8_t cmd, void *cmdbuf);
+void flash_write_cmd (uint32_t blkAddr, uint32_t offset, uint8_t cmd);
+void flash_write_data(uint32_t address, uint32_t data);
+void flash_write_databuffer(uint32_t* address, void* data, uint32_t numBytes);
+uint32_t flash_verify_databuffer(uint32_t address, void* data, uint32_t numBytes);
+uint32_t flash_read_data(uint32_t address, uint32_t offset);
+FLASHData flash_read_CFI_bytes (uint32_t blkAddr, uint32_t offset, uint8_t numBytes);
+Bool flash_isequal (uint32_t blkAddr, uint32_t offset, uint8_t val);
+Bool flash_issetall (uint32_t blkAddr, uint32_t offset, uint8_t mask);
+Bool flash_issetsome (uint32_t blkAddr, uint32_t offset, uint8_t mask);
 
 // Generic commands that will point to either AMD or Intel command set
-Uint32 (* Flash_Write)(Uint32, VUint32);
-Uint32 (* Flash_BufferWrite)( Uint32, VUint8[], Uint32);
-Uint32 (* Flash_Erase)(Uint32);
-Uint32 (* Flash_ID)(Uint32);
+uint32_t (* Flash_Write)(uint32_t, volatile uint32_t);
+uint32_t (* Flash_BufferWrite)( uint32_t, volatile uint8_t[], uint32_t);
+uint32_t (* Flash_Erase)(uint32_t);
+uint32_t (* Flash_ID)(uint32_t);
 
 // Empty commands for when neither command set is used
-Uint32 Unsupported_Erase( Uint32 );
-Uint32 Unsupported_Write( Uint32, VUint32 );
-Uint32 Unsupported_BufferWrite( Uint32, VUint8[], Uint32 );
-Uint32 Unsupported_ID( Uint32 );
+uint32_t Unsupported_Erase( uint32_t );
+uint32_t Unsupported_Write( uint32_t, volatile uint32_t );
+uint32_t Unsupported_BufferWrite( uint32_t, volatile uint8_t[], uint32_t );
+uint32_t Unsupported_ID( uint32_t );
 
 //Intel pointer-mapped commands
-Uint32 Intel_Erase( VUint32 blkAddr);
-Uint32 Intel_Write( Uint32 address, VUint32 data );
-Uint32 Intel_BufferWrite( Uint32 address, VUint8 data[], Uint32 numBytes );
-Uint32 Intel_ID( Uint32 );
+uint32_t Intel_Erase( volatile uint32_t blkAddr);
+uint32_t Intel_Write( uint32_t address, volatile uint32_t data );
+uint32_t Intel_BufferWrite( uint32_t address, volatile uint8_t data[], uint32_t numBytes );
+uint32_t Intel_ID( uint32_t );
 
 //AMD pointer-mapped commands
-Uint32 AMD_Erase(Uint32 blkAddr);
-Uint32 AMD_Write( Uint32 address, VUint32 data );
-Uint32 AMD_BufferWrite(Uint32 address, VUint8 data[], Uint32 numBytes );
-Uint32 AMD_ID( Uint32 );
+uint32_t AMD_Erase(uint32_t blkAddr);
+uint32_t AMD_Write( uint32_t address, volatile uint32_t data );
+uint32_t AMD_BufferWrite(uint32_t address, volatile uint8_t data[], uint32_t numBytes );
+uint32_t AMD_ID( uint32_t );
 
 // Misc. Intel commands
-Uint32 Intel_Clear_Lock(VUint32 blkAddr);
-Uint32 Intel_Set_Lock(VUint32 blkAddr);
-Uint32 Intel_Lock_Status_Check();
+uint32_t Intel_Clear_Lock(volatile uint32_t blkAddr);
+uint32_t Intel_Set_Lock(volatile uint32_t blkAddr);
+uint32_t Intel_Lock_Status_Check();
 void Intel_Soft_Reset_Flash();
 void Intel_Clear_Status();
 void Intel_Wait_For_Status_Complete();

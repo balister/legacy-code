@@ -18,6 +18,8 @@
 #ifndef _NAND_H_
 #define _NAND_H_
 
+#include <stdint.h>
+
 #include "ubl.h"
 #include "tistdtypes.h"
 #include "dm644x.h"
@@ -84,88 +86,88 @@
 // ----------------- NAND device and information structures --------------------
 // NAND_DEVICE_INFO structure
 typedef struct _NAND_DEV_STRUCT_ {
-    Uint8   devID;              // DeviceID
-    Uint16  numBlocks;          // number of blocks in device
-    Uint8   pagesPerBlock;      // page count per block
-    Uint16  bytesPerPage;       // byte count per page (include spare)
+    uint8_t   devID;              // DeviceID
+    uint16_t  numBlocks;          // number of blocks in device
+    uint8_t   pagesPerBlock;      // page count per block
+    uint16_t  bytesPerPage;       // byte count per page (include spare)
 } NAND_DEVICE_INFO, *PNAND_DEVICE_INFO;
 
 // NAND_INFO structure 
 typedef struct _NAND_MEDIA_STRUCT_ {
-    Uint32  flashBase;          // Base address of CS memory space where NAND is connected
-	Uint8   busWidth;           // NAND width 1->16 bits 0->8 bits
-	Uint8   devID;              // NAND_DevTable index
-	Uint16  numBlocks;          // block count per device
-	Uint8   pagesPerBlock;      // page count per block
-	Uint16  bytesPerPage;       // Number of bytes in a page
-	Uint8   numColAddrBytes;    // Number of Column address cycles
-	Uint8   numRowAddrBytes;    // Number of Row address cycles
-	Uint32  ECCMask;            // Mask for ECC register
+    uint32_t  flashBase;          // Base address of CS memory space where NAND is connected
+	uint8_t   busWidth;           // NAND width 1->16 bits 0->8 bits
+	uint8_t   devID;              // NAND_DevTable index
+	uint16_t  numBlocks;          // block count per device
+	uint8_t   pagesPerBlock;      // page count per block
+	uint16_t  bytesPerPage;       // Number of bytes in a page
+	uint8_t   numColAddrBytes;    // Number of Column address cycles
+	uint8_t   numRowAddrBytes;    // Number of Row address cycles
+	uint32_t  ECCMask;            // Mask for ECC register
 	Bool    bigBlock;			// TRUE - Big block device, FALSE - small block device
-	Uint8   spareBytesPerPage;  // Number of bytes in spare byte area of each page   	
-	Uint8   blkShift;			// Number of bits by which block address is to be shifted
-	Uint8   pageShift;			// Number of bits by which page address is to be shifted
-	Uint8   CSOffset;           // 0 for CS2 space, 1 for CS3 space, 2 for CS4 space, 3 for CS5 space
+	uint8_t   spareBytesPerPage;  // Number of bytes in spare byte area of each page   	
+	uint8_t   blkShift;			// Number of bits by which block address is to be shifted
+	uint8_t   pageShift;			// Number of bits by which page address is to be shifted
+	uint8_t   CSOffset;           // 0 for CS2 space, 1 for CS3 space, 2 for CS4 space, 3 for CS5 space
 } NAND_INFO, *PNAND_INFO;
 
 typedef union {
-	Uint8 c;
-	Uint16 w;
-	Uint32 l;
+	uint8_t c;
+	uint16_t w;
+	uint32_t l;
 } FLASHData;
 
 typedef union {
-	VUint8 *cp;
-	VUint16 *wp;
-	VUint32 *lp;
+	volatile uint8_t *cp;
+	volatile uint16_t *wp;
+	volatile uint32_t *lp;
 } FLASHPtr;
 
 // ---------------- Prototypes of functions for NAND flash --------------------
 
 // Generic NAND flash functions
-VUint8 *flash_make_addr (Uint32 baseAddr, Uint32 offset);
-void flash_write_addr (PNAND_INFO pNandInfo, Uint32 addr);
-void flash_write_cmd (PNAND_INFO pNandInfo, Uint32 cmd);
-void flash_write_bytes (PNAND_INFO pNandInfo, void *pSrc, Uint32 numBytes);
-void flash_write_addr_cycles(PNAND_INFO pNandInfo, Uint32 block, Uint32 page);
-void flash_write_addr_bytes(PNAND_INFO pNandInfo, Uint32 numAddrBytes, Uint32 addr);
-void flash_write_row_addr_bytes(PNAND_INFO pNandInfo, Uint32 block, Uint32 page);
-void flash_write_data(PNAND_INFO pNandInfo, Uint32 offset, Uint32 data);
-Uint32 flash_read_data (PNAND_INFO pNandInfo);
-void flash_read_bytes(PNAND_INFO pNandInfo, void *pDest, Uint32 numBytes);
-void flash_swap_data(PNAND_INFO pNandInfo, Uint32* data);
+volatile uint8_t *flash_make_addr (uint32_t baseAddr, uint32_t offset);
+void flash_write_addr (PNAND_INFO pNandInfo, uint32_t addr);
+void flash_write_cmd (PNAND_INFO pNandInfo, uint32_t cmd);
+void flash_write_bytes (PNAND_INFO pNandInfo, void *pSrc, uint32_t numBytes);
+void flash_write_addr_cycles(PNAND_INFO pNandInfo, uint32_t block, uint32_t page);
+void flash_write_addr_bytes(PNAND_INFO pNandInfo, uint32_t numAddrBytes, uint32_t addr);
+void flash_write_row_addr_bytes(PNAND_INFO pNandInfo, uint32_t block, uint32_t page);
+void flash_write_data(PNAND_INFO pNandInfo, uint32_t offset, uint32_t data);
+uint32_t flash_read_data (PNAND_INFO pNandInfo);
+void flash_read_bytes(PNAND_INFO pNandInfo, void *pDest, uint32_t numBytes);
+void flash_swap_data(PNAND_INFO pNandInfo, uint32_t* data);
 
 //Initialize the NAND registers and structures
-Uint32 NAND_Init();
-Uint32 NAND_GetDetails();
+uint32_t NAND_Init();
+uint32_t NAND_GetDetails();
 
 // Page read and write functions
-Uint32 NAND_ReadPage(Uint32 block, Uint32 page, Uint8 *dest);
-Uint32 NAND_WritePage(Uint32 block, Uint32 page, Uint8 *src);
-Uint32 NAND_VerifyPage(Uint32 block, Uint32 page, Uint8 *src, Uint8* dest);
+uint32_t NAND_ReadPage(uint32_t block, uint32_t page, uint8_t *dest);
+uint32_t NAND_WritePage(uint32_t block, uint32_t page, uint8_t *src);
+uint32_t NAND_VerifyPage(uint32_t block, uint32_t page, uint8_t *src, uint8_t* dest);
 
 // Copy Application code from NAND to RAM (found in nandboot.c)
-Uint32 NAND_Copy();
+uint32_t NAND_Copy();
 
 // Used to write NAND UBL or APP header and data to NAND
-Uint32 NAND_WriteHeaderAndData(NAND_BOOT *nandBoot,Uint8 *srcBuf);
+uint32_t NAND_WriteHeaderAndData(NAND_BOOT *nandBoot,uint8_t *srcBuf);
 
 // Used to erase an entire NAND block
-Uint32 NAND_EraseBlocks(Uint32 startBlkNum, Uint32 blkCount);
+uint32_t NAND_EraseBlocks(uint32_t startBlkNum, uint32_t blkCount);
 
 // Unprotect blocks encompassing specfied addresses */
-Uint32 NAND_UnProtectBlocks(Uint32 startBlkNum,Uint32 endBlkNum);
+uint32_t NAND_UnProtectBlocks(uint32_t startBlkNum,uint32_t endBlkNum);
 
 // Protect blocks
 void NAND_ProtectBlocks(void);
 
 // Wait for ready signal seen at NANDFSCR
-Uint32 NAND_WaitForRdy(Uint32 timeout);
+uint32_t NAND_WaitForRdy(uint32_t timeout);
 
 // Wait for status result from device to read good */
-Uint32 NAND_WaitForStatus(Uint32 timeout);
+uint32_t NAND_WaitForStatus(uint32_t timeout);
 
 // Read ECC data and restart the ECC calculation
-Uint32 NAND_ECCReadAndRestart (PNAND_INFO pNandInfo);
+uint32_t NAND_ECCReadAndRestart (PNAND_INFO pNandInfo);
 
 #endif //_NAND_H_

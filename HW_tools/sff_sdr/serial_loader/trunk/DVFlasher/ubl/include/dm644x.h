@@ -16,6 +16,8 @@
 #ifndef _DM644X_H_
 #define _DM644X_H_
 
+#include <stdint.h> 
+
 #include "tistdtypes.h" 
 
 //Return type defines 
@@ -64,21 +66,21 @@
  * -------------------------------------------------------------------------- */ 
 typedef struct _sys_module_regs_
 {
-	VUint32 PINMUX[2];         //0x00
-	VUint32 DSPBOOTADDR;       //0x08
-	VUint32 SUSPSRC;           //0x0C
-	VUint32 INTGEN;            //0x10
-	VUint32 BOOTCFG;           //0x14
-	VUint8 RSVD0[16];          //0x18
-	VUint32 DEVICE_ID;         //0x28
-	VUint8 RSVD1[8];           //0x2C
-	VUint32 USBPHY_CTL;        //0x34
-	VUint32 CHP_SHRTSW;        //0x38
-	VUint32 MSTPRI[2];         //0x3C
-	VUint32 VPSS_CLKCTL;       //0x44
-	VUint32 VDD3P3V_PWDN;      //0x48
-	VUint32 DDRVTPER;          //0x4C
-	VUint8 RSVD2[32];          //0x50 
+	volatile uint32_t PINMUX[2];         //0x00
+	volatile uint32_t DSPBOOTADDR;       //0x08
+	volatile uint32_t SUSPSRC;           //0x0C
+	volatile uint32_t INTGEN;            //0x10
+	volatile uint32_t BOOTCFG;           //0x14
+	volatile uint8_t RSVD0[16];          //0x18
+	volatile uint32_t DEVICE_ID;         //0x28
+	volatile uint8_t RSVD1[8];           //0x2C
+	volatile uint32_t USBPHY_CTL;        //0x34
+	volatile uint32_t CHP_SHRTSW;        //0x38
+	volatile uint32_t MSTPRI[2];         //0x3C
+	volatile uint32_t VPSS_CLKCTL;       //0x44
+	volatile uint32_t VDD3P3V_PWDN;      //0x48
+	volatile uint32_t DDRVTPER;          //0x4C
+	volatile uint8_t RSVD2[32];          //0x50 
 } sysModuleRegs;
 
 #define SYSTEM ((sysModuleRegs*) 0x01C40000)
@@ -89,25 +91,25 @@ typedef struct _sys_module_regs_
  * -------------------------------------------------------------------------- */
 typedef struct _aintc_regs_
 {
-    VUint32 FIQ0;
-    VUint32 FIQ1;
-    VUint32 IRQ0;
-    VUint32 IRQ1;
-    VUint32 FIQENTRY;
-    VUint32 IRQENTRY;
-    VUint32 EINT0;
-    VUint32 EINT1;
-    VUint32 INTCTL;
-    VUint32 EABASE;
-    VUint8 RSVD0[8];
-    VUint32 INTPRI0;
-    VUint32 INTPRI1;
-    VUint32 INTPRI2;
-    VUint32 INTPRI3;
-    VUint32 INTPRI4;
-    VUint32 INTPRI5;
-    VUint32 INTPRI6;
-    VUint32 INTPRI7;
+    volatile uint32_t FIQ0;
+    volatile uint32_t FIQ1;
+    volatile uint32_t IRQ0;
+    volatile uint32_t IRQ1;
+    volatile uint32_t FIQENTRY;
+    volatile uint32_t IRQENTRY;
+    volatile uint32_t EINT0;
+    volatile uint32_t EINT1;
+    volatile uint32_t INTCTL;
+    volatile uint32_t EABASE;
+    volatile uint8_t RSVD0[8];
+    volatile uint32_t INTPRI0;
+    volatile uint32_t INTPRI1;
+    volatile uint32_t INTPRI2;
+    volatile uint32_t INTPRI3;
+    volatile uint32_t INTPRI4;
+    volatile uint32_t INTPRI5;
+    volatile uint32_t INTPRI6;
+    volatile uint32_t INTPRI7;
 } aintcRegs;
 
 #define AINTC ((aintcRegs*) 0x01C48000)
@@ -117,31 +119,31 @@ typedef struct _aintc_regs_
  * -------------------------------------------------------------------------- */
 typedef struct _PLL_regs_
 {
-	VUint32 PID;
-	VUint8 RSVD0[224];
-	VUint32 RSTYPE;
-	VUint8 RSVD1[24];	
-	VUint32 PLLCTL;
-	VUint8 RSVD2[12];	
-	VUint32 PLLM;
-	VUint8 RSVD3[4];
-	VUint32 PLLDIV1;
-	VUint32 PLLDIV2;
-	VUint32 PLLDIV3;	
-	VUint8 RSVD4[4]; 
-	VUint32 POSTDIV;
-	VUint32 BPDIV;
-	VUint8 RSVD5[8];	
-	VUint32 PLLCMD;
-	VUint32 PLLSTAT;
-	VUint32 ALNCTL;
-	VUint32 DCHANGE;
-	VUint32 CKEN;
-	VUint32 CKSTAT;
-	VUint32 SYSTAT;
-	VUint8 RSVD6[12];
-	VUint32 PLLDIV4;
-	VUint32 PLLDIV5;
+	volatile uint32_t PID;
+	volatile uint8_t RSVD0[224];
+	volatile uint32_t RSTYPE;
+	volatile uint8_t RSVD1[24];	
+	volatile uint32_t PLLCTL;
+	volatile uint8_t RSVD2[12];	
+	volatile uint32_t PLLM;
+	volatile uint8_t RSVD3[4];
+	volatile uint32_t PLLDIV1;
+	volatile uint32_t PLLDIV2;
+	volatile uint32_t PLLDIV3;	
+	volatile uint8_t RSVD4[4]; 
+	volatile uint32_t POSTDIV;
+	volatile uint32_t BPDIV;
+	volatile uint8_t RSVD5[8];	
+	volatile uint32_t PLLCMD;
+	volatile uint32_t PLLSTAT;
+	volatile uint32_t ALNCTL;
+	volatile uint32_t DCHANGE;
+	volatile uint32_t CKEN;
+	volatile uint32_t CKSTAT;
+	volatile uint32_t SYSTAT;
+	volatile uint8_t RSVD6[12];
+	volatile uint32_t PLLDIV4;
+	volatile uint32_t PLLDIV5;
 } PLLRegs;
 
 #define PLL1 ((PLLRegs*) 0x01C40800)
@@ -153,46 +155,46 @@ typedef struct _PLL_regs_
  * -------------------------------------------------------------------------- */
 typedef struct _PSC_regs_
 {
-	VUint32 PID;        // 0x000
-	VUint8 RSVD0[12];   // 0x004
-	VUint32 GBLCTL;     // 0x010
-	VUint8 RSVD1[4];    // 0x014
-	VUint32 INTEVAL;    // 0x018
-	VUint8 RSVD2[36];	// 0x01C
-	VUint32 MERRPR0;    // 0x040
-	VUint32 MERRPR1;    // 0x044
-	VUint8 RSVD3[8];    // 0x048
-	VUint32 MERRCR0;    // 0x050
-	VUint32 MERRCR1;    // 0x054
-	VUint8 RSVD4[8];    // 0x058
-	VUint32 PERRPR;     // 0x060
-	VUint8 RSVD5[4];    // 0x064
-	VUint32 PERRCR;     // 0x068
-	VUint8 RSVD6[4];    // 0x06C
-	VUint32 EPCPR;      // 0x070
-	VUint8 RSVD7[4];    // 0x074
-	VUint32 EPCCR;      // 0x078
-	VUint8 RSVD8[132];  // 0x07C
-	VUint32 RAILSTAT;   // 0x100
-	VUint32 RAILCTL;    // 0x104
-	VUint32 RAILSEL;    // 0x108
-	VUint8 RSVD9[20];   // 0x10C
-	VUint32 PTCMD;      // 0x120
-	VUint8 RSVD10[4];   // 0x124
-	VUint32 PTSTAT;     // 0x128
-	VUint8 RSVD11[212]; // 0x12C
-	VUint32 PDSTAT0;    // 0x200
-	VUint32 PDSTAT1;    // 0x204
-	VUint8 RSVD12[248]; // 0x208
-	VUint32 PDCTL0;     // 0x300
-	VUint32 PDCTL1;     // 0x304
-	VUint8 RSVD13[536]; // 0x308
-	VUint32 MCKOUT0;    // 0x520
-	VUint32 MCKOUT1;    // 0x524
-	VUint8 RSVD14[728]; // 0x528
-	VUint32 MDSTAT[41]; // 0x800
-	VUint8 RSVD15[348]; // 0x8A4
-	VUint32 MDCTL[41];  // 0xA00
+	volatile uint32_t PID;        // 0x000
+	volatile uint8_t RSVD0[12];   // 0x004
+	volatile uint32_t GBLCTL;     // 0x010
+	volatile uint8_t RSVD1[4];    // 0x014
+	volatile uint32_t INTEVAL;    // 0x018
+	volatile uint8_t RSVD2[36];	// 0x01C
+	volatile uint32_t MERRPR0;    // 0x040
+	volatile uint32_t MERRPR1;    // 0x044
+	volatile uint8_t RSVD3[8];    // 0x048
+	volatile uint32_t MERRCR0;    // 0x050
+	volatile uint32_t MERRCR1;    // 0x054
+	volatile uint8_t RSVD4[8];    // 0x058
+	volatile uint32_t PERRPR;     // 0x060
+	volatile uint8_t RSVD5[4];    // 0x064
+	volatile uint32_t PERRCR;     // 0x068
+	volatile uint8_t RSVD6[4];    // 0x06C
+	volatile uint32_t EPCPR;      // 0x070
+	volatile uint8_t RSVD7[4];    // 0x074
+	volatile uint32_t EPCCR;      // 0x078
+	volatile uint8_t RSVD8[132];  // 0x07C
+	volatile uint32_t RAILSTAT;   // 0x100
+	volatile uint32_t RAILCTL;    // 0x104
+	volatile uint32_t RAILSEL;    // 0x108
+	volatile uint8_t RSVD9[20];   // 0x10C
+	volatile uint32_t PTCMD;      // 0x120
+	volatile uint8_t RSVD10[4];   // 0x124
+	volatile uint32_t PTSTAT;     // 0x128
+	volatile uint8_t RSVD11[212]; // 0x12C
+	volatile uint32_t PDSTAT0;    // 0x200
+	volatile uint32_t PDSTAT1;    // 0x204
+	volatile uint8_t RSVD12[248]; // 0x208
+	volatile uint32_t PDCTL0;     // 0x300
+	volatile uint32_t PDCTL1;     // 0x304
+	volatile uint8_t RSVD13[536]; // 0x308
+	volatile uint32_t MCKOUT0;    // 0x520
+	volatile uint32_t MCKOUT1;    // 0x524
+	volatile uint8_t RSVD14[728]; // 0x528
+	volatile uint32_t MDSTAT[41]; // 0x800
+	volatile uint8_t RSVD15[348]; // 0x8A4
+	volatile uint32_t MDCTL[41];  // 0xA00
 } PSCRegs;
 
 #define PSC ((PSCRegs*) 0x01C41000)
@@ -238,26 +240,26 @@ typedef struct _PSC_regs_
  * -------------------------------------------------------------------------- */
 typedef struct _DDR2_MEM_CTL_REGS_
 {
-	VUint8 RSVD0[4];		//0x00
-	VUint32 SDRSTAT;		//0x04
-	VUint32 SDBCR;			//0x08
-	VUint32 SDRCR;			//0x0C
-	VUint32 SDTIMR;			//0x10
-	VUint32 SDTIMR2;		//0x14
-	VUint8 RSVD1[8];		//0x18 
-	VUint32 PBBPR;			//0x20
-	VUint8 RSVD2[156];	//0x24 
-	VUint32 IRR;				//0xC0
-	VUint32 IMR;				//0xC4
-	VUint32 IMSR;			//0xC8
-	VUint32 IMCR;			//0xCC
-	VUint8 RSVD3[20];	//0xD0
-	VUint32 DDRPHYCR;		//0xE4
-	VUint8 RSVD4[8];		//0xE8
-	VUint32 VTPIOCR;		//0xF0
+	volatile uint8_t RSVD0[4];		//0x00
+	volatile uint32_t SDRSTAT;		//0x04
+	volatile uint32_t SDBCR;			//0x08
+	volatile uint32_t SDRCR;			//0x0C
+	volatile uint32_t SDTIMR;			//0x10
+	volatile uint32_t SDTIMR2;		//0x14
+	volatile uint8_t RSVD1[8];		//0x18 
+	volatile uint32_t PBBPR;			//0x20
+	volatile uint8_t RSVD2[156];	//0x24 
+	volatile uint32_t IRR;				//0xC0
+	volatile uint32_t IMR;				//0xC4
+	volatile uint32_t IMSR;			//0xC8
+	volatile uint32_t IMCR;			//0xCC
+	volatile uint8_t RSVD3[20];	//0xD0
+	volatile uint32_t DDRPHYCR;		//0xE4
+	volatile uint8_t RSVD4[8];		//0xE8
+	volatile uint32_t VTPIOCR;		//0xF0
 } DDR2Regs;
 
-#define DDRVTPR (*((VUint32*) 0x01C42030))
+#define DDRVTPR (*((volatile uint32_t*) 0x01C42030))
 #define DDR ((DDR2Regs*) 0x20000000)
 #define DDR_TEST_PATTERN 0xA55AA55Au
 #define DDR_RAM_SIZE 0x10000000u
@@ -268,45 +270,45 @@ typedef struct _DDR2_MEM_CTL_REGS_
  * -------------------------------------------------------------------------- */
 typedef struct _emif_regs_
 {
-    VUint32 ERCSR;      // 0x00
-    VUint32 AWCCR;      // 0x04
-    VUint32 SDBCR;      // 0x08
-    VUint32 SDRCR;      // 0x0C
-    VUint32 AB1CR;      // 0x10
-    VUint32 AB2CR;      // 0x14
-    VUint32 AB3CR;
-    VUint32 AB4CR;
-    VUint32 SDTIMR;     // 0x20
-    VUint32 DDRSR;
-    VUint32 DDRPHYCR;
-    VUint32 DDRPHYSR;
-    VUint32 TOTAR;      // 0x30
-    VUint32 TOTACTR;
-    VUint32 DDRPHYID_REV;
-    VUint32 SDSRETR;
-    VUint32 EIRR;       // 0x40
-    VUint32 EIMR;
-    VUint32 EIMSR;
-    VUint32 EIMCR;
-    VUint32 IOCTRLR;    // 0x50
-    VUint32 IOSTATR;
-    VUint8 RSVD0[8];
-    VUint32 NANDFCR;    // 0x60
-    VUint32 NANDFSR;
-    VUint8 RSVD1[8];
-    VUint32 NANDF1ECC;  // 0x70
-    VUint32 NANDF2ECC;
-    VUint32 NANDF3ECC;
-    VUint32 NANDF4ECC;
-    VUint8 RSVD2[4];    // 0x80
-    VUint32 IODFTECR;
-    VUint32 IODFTGCR;
-    VUint8 RSVD3[4];
-    VUint32 IODFTMRLR;  // 0x90
-    VUint32 IODFTMRMR;
-    VUint32 IODFTMRMSBR;
-    VUint8 RSVD4[20];
-    VUint32 MODRNR;     // 0xB0
+    volatile uint32_t ERCSR;      // 0x00
+    volatile uint32_t AWCCR;      // 0x04
+    volatile uint32_t SDBCR;      // 0x08
+    volatile uint32_t SDRCR;      // 0x0C
+    volatile uint32_t AB1CR;      // 0x10
+    volatile uint32_t AB2CR;      // 0x14
+    volatile uint32_t AB3CR;
+    volatile uint32_t AB4CR;
+    volatile uint32_t SDTIMR;     // 0x20
+    volatile uint32_t DDRSR;
+    volatile uint32_t DDRPHYCR;
+    volatile uint32_t DDRPHYSR;
+    volatile uint32_t TOTAR;      // 0x30
+    volatile uint32_t TOTACTR;
+    volatile uint32_t DDRPHYID_REV;
+    volatile uint32_t SDSRETR;
+    volatile uint32_t EIRR;       // 0x40
+    volatile uint32_t EIMR;
+    volatile uint32_t EIMSR;
+    volatile uint32_t EIMCR;
+    volatile uint32_t IOCTRLR;    // 0x50
+    volatile uint32_t IOSTATR;
+    volatile uint8_t RSVD0[8];
+    volatile uint32_t NANDFCR;    // 0x60
+    volatile uint32_t NANDFSR;
+    volatile uint8_t RSVD1[8];
+    volatile uint32_t NANDF1ECC;  // 0x70
+    volatile uint32_t NANDF2ECC;
+    volatile uint32_t NANDF3ECC;
+    volatile uint32_t NANDF4ECC;
+    volatile uint8_t RSVD2[4];    // 0x80
+    volatile uint32_t IODFTECR;
+    volatile uint32_t IODFTGCR;
+    volatile uint8_t RSVD3[4];
+    volatile uint32_t IODFTMRLR;  // 0x90
+    volatile uint32_t IODFTMRMR;
+    volatile uint32_t IODFTMRMSBR;
+    volatile uint8_t RSVD4[20];
+    volatile uint32_t MODRNR;     // 0xB0
 } emifRegs;
 
 #define AEMIF ((emifRegs*) 0x01E00000)
@@ -316,21 +318,21 @@ typedef struct _emif_regs_
  * -------------------------------------------------------------------------- */
 typedef struct _uart_regs_
 {
-	VUint32 RBR;
-	VUint32 IER;
-	VUint32 IIR;
-	VUint32 LCR;
-	VUint32 MCR;
-	VUint32 LSR;
-	VUint32 MSR;
-	VUint32 SCR;
-	VUint8 DLL;
-	VUint8 RSVDO[3];
-	VUint8 DLH;
-	VUint8 RSVD1[3];	
-	VUint32 PID1;
-	VUint32 PID2;
-	VUint32 PWREMU_MGNT;
+	volatile uint32_t RBR;
+	volatile uint32_t IER;
+	volatile uint32_t IIR;
+	volatile uint32_t LCR;
+	volatile uint32_t MCR;
+	volatile uint32_t LSR;
+	volatile uint32_t MSR;
+	volatile uint32_t SCR;
+	volatile uint8_t  DLL;
+	volatile uint8_t  RSVDO[3];
+	volatile uint8_t  DLH;
+	volatile uint8_t  RSVD1[3];	
+	volatile uint32_t PID1;
+	volatile uint32_t PID2;
+	volatile uint32_t PWREMU_MGNT;
 } uartRegs;
 
 #define THR RBR
@@ -343,17 +345,17 @@ typedef struct _uart_regs_
  * -------------------------------------------------------------------------- */
 typedef struct _timer_regs_
 {
-    VUint32 PID12;
-    VUint32 EMUMGT_CLKSPD;
-    VUint32 GPINT_GPEN;
-    VUint32 GPTDAT_GPDIR;
-    VUint32 TIM12;
-    VUint32 TIM34;
-    VUint32 PRD12;
-    VUint32 PRD34;
-    VUint32 TCR;
-    VUint32 TGCR;
-    VUint32 WDTCR;
+    volatile uint32_t PID12;
+    volatile uint32_t EMUMGT_CLKSPD;
+    volatile uint32_t GPINT_GPEN;
+    volatile uint32_t GPTDAT_GPDIR;
+    volatile uint32_t TIM12;
+    volatile uint32_t TIM34;
+    volatile uint32_t PRD12;
+    volatile uint32_t PRD34;
+    volatile uint32_t TCR;
+    volatile uint32_t TGCR;
+    volatile uint32_t WDTCR;
 } timerRegs;
 
 #define TIMER0 ((timerRegs*) 0x01C21400)
@@ -376,7 +378,7 @@ static inline int TIMER0Status(void)
 // Function Prototypes
 
 // Execute LPSC state transition
-void LPSCTransition(Uint8 module, Uint8 state);
+void LPSCTransition(uint8_t module, uint8_t state);
 
 // Initialization prototypes
 void DM644xInit(void);
@@ -388,7 +390,4 @@ void DDR2Init(void);
 //void AEMIFInit(void);
 void IVTInit(void);
 
-// NOP wait loop 
-void waitloop(unsigned int loopcnt);
-  
 #endif // End _DM644X_H_

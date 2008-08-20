@@ -18,10 +18,12 @@
 #ifndef _UBL_H_
 #define _UBL_H_
 
+#include <stdint.h> 
+
 #include "tistdtypes.h"
 
 //UBL version number
-#define UBL_VERSION_STRING "1.12"
+#define UBL_VERSION_STRING "1.12.1"
 #ifdef UBL_NAND
 #define UBL_FLASH_TYPE "NAND"
 #else
@@ -64,19 +66,19 @@
 #define RAM_END_ADDR		(0x87FFFFFF) /* SFFSDR has 128 Mb of DDR-II */
 
 typedef struct {
-	Uint32 magicNum;	/* Expected magic number */
-	Uint32 entryPoint;	/* Entry point of the user application */
-	Uint32 numPage;		/* Number of pages where boot loader is stored */
-	Uint32 block;		/* starting block number where User boot loader is stored */
-	Uint32 page;		/* starting page number where boot-loader is stored */
-	Uint32 ldAddress;	/* Starting RAM address where image is to copied - XIP Mode */
+	uint32_t magicNum;	/* Expected magic number */
+	uint32_t entryPoint;	/* Entry point of the user application */
+	uint32_t numPage;		/* Number of pages where boot loader is stored */
+	uint32_t block;		/* starting block number where User boot loader is stored */
+	uint32_t page;		/* starting page number where boot-loader is stored */
+	uint32_t ldAddress;	/* Starting RAM address where image is to copied - XIP Mode */
 } NAND_BOOT;
 
 typedef struct {
-	Uint32		magicNum;
-	Uint32		entryPoint;	
-	Uint32		appSize;
-	Uint32		ldAddress;	/* Starting RAM address where image is to copied - XIP Mode */
+	uint32_t magicNum;
+	uint32_t entryPoint;	
+	uint32_t appSize;
+	uint32_t ldAddress;	/* Starting RAM address where image is to copied - XIP Mode */
 } NOR_BOOT;
 
 
@@ -109,7 +111,7 @@ void boot( void ) __attribute__((naked,section (".boot")));
 void selfcopy( void ) __attribute__((naked,section (".selfcopy")));
 void fake_entry( void ) __attribute__((naked,section (".fakeentry")));
 
-Int32 main(void);
+int32_t main(void);
 void (*APPEntry)(void);
 
 #endif //_UBL_H_

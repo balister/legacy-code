@@ -34,13 +34,13 @@
 
 #define C1_IC           (1<<12)         /* icache off/on */
 
-Uint32 gEntryPoint;
+uint32_t gEntryPoint;
 BootMode gBootMode;
 
 void selfcopy()
 {
 	// Self copy setup 
-	extern Uint32 __selfcopysrc, __selfcopydest, __selfcopydestend;
+	extern uint32_t __selfcopysrc, __selfcopydest, __selfcopydestend;
 		
 	//Enable ITCM
 	asm(" MRC p15, 0, r0, c9, c1, 1");
@@ -53,9 +53,9 @@ void selfcopy()
 	asm(" ORR r0, r0, #0x1");
 	asm(" MCR p15, 0, r0, c9, c1, 0");
 	
-	VUint32* src = &(__selfcopysrc);
-	VUint32* dest = &(__selfcopydest);
-	VUint32* destend = &(__selfcopydestend);
+	volatile uint32_t *src = &(__selfcopysrc);
+	volatile uint32_t *dest = &(__selfcopydest);
+	volatile uint32_t *destend = &(__selfcopydestend);
 
 	// Copy the words
 	while (dest < destend)
@@ -110,7 +110,7 @@ static void cp_delay (void)
 
 void icache_enable (void)
 {
-	Uint32 reg;
+	uint32_t reg;
 
         reg = read_p15_c1 ();           /* get control reg. */
         cp_delay ();
@@ -131,8 +131,8 @@ void boot()
 	asm(" MCR	p15, 0, r1, c1, c0, 0");
 	
 	// Stack setup (__topstack symbol defined in linker script)
-	extern Uint32 __topstack;
-	register Uint32* stackpointer asm ("sp");	
+	extern uint32_t __topstack;
+	register uint32_t* stackpointer asm ("sp");	
 	stackpointer = &(__topstack);
 	
     // Call to main code
@@ -142,14 +142,14 @@ void boot()
     
     // Jump to entry point
 	APPEntry = (void*) gEntryPoint;
-    UARTSendData((Uint8 *) "About to jump to: ",FALSE);
-    UARTSendInt((Uint32)APPEntry);
-    UARTSendData((Uint8 *) "\n\r",FALSE);
+    UARTSendData((uint8_t *) "About to jump to: ",FALSE);
+    UARTSendInt((uint32_t)APPEntry);
+    UARTSendData((uint8_t *) "\n\r",FALSE);
 
     (*APPEntry)();	
 }
 
-Int32 main(void)
+int32_t main(void)
 {
 	// Read boot mode 
 	gBootMode = (BootMode) ( ( (SYSTEM->BOOTCFG) & 0xC0) >> 6);
@@ -169,11 +169,11 @@ Int32 main(void)
 	set_current_mem_loc(0);
 
 	// Send some information to host
-    UARTSendData((Uint8 *) "TI UBL Version: ",FALSE);
-    UARTSendData((Uint8 *) UBL_VERSION_STRING,FALSE);
-    UARTSendData((Uint8 *) ", Flash type: ", FALSE);
-    UARTSendData((Uint8 *) UBL_FLASH_TYPE, FALSE);
-	UARTSendData((Uint8 *) "\r\nBooting PSP Boot Loader\r\nPSPBootMode = ",FALSE);
+    UARTSendData((uint8_t *) "TI UBL Version: ",FALSE);
+    UARTSendData((uint8_t *) UBL_VERSION_STRING,FALSE);
+    UARTSendData((uint8_t *) ", Flash type: ", FALSE);
+    UARTSendData((uint8_t *) UBL_FLASH_TYPE, FALSE);
+	UARTSendData((uint8_t *) "\r\nBooting PSP Boot Loader\r\nPSPBootMode = ",FALSE);
 	
 	/* Select Boot Mode */
 	switch(gBootMode)
@@ -182,17 +182,17 @@ Int32 main(void)
 		case NON_SECURE_NAND:
 		{
 			//Report Bootmode to host
-			UARTSendData((Uint8 *) "NAND\r\n",FALSE);
+			UARTSendData((uint8_t *) "NAND\r\n",FALSE);
 
 			// copy binary or S-record of application from NAND to DDRAM, and decode if needed
 			if (NAND_Copy() != E_PASS)
 			{
-				UARTSendData((Uint8 *) "NAND Boot failed.\r\n", FALSE);
+				UARTSendData((uint8_t *) "NAND Boot failed.\r\n", FALSE);
 				goto UARTBOOT;
 			}
 			else
 			{
-				UARTSendData((Uint8 *) "NAND Boot success.\r\n", FALSE);
+				UARTSendData((uint8_t *) "NAND Boot success.\r\n", FALSE);
 			}
 			break;
 		}
@@ -201,17 +201,17 @@ Int32 main(void)
 		case NON_SECURE_NOR:
 		{
 			//Report Bootmode to host
-			UARTSendData((Uint8 *) "NOR \r\n", FALSE);
+			UARTSendData((uint8_t *) "NOR \r\n", FALSE);
 
 			// Copy binary or S-record of application from NOR to DDRAM, then decode
 			if (NOR_Copy() != E_PASS)
 			{
-				UARTSendData((Uint8 *) "NOR Boot failed.\r\n", FALSE);
+				UARTSendData((uint8_t *) "NOR Boot failed.\r\n", FALSE);
 				goto UARTBOOT;
 			}
 			else
 			{
-				UARTSendData((Uint8 *) "NOR Boot success.\r\n", FALSE);
+				UARTSendData((uint8_t *) "NOR Boot success.\r\n", FALSE);
 			}
 			break;
 		}
@@ -219,7 +219,7 @@ Int32 main(void)
 		case NON_SECURE_UART:
 		{
 			//Report Bootmode to host
-			UARTSendData((Uint8 *) "UART\r\n", FALSE);
+			UARTSendData((uint8_t *) "UART\r\n", FALSE);
             goto UARTBOOT;
 			break;
 		}
@@ -230,8 +230,8 @@ UARTBOOT:	UART_Boot();
 		}
 	}
 		
-	UARTSendData((Uint8*)"   DONE", TRUE);
-        UARTSendData((Uint8 *) "\r\n", FALSE);
+	UARTSendData((uint8_t*)"   DONE", TRUE);
+        UARTSendData((uint8_t *) "\r\n", FALSE);
 
 	waitloop(10000);
 

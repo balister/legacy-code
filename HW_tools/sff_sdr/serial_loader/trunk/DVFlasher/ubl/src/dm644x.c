@@ -17,49 +17,50 @@
 
 #include "dm644x.h"
 #include "ubl.h"
+#include "util.h"
 #include "uart.h"
 
-extern VUint32 DDRMem[0];
+extern volatile uint32_t DDRMem[0];
 extern BootMode gBootMode;
-extern Uint32 gEntryPoint;
+extern uint32_t gEntryPoint;
 
 // ---------------------------------------------------------------------------
 // Global Memory Timing and PLL Settings
 // ---------------------------------------------------------------------------
     // For Micron MT47H32M16BN-3 @ 324 MHz   
-    const Uint8 DDR_NM = 0;
-    const Uint8 DDR_CL = 3;
-    const Uint8 DDR_IBANK = 2;
-    const Uint8 DDR_PAGESIZE = 2;
-    const Uint8 DDR_T_RFC = 34;
-    const Uint8 DDR_T_RP = 4;
-    const Uint8 DDR_T_RCD = 4;
-    const Uint8 DDR_T_WR = 4;
-    const Uint8 DDR_T_RAS = 12;
-    const Uint8 DDR_T_RC = 17;
-    const Uint8 DDR_T_RRD = 2;
-    const Uint8 DDR_T_WTR = 2;
-    const Uint8 DDR_T_XSNR = 37;
-    const Uint8 DDR_T_XSRD = 199;
-    const Uint8 DDR_T_RTP = 2;
-    const Uint8 DDR_T_CKE = 2;
-    const Uint16 DDR_RR = 2527;
-    const Uint8 DDR_Board_Delay = 3;
-    const Uint8 DDR_READ_Latency = 5;
+    const uint8_t DDR_NM = 0;
+    const uint8_t DDR_CL = 3;
+    const uint8_t DDR_IBANK = 2;
+    const uint8_t DDR_PAGESIZE = 2;
+    const uint8_t DDR_T_RFC = 34;
+    const uint8_t DDR_T_RP = 4;
+    const uint8_t DDR_T_RCD = 4;
+    const uint8_t DDR_T_WR = 4;
+    const uint8_t DDR_T_RAS = 12;
+    const uint8_t DDR_T_RC = 17;
+    const uint8_t DDR_T_RRD = 2;
+    const uint8_t DDR_T_WTR = 2;
+    const uint8_t DDR_T_XSNR = 37;
+    const uint8_t DDR_T_XSRD = 199;
+    const uint8_t DDR_T_RTP = 2;
+    const uint8_t DDR_T_CKE = 2;
+    const uint16_t DDR_RR = 2527;
+    const uint8_t DDR_Board_Delay = 3;
+    const uint8_t DDR_READ_Latency = 5;
     
-    const Uint32 PLL2_Mult = 24;
-    const Uint32 PLL2_Div1 = 12;
-    const Uint32 PLL2_Div2 = 2;
+    const uint32_t PLL2_Mult = 24;
+    const uint32_t PLL2_Div1 = 12;
+    const uint32_t PLL2_Div2 = 2;
 
 // Set CPU clocks
-    const Uint32 PLL1_Mult = 22;  // DSP=594 MHz ARM=297 MHz
+    const uint32_t PLL1_Mult = 22;  // DSP=594 MHz ARM=297 MHz
     
 // ---------------------------------------------------------
 // End of global PLL and Memory settings
 // ---------------------------------------------------------
     
 
-void LPSCTransition(Uint8 module, Uint8 state)
+void LPSCTransition(uint8_t module, uint8_t state)
 {
     while (PSC->PTSTAT & 0x00000001);
 	PSC->MDCTL[module] = ((PSC->MDCTL[module]) & (0xFFFFFFE0)) | (state);
@@ -97,7 +98,7 @@ void DM644xInit()
 
 void PSCInit()
 {
-    Uint32 i;
+    uint32_t i;
 
     // Put the C64x+ Core into reset (if it's on)
 	PSC->MDCTL[LPSC_DSP] &= (~0x00000100);
@@ -201,7 +202,7 @@ void PLL2Init()
 
 void DDR2Init()
 {
-	Int32 tempVTP;
+	int32_t tempVTP;
 	
 	// Set the DDR2 to enable
 	LPSCTransition(LPSC_DDR2, PSC_ENABLE);
@@ -351,8 +352,8 @@ void UARTInit()
 
 void IVTInit()
 {
-	VUint32 *ivect;
-    extern Uint32 __IVT;
+	volatile uint32_t *ivect;
+    extern uint32_t __IVT;
     
 	if (gBootMode == NON_SECURE_NOR)
 	{

@@ -23,7 +23,7 @@
 #include "nand.h"
 #endif
 
-extern Uint32 gEntryPoint;
+extern uint32_t gEntryPoint;
 
 #ifdef UBL_NAND
 extern NAND_INFO gNandInfo;
@@ -40,20 +40,20 @@ void UART_Boot(void) {
 #endif
 #ifdef UBL_NOR
 	NOR_BOOT           norBoot;
-	Uint32             blkAddress, blkSize, baseAddress;
+	uint32_t             blkAddress, blkSize, baseAddress;
 #endif	
 	UART_ACK_HEADER    ackHeader;
-	Uint32             dataAddr = 0,dataByteCnt=0;
-	Uint32             bootCmd;
+	uint32_t             dataAddr = 0,dataByteCnt=0;
+	uint32_t             bootCmd;
 
 UART_tryAgain:
 	// Initialize UART and TIMER
 	//UARTInit();
 	waitloop(100);
-	UARTSendData((Uint8 *) "Starting UART Boot...\r\n", FALSE);
+	UARTSendData((uint8_t *) "Starting UART Boot...\r\n", FALSE);
 
 	// UBL Sends 'BOOTPSP/0'
-	if (UARTSendData((Uint8*)"BOOTPSP", TRUE) != E_PASS)
+	if (UARTSendData((uint8_t*)"BOOTPSP", TRUE) != E_PASS)
 		goto UART_tryAgain;
 
 	// Get the BOOT command
@@ -65,7 +65,7 @@ UART_tryAgain:
 		// Only used for doing simple boot of UART
 		case UBL_MAGIC_SAFE:
 		{
-			if ( UARTSendData((Uint8*)"SENDAPP", TRUE) != E_PASS)
+			if ( UARTSendData((uint8_t*)"SENDAPP", TRUE) != E_PASS)
 				goto UART_tryAgain;
 			if (UARTGetHeaderAndData(&ackHeader) != E_PASS)
 			{
@@ -79,7 +79,7 @@ UART_tryAgain:
 		case UBL_MAGIC_NOR_SREC_BURN:
 		case UBL_MAGIC_NOR_BIN_BURN:
 		{
-			if ( UARTSendData((Uint8*)"SENDUBL", TRUE) != E_PASS)
+			if ( UARTSendData((uint8_t*)"SENDUBL", TRUE) != E_PASS)
 				goto UART_tryAgain;
 			// Get the UBL into binary form
 			if (UARTGetHeaderAndData(&ackHeader) != E_PASS)
@@ -97,7 +97,7 @@ UART_tryAgain:
 			NOR_WriteBytes(gNorInfo.flashBase, ackHeader.binByteCnt, ackHeader.binAddr);
 
 			// Send SENDAPP command
-			if ( UARTSendData((Uint8*)"SENDAPP", TRUE) != E_PASS)
+			if ( UARTSendData((uint8_t*)"SENDAPP", TRUE) != E_PASS)
 				goto UART_tryAgain;
 
 			// Get the application header and data
@@ -129,7 +129,7 @@ UART_tryAgain:
 			norBoot.ldAddress = ackHeader.binAddr;			//Should be same as AppStartAddr
 
 			// Write the NOR_BOOT header to the flash
-			NOR_WriteBytes( baseAddress, sizeof(norBoot), (Uint32) &norBoot);
+			NOR_WriteBytes( baseAddress, sizeof(norBoot), (uint32_t) &norBoot);
 
 			// Write the application data to the flash
 			NOR_WriteBytes((baseAddress + sizeof(norBoot)), dataByteCnt, dataAddr);
@@ -141,7 +141,7 @@ UART_tryAgain:
 		case UBL_MAGIC_NOR_RESTORE:
 		{
 			// Get the APP (should be u-boot) into binary form
-			if ( UARTSendData((Uint8*)"SENDAPP", TRUE) != E_PASS)
+			if ( UARTSendData((uint8_t*)"SENDAPP", TRUE) != E_PASS)
 				goto UART_tryAgain;
 			
 			if ( UARTGetHeaderAndData(&ackHeader) != E_PASS )
@@ -171,11 +171,11 @@ UART_tryAgain:
 			// Erasing the Flash
 			if (NOR_GlobalErase() != E_PASS)
 			{
-				UARTSendData((Uint8 *)"\r\nErase failed.\r\n", FALSE);
+				UARTSendData((uint8_t *)"\r\nErase failed.\r\n", FALSE);
 			}
 			else
 			{
-				UARTSendData((Uint8 *)"\r\nErase completed successfully.\r\n", FALSE);
+				UARTSendData((uint8_t *)"\r\nErase completed successfully.\r\n", FALSE);
 			}
 
 			// Set the entry point for code execution
@@ -189,7 +189,7 @@ UART_tryAgain:
 		case UBL_MAGIC_NAND_SREC_BURN:
 		case UBL_MAGIC_NAND_BIN_BURN:
 		{
-			if ( UARTSendData((Uint8*)"SENDUBL", TRUE) != E_PASS)
+			if ( UARTSendData((uint8_t*)"SENDUBL", TRUE) != E_PASS)
 				goto UART_tryAgain;
 
 			// Get the UBL into binary form
@@ -201,7 +201,7 @@ UART_tryAgain:
 			// Initialize the NAND Flash
 			if (NAND_Init() != E_PASS)
 			{
-			    UARTSendData((Uint8 *)"NAND_Init() failed!", FALSE);
+			    UARTSendData((uint8_t *)"NAND_Init() failed!", FALSE);
 			    goto UART_tryAgain;
 			}   
 
@@ -209,7 +209,7 @@ UART_tryAgain:
 			nandBoot.magicNum = ackHeader.magicNum;
 
 			// Get entrypoint for UBL
-			nandBoot.entryPoint = (Uint32) (0x0000FFFF & ackHeader.appStartAddr);
+			nandBoot.entryPoint = (uint32_t) (0x0000FFFF & ackHeader.appStartAddr);
 
 			// The UBL image is 14kBytes plus do some rounding
 			nandBoot.numPage = 0;
@@ -227,12 +227,12 @@ UART_tryAgain:
 	
 			// Write header to page 0 of block 1(or up to block 5)
 			// Write the UBL to the same block, starting at page 1 (since blocks are 16k)
-			UARTSendData((Uint8 *) "Writing UBL to NAND flash\r\n", FALSE);
-			if (NAND_WriteHeaderAndData(&nandBoot, (Uint8 *) ackHeader.binAddr) != E_PASS)
+			UARTSendData((uint8_t *) "Writing UBL to NAND flash\r\n", FALSE);
+			if (NAND_WriteHeaderAndData(&nandBoot, (uint8_t *) ackHeader.binAddr) != E_PASS)
 			    goto UART_tryAgain;
 
 			// Send SENDAPP command
-			if (UARTSendData((Uint8*)"SENDAPP", TRUE) != E_PASS)
+			if (UARTSendData((uint8_t*)"SENDAPP", TRUE) != E_PASS)
 				goto UART_tryAgain;
 
 			// Get the application header and data
@@ -276,8 +276,8 @@ UART_tryAgain:
 			nandBoot.ldAddress = ackHeader.binAddr;
 
 			// Nand Burn of application data
-			UARTSendData((Uint8 *) "Writing APP to NAND flash\r\n", FALSE);
-			if (NAND_WriteHeaderAndData(&nandBoot, (Uint8 *) dataAddr) != E_PASS)
+			UARTSendData((uint8_t *) "Writing APP to NAND flash\r\n", FALSE);
+			if (NAND_WriteHeaderAndData(&nandBoot, (uint8_t *) dataAddr) != E_PASS)
 			    goto UART_tryAgain;
 
 			// Set the entry point to nowhere, since there isn't an appropriate binary image to run */
@@ -289,7 +289,7 @@ UART_tryAgain:
 			// Initialize the NAND Flash
 			if (NAND_Init() != E_PASS)
 			{
-			    UARTSendData((Uint8 *)"NAND_Init() failed!", FALSE);
+			    UARTSendData((uint8_t *)"NAND_Init() failed!", FALSE);
 			    goto UART_tryAgain;
 			}
 
@@ -299,12 +299,12 @@ UART_tryAgain:
 			// Erase all the pages of the device
 			if (NAND_EraseBlocks(1,(gNandInfo.numBlocks - 1)) != E_PASS)
 			{
-				UARTSendData((Uint8 *)"Erase failed.\r\n", FALSE);
+				UARTSendData((uint8_t *)"Erase failed.\r\n", FALSE);
 				goto UART_tryAgain;
 			}
 			else
 			{
-				UARTSendData((Uint8 *)"Erase completed successfully.\r\n", FALSE);
+				UARTSendData((uint8_t *)"Erase completed successfully.\r\n", FALSE);
 			}
 			            
 			// Protect the device
@@ -319,7 +319,7 @@ UART_tryAgain:
 		default:
 		{
 			// Simple UART Boot
-			if ( UARTSendData((Uint8*)"SENDAPP", TRUE) != E_PASS)
+			if ( UARTSendData((uint8_t*)"SENDAPP", TRUE) != E_PASS)
 				goto UART_tryAgain;
 
 			if (UARTGetHeaderAndData(&ackHeader) != E_PASS)
