@@ -18,13 +18,13 @@
 
 #define MAXSTRLEN 256
 
-typedef struct _UART_ACK_HEADER{
-    uint32_t      magicNum;
-    uint32_t      appStartAddr;
-    uint32_t      srecByteCnt;
-    uint32_t      srecAddr;
-    uint32_t      binByteCnt;
-    uint32_t      binAddr;
+typedef struct _UART_ACK_HEADER {
+	uint32_t magicNum;
+	uint32_t appStartAddr;
+	uint32_t srecByteCnt;
+	uint32_t srecAddr;
+	uint32_t binByteCnt;
+	uint32_t binAddr;
 } UART_ACK_HEADER;
 
 // ------ Function prototypes ------ 
@@ -32,9 +32,11 @@ typedef struct _UART_ACK_HEADER{
 void UART_Boot(void);
 
 // Simple send/recv functions
-uint32_t UARTSendData(uint8_t *seq, Bool includeNull);
-uint32_t UARTSendInt(uint32_t value);
-int32_t GetStringLen(uint8_t *seq);
+void UARTSendCRLF(void);
+void UARTSendString(char *string);
+void UARTSendStringCRLF(char *string);
+void UARTSendStringNULL(char *string);
+void UARTSendInt(uint32_t value);
 uint32_t UARTRecvData(uint32_t numBytes, uint8_t *seq);
 
 // Complex send/recv functions

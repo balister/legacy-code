@@ -28,7 +28,7 @@ uint32_t NOR_Copy() {
 	volatile uint32_t *ramPtr = 0;
 	uint32_t blkSize, blkAddress;
 
-	UARTSendData((uint8_t *) "Starting NOR Copy...\r\n", FALSE);
+	UARTSendStringCRLF("Starting NOR Copy...");
 	
 	// Nor Initialization
 	if (NOR_Init() != E_PASS)

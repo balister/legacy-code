@@ -137,7 +137,7 @@ uint32_t SRecDecode(uint8_t *srecAddr, uint32_t srecByteCnt, uint32_t *binAddr, 
 			index += 2;
 			if ( cnt != (uint8_t)((~checksum) & 0xFF) )
 			{
-				UARTSendData((uint8_t *) "S-record decode checksum failure.\r\n", FALSE);
+				UARTSendStringCRLF("S-record decode checksum failure.");
 				return E_FAIL;
 			}
 		}

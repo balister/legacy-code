@@ -1,23 +1,23 @@
 /* --------------------------------------------------------------------------
-    FILE        : ubl.c 				                             	 	        
-    PURPOSE     : Main User Boot Loader file
-    PROJECT     : DaVinci User Boot-Loader and Flasher
-    AUTHOR      : Daniel Allred
-    DATE	    : Dec-18-2006  
+   FILE        : ubl.c 				                             	 	        
+   PURPOSE     : Main User Boot Loader file
+   PROJECT     : DaVinci User Boot-Loader and Flasher
+   AUTHOR      : Daniel Allred
+   DATE	    : Dec-18-2006  
  
-    HISTORY
-        v1.00 completion 							 						      
- 	        Daniel Allred - Jan-22-2006
- 	    v1.10 - DJA - Feb-1-2007
- 	        Added dummy entry point make NAND UBL work
- 	        with the CCS flashing utility from SDI. This
- 	        fakeentry is located at 0x20 at runtime and
- 	        simply redirects to the true entry point, boot().
- 	    v1.11 - DJA - 7-Mar-2007
- 	        Changed power domain initializations.  Added call to 
- 	        PSCInit() as first thing, otherwise WDT resets would fail.
+   HISTORY
+   v1.00 completion 							 						      
+   Daniel Allred - Jan-22-2006
+   v1.10 - DJA - Feb-1-2007
+   Added dummy entry point make NAND UBL work
+   with the CCS flashing utility from SDI. This
+   fakeentry is located at 0x20 at runtime and
+   simply redirects to the true entry point, boot().
+   v1.11 - DJA - 7-Mar-2007
+   Changed power domain initializations.  Added call to 
+   PSCInit() as first thing, otherwise WDT resets would fail.
  	                                                                      
- ----------------------------------------------------------------------------- */
+   ----------------------------------------------------------------------------- */
 
 #include "ubl.h"
 #include "dm644x.h"
@@ -71,7 +71,7 @@ void selfcopy()
 
 void fake_entry()
 {
-    boot();
+	boot();
 }
 
 /* read co-processor 15, register #1 (control register) */
@@ -135,18 +135,18 @@ void boot()
 	register uint32_t* stackpointer asm ("sp");	
 	stackpointer = &(__topstack);
 	
-    // Call to main code
-    main();
+	// Call to main code
+	main();
     
-    icache_enable();
+	icache_enable();
     
-    // Jump to entry point
+	// Jump to entry point
 	APPEntry = (void*) gEntryPoint;
-    UARTSendData((uint8_t *) "About to jump to: ",FALSE);
-    UARTSendInt((uint32_t)APPEntry);
-    UARTSendData((uint8_t *) "\n\r",FALSE);
+	UARTSendString("About to jump to: ");
+	UARTSendInt((uint32_t)APPEntry);
+	UARTSendCRLF();
 
-    (*APPEntry)();	
+	(*APPEntry)();	
 }
 
 int32_t main(void)
@@ -157,10 +157,10 @@ int32_t main(void)
 	PSCInit();
 	
 	if (gBootMode == NON_SECURE_UART)
-    {
-        // Wait until the RBL is done using the UART. 
-        while((UART0->LSR & 0x40) == 0 );
-    }
+	{
+		// Wait until the RBL is done using the UART. 
+		while((UART0->LSR & 0x40) == 0 );
+	}
 
 	// Platform Initialization
 	DM644xInit();
@@ -169,77 +169,76 @@ int32_t main(void)
 	set_current_mem_loc(0);
 
 	// Send some information to host
-    UARTSendData((uint8_t *) "TI UBL Version: ",FALSE);
-    UARTSendData((uint8_t *) UBL_VERSION_STRING,FALSE);
-    UARTSendData((uint8_t *) ", Flash type: ", FALSE);
-    UARTSendData((uint8_t *) UBL_FLASH_TYPE, FALSE);
-	UARTSendData((uint8_t *) "\r\nBooting PSP Boot Loader\r\nPSPBootMode = ",FALSE);
+	UARTSendString("TI UBL Version: ");
+	UARTSendString(UBL_VERSION_STRING);
+	UARTSendString(", Flash type: ");
+	UARTSendString(UBL_FLASH_TYPE);
+	UARTSendString("\r\nBooting PSP Boot Loader\r\nPSPBootMode = ");
 	
 	/* Select Boot Mode */
 	switch(gBootMode)
 	{
 #ifdef UBL_NAND
-		case NON_SECURE_NAND:
-		{
-			//Report Bootmode to host
-			UARTSendData((uint8_t *) "NAND\r\n",FALSE);
+	case NON_SECURE_NAND:
+	{
+		//Report Bootmode to host
+		UARTSendStringCRLF("NAND");
 
-			// copy binary or S-record of application from NAND to DDRAM, and decode if needed
-			if (NAND_Copy() != E_PASS)
-			{
-				UARTSendData((uint8_t *) "NAND Boot failed.\r\n", FALSE);
-				goto UARTBOOT;
-			}
-			else
-			{
-				UARTSendData((uint8_t *) "NAND Boot success.\r\n", FALSE);
-			}
-			break;
+		// copy binary or S-record of application from NAND to DDRAM, and decode if needed
+		if (NAND_Copy() != E_PASS)
+		{
+			UARTSendStringCRLF("NAND Boot failed.");
+			goto UARTBOOT;
 		}
+		else
+		{
+			UARTSendStringCRLF("NAND Boot success.");
+		}
+		break;
+	}
 #endif		
 #ifdef UBL_NOR
-		case NON_SECURE_NOR:
-		{
-			//Report Bootmode to host
-			UARTSendData((uint8_t *) "NOR \r\n", FALSE);
+	case NON_SECURE_NOR:
+	{
+		//Report Bootmode to host
+		UARTSendStringCRLF("NOR");
 
-			// Copy binary or S-record of application from NOR to DDRAM, then decode
-			if (NOR_Copy() != E_PASS)
-			{
-				UARTSendData((uint8_t *) "NOR Boot failed.\r\n", FALSE);
-				goto UARTBOOT;
-			}
-			else
-			{
-				UARTSendData((uint8_t *) "NOR Boot success.\r\n", FALSE);
-			}
-			break;
-		}
-#endif		
-		case NON_SECURE_UART:
+		// Copy binary or S-record of application from NOR to DDRAM, then decode
+		if (NOR_Copy() != E_PASS)
 		{
-			//Report Bootmode to host
-			UARTSendData((uint8_t *) "UART\r\n", FALSE);
-            goto UARTBOOT;
-			break;
+			UARTSendStringCRLF("NOR Boot failed.");
+			goto UARTBOOT;
 		}
-		default:
+		else
 		{
-UARTBOOT:	UART_Boot();
-			break;
+			UARTSendStringCRLF("NOR Boot success.");
 		}
+		break;
 	}
-		
-	UARTSendData((uint8_t*)"   DONE", TRUE);
-        UARTSendData((uint8_t *) "\r\n", FALSE);
+#endif		
+	case NON_SECURE_UART:
+	{
+		//Report Bootmode to host
+		UARTSendStringCRLF("UART");
+		goto UARTBOOT;
+		break;
+	}
+	default:
+	{
+	UARTBOOT:
+		UART_Boot();
+		break;
+	}
+	}
+	
+	UARTSendStringNULL("   DONE");
+        UARTSendCRLF();
 
 	waitloop(10000);
 
 	// Disabling UART timeout timer
-    while((UART0->LSR & 0x40) == 0 );
+	while((UART0->LSR & 0x40) == 0 );
 	TIMER0->TCR = 0x00000000;
 
 	return E_PASS;    
 }
-
-

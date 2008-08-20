@@ -47,7 +47,7 @@ uint32_t NAND_Copy() {
 	rxBuf = (uint8_t*)ubl_alloc_mem((MAX_IMAGE_SIZE>>1));
 	blockNum = START_APP_BLOCK_NUM;
 
-	UARTSendData((uint8_t *)"Starting NAND Copy...\r\n", FALSE);
+	UARTSendStringCRLF("Starting NAND Copy...");
 	
 	// NAND Initialization
 	if (NAND_Init() != E_PASS)
@@ -69,7 +69,7 @@ NAND_startAgain:
 		/* Valid magic number found */
 		if((magicNum & 0xFFFFFF00) == MAGIC_NUMBER_VALID)
 		{
-			UARTSendData((uint8_t *) "Valid MagicNum found.\r\n", FALSE);
+			UARTSendStringCRLF("Valid MagicNum found.");
 			blockNum = count;
 			break;
 		}
@@ -142,14 +142,14 @@ NAND_retry:
 					   (uint32_t *) &entryPoint2,
 		               (uint32_t *) &temp ) != E_PASS)
 		{
-		    UARTSendData((uint8_t *)"S-record decode failure.", FALSE);
+		    UARTSendString("S-record decode failure.");
 			return E_FAIL;
 		}
 		
 		if (gEntryPoint != entryPoint2)
 		{
-			UARTSendData((uint8_t *)"WARNING: S-record entrypoint does not match header entrypoint.\r\n", FALSE);
-			UARTSendData((uint8_t *)"WARNING: Using header entrypoint - results may be unexpected.\r\n", FALSE);
+			UARTSendStringCRLF("WARNING: S-record entrypoint does not match header entrypoint.");
+			UARTSendStringCRLF("WARNING: Using header entrypoint - results may be unexpected.");
 		}
 	}
 	

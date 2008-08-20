@@ -275,8 +275,8 @@ namespace DVFlasher
             myCmdParams.UARTUBLExecAddr = 0x0100;
             myCmdParams.UARTUBLUsed = true;
             
-            myCmdParams.NORUBLExecAddr = 0x2aa0;
-            myCmdParams.NANDUBLExecAddr = 0x26ec;
+            myCmdParams.NORUBLExecAddr = 0x29c8;
+            myCmdParams.NANDUBLExecAddr = 0x259c;
 
             myCmdParams.APPMagicFlag = MagicFlags.UBL_MAGIC_SAFE;
             myCmdParams.APPFileName = null;
