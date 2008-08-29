@@ -10,7 +10,7 @@
 #       v1.10 on 01-Feb-2007
 #		v1.11 on 07-Mar-2007
 #		v1.12 on 14-Mar-2007
-VER=1_14_1
+VER=1_14_2
 
 MONOCOMPILE=gmcs
 DOTNETCOMPILE=csc

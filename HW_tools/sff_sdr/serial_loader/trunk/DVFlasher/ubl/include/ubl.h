@@ -23,12 +23,16 @@
 #include "tistdtypes.h"
 
 /* UBL version number */
-#define UBL_VERSION_STRING "1.13"
+#define UBL_VERSION_STRING "1.13.1"
 #ifdef UBL_NAND
 #define UBL_FLASH_TYPE "NAND"
 #else
 #define UBL_FLASH_TYPE "NOR"
 #endif
+
+/* Define this for bypassing the ECC check when reading from the NAND.
+ * This is useful for debugging or during development. */
+//#define NAND_BYPASS_READ_PAGE_ECC_CHECK 1
 
 // Define MagicNumber constants
 #define MAGIC_NUMBER_VALID (0xA1ACED00)

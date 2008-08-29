@@ -287,6 +287,10 @@ uint32_t NAND_Init()
 
 	UARTSendString("Initializing NAND flash:\r\n");
 
+#ifdef NAND_BYPASS_READ_PAGE_ECC_CHECK
+	UARTSendString("  Bypassing ECC check on page reads.\r\n");
+#endif /* NAND_BYPASS_READ_PAGE_ECC_CHECK */
+
 	/* Set NAND flash base address */
 	gNandInfo.flashBase = (uint32_t) &(__NANDFlash);
 
@@ -439,7 +443,9 @@ uint32_t NAND_GetDetails()
 /* Routine to read a page from NAND */
 uint32_t NAND_ReadPage(uint32_t block, uint32_t page, uint8_t *dest)
 {
+#ifndef NAND_BYPASS_READ_PAGE_ECC_CHECK
 	uint32_t eccValue[4];
+#endif
 	uint32_t spareValue[4], tempSpareValue;
 	uint8_t numReads, i;
 
@@ -462,8 +468,10 @@ uint32_t NAND_ReadPage(uint32_t block, uint32_t page, uint8_t *dest)
 	if (NAND_WaitForRdy(NAND_TIMEOUT) != E_PASS)
 		return E_FAIL;
 
+#ifndef NAND_BYPASS_READ_PAGE_ECC_CHECK
 	/* Starting the ECC in the NANDFCR register for CS2(bit no.8) */
 	NAND_ECCReadAndRestart((PNAND_INFO)&gNandInfo);
+#endif
 
 	/* Read the page data */
 	for (i = 0; i < numReads; i++) {
@@ -476,8 +484,11 @@ uint32_t NAND_ReadPage(uint32_t block, uint32_t page, uint8_t *dest)
 					 gNandInfo.bytesPerPage);
 		}
 
+#ifndef NAND_BYPASS_READ_PAGE_ECC_CHECK
 		/* Get the ECC Value */
 		eccValue[i] = NAND_ECCReadAndRestart((PNAND_INFO)&gNandInfo);
+#endif
+
 		/* Increment pointer */
 		if (gNandInfo.bigBlock)
 			dest += 512;
@@ -485,6 +496,7 @@ uint32_t NAND_ReadPage(uint32_t block, uint32_t page, uint8_t *dest)
 			dest += gNandInfo.bytesPerPage;
 	}
 
+#ifndef NAND_BYPASS_READ_PAGE_ECC_CHECK
 	/* Read the stored ECC value(s) */
 	for (i = 0; i < numReads; i++) {
 		if (gNandInfo.bytesPerPage == 256)
@@ -504,8 +516,6 @@ uint32_t NAND_ReadPage(uint32_t block, uint32_t page, uint8_t *dest)
 			tempSpareValue = spareValue[0];
 		}
 
-		/* Verify ECC values */
-
 #ifdef NAND_DEBUG
 		UARTSendString("ECCValue = ");
 		UARTSendInt(eccValue[i]);
@@ -514,6 +524,7 @@ uint32_t NAND_ReadPage(uint32_t block, uint32_t page, uint8_t *dest)
 		UARTSendCRLF();
 #endif
 
+		/* Verify ECC values */
 		if (eccValue[i] != tempSpareValue) {
 			UARTSendString("NAND ECC failure!\r\n");
 			UARTSendString("eccValue[i] = ");
@@ -528,6 +539,7 @@ uint32_t NAND_ReadPage(uint32_t block, uint32_t page, uint8_t *dest)
 			return E_FAIL;
 		}
 	}
+#endif /* NAND_BYPASS_READ_PAGE_ECC_CHECK */
 
 #ifdef NAND_DEBUG
 	UARTSendString("\r\nDone reading a page from NAND flash\r\n");
