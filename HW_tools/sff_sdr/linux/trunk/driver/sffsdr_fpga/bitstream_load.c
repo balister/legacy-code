@@ -168,12 +168,6 @@ static int select_map_select_gpio_pins(int board_type)
 		fpga_init_gpio      = GPIO(40);
 		fpga_busy_gpio      = GPIO(42);
 		break;
-	case BOARD_TYPE_FEMTO_BASE_STATION:
-		fpga_program_b_gpio = GPIO(51);
-		fpga_done_gpio      = GPIO(46);
-		fpga_init_gpio      = GPIO(50);
-		fpga_busy_gpio      = GPIO(45);
-		break;
 	default:
 		FAILMSG("Error: Unknown board type.");
 		return FPGA_LOAD_INVALID_BOARD_TYPE;

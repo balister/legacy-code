@@ -30,7 +30,6 @@
 
 /* Board types. */
 #define BOARD_TYPE_SFFSDR		0
-#define BOARD_TYPE_FEMTO_BASE_STATION	1
 
 #define BITSTREAM_LENGTH_SX35	(4*426810) /* Length in bytes of a
 					    * full bitstream. */
