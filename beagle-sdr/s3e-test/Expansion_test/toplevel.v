@@ -20,6 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 module toplevel(
 
+input clk,    // 50 MHz clock
 
 // Connections to beagle via FX2 connector
 input pin3,   // IO39
@@ -48,7 +49,12 @@ input pin24,  // IO12
 input nREGEN, // IO09
 input nRESET, // IO10
 
-output [7:0] led
+output [7:0] led,
+
+output lcd_rs,
+output lcd_rw,
+output lcd_e,
+output [3:0] lcd_d
 
     );
 
@@ -61,4 +67,15 @@ assign led[4] = 0;
 assign led[5] = 0;
 assign led[6] = 0;
 assign led[7] = 0;
+
+lcd_write_number_test foo
+   (
+   .CLK_50MHZ(clk),
+   .LCD_E(lcd_e),
+   .LCD_RS(lcd_rs),
+   .LCD_RW(lcd_rw),
+   .LCD_D(lcd_d)
+   );
+  
+
 endmodule
