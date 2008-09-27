@@ -1,6 +1,7 @@
 /****************************************************************************
 
 Copyright 2006, 2008 Virginia Polytechnic Institute and State University
+Copyright 2008       Philip Balister, philip@opensdr.com
 
 This file is part of the OSSIE Sound_out Device.
 
@@ -33,7 +34,7 @@ using namespace standardInterfaces;  // For standard OSSIE interface classes
 int main(int argc, char* argv[])
 
 {
-    ossieDebugLevel = 1;
+    ossieDebugLevel = 10;
 
     ossieSupport::ORB *orb = new ossieSupport::ORB;
 
@@ -58,58 +59,6 @@ int main(int argc, char* argv[])
     string objName = "DomainName1/";
     objName += label;
     orb->bind_object_to_name((CORBA::Object_ptr) soundCardPlayback_var, objName.c_str());
-
-    // Create control ports for sound in and out control
-
-    soundOutControl_i* soundOutControl_servant;
-    audioOutControl_var soundOutControl_var;
-
-    soundOutControl_servant = new soundOutControl_i();
-    soundOutControl_var = soundOutControl_servant->_this();
-
-    soundInControl_i* soundInControl_servant;
-    audioInControl_var soundInControl_var;
-
-    soundInControl_servant = new soundInControl_i();
-    soundInControl_var = soundInControl_servant->_this();
-
-    objName = "DomainName1/";
-    objName += "soundOutControl";
-    orb->bind_object_to_name((CORBA::Object_ptr) soundOutControl_var, objName.c_str());
-    
-    objName = "DomainName1/";
-    objName += "soundInControl";
-    orb->bind_object_to_name((CORBA::Object_ptr) soundInControl_var, objName.c_str());
-
-
-    // Create the ports for sound output data
-
-    soundOut_i* soundOut;
-
-    complexShort_var soundOut_var;
-
-    soundOut = new soundOut_i(soundCardPlayback_servant);
-    soundOut_var = soundOut->_this();
-
-    objName = "DomainName1/";
-    objName += "soundOut";
-    orb->bind_object_to_name((CORBA::Object_ptr) soundOut_var, objName.c_str());
-
-#if 0 // Save for when I need to input from souncard
-    // Create the ports for RX Data
-
-    RX_data_i *rx_data_1;
-
-    CF::Port_var rx_data_1_var;
-
-    rx_data_1 = new RX_data_i(1);
-
-    rx_data_1_var = rx_data_1->_this();
-
-    objName = "DomainName1/";
-    objName += "RX_Data_1";
-    orb->bind_object_to_name((CORBA::Object_var) rx_data_1_var, objName.c_str());
-#endif
 
     // Start the orb
     orb->orb->run();

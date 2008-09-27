@@ -1,6 +1,7 @@
 /****************************************************************************
 
 Copyright 2006, 2008 Virginia Polytechnic Institute and State University
+Copyright 2008       Philip Balister, philip@opensdr.com
 
 This file is part of the OSSIE Sound_out Device.
 
@@ -35,49 +36,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "ossie/PortTypes.h"
 #include "ossie/debug.h"
 
-#include "soundControl.h"
-#include "complexShort.h"
-
-class SoundCardPlayback_i;
-
-// Definitions for provides ports
-
-/// Control port
-class soundOutControl_i : public POA_standardInterfaces::audioOutControl
-
-{
-  public:
-    soundOutControl_i();
-
-};
-
-/// Control port
-class soundInControl_i : public POA_standardInterfaces::audioInControl
-
-{
-  public:
-    soundInControl_i();
-
-};
-
-/// Data port for sound playback
-class soundOut_i : public POA_standardInterfaces::complexShort
-{
-  public:
-    /// Initializing constructor
-    soundOut_i(SoundCardPlayback_i * _base);  
-
-    /// Push sample data (stereo) to sound card
-    void pushPacket(const PortTypes::ShortSequence &L, const PortTypes::ShortSequence &R);
-
-  private:
-    // Disallow default constructor
-    soundOut_i();
-
-    /// Instance SoundCardPlayback_i
-    SoundCardPlayback_i *scp;
-};
-
+#include "standardinterfaces/complexShort_p.h"
 
 /// Main Sound card device definition
 class SoundCardPlayback_i : public virtual POA_CF::Device
@@ -89,6 +48,8 @@ class SoundCardPlayback_i : public virtual POA_CF::Device
 
     /// Default destructor
     ~SoundCardPlayback_i();
+
+    static void do_play_sound(void *u) { ((SoundCardPlayback_i *)u)->play_sound(); };
 
     // Device methods
     CF::Device::UsageType usageState ()
@@ -121,9 +82,6 @@ class SoundCardPlayback_i : public virtual POA_CF::Device
         throw (CF::Resource::StopError, CORBA::SystemException);
 
     char *identifier () throw (CORBA::SystemException);
-
-    //// static function for omni thread
-    static void run( void * data );
 
     // Life Cycle methods
     /// Checks if sound card device is not already in use
@@ -158,22 +116,8 @@ CORBA::SystemException);
 
     // --- Sound playback variables ---
 
-    ///
-    snd_pcm_t *pcm_handle;
-
-    ///
-    snd_pcm_uframes_t periodsize;
-
-    omni_mutex playback_mutex;
-    omni_mutex wait_for_data;
-    omni_condition data_available;
-    short *playback_buffer;
-    unsigned int insert_idx;
-    unsigned int read_idx;
-    unsigned int length;
-
     /// Sound playback thread
-    omni_thread *sound_thread;
+    omni_thread *play_sound_thread;
 
   private:
     /// Disallowing default constructor
@@ -189,6 +133,9 @@ CORBA::SystemException);
     std::string dev_id;
     std::string dev_label;
     std::string dev_profile;
+
+    // Ports
+    standardInterfaces_i::complexShort_p* sound_out_port;
 
     /// Main processing playback loop
     void play_sound();

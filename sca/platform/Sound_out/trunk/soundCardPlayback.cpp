@@ -1,6 +1,7 @@
 /****************************************************************************
 
 Copyright 2006, 2008 Virginia Polytechnic Institute and State University
+Copyright 2008       Philip Balister, philip@opensdr.com
 
 This file is part of the OSSIE Sound_out Device.
 
@@ -33,9 +34,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "soundCardPlayback.h"
 
+#include <pulse/simple.h>
+#include <pulse/error.h>
+
 // Initializing constructor
 SoundCardPlayback_i::SoundCardPlayback_i(char *id, char *label, char *profile)
-  : insert_idx(2), read_idx(0), length(0), data_available(&wait_for_data)
 {
     DEBUG(3, SoundCardPlayback, "constructor invoked")
 
@@ -44,31 +47,21 @@ SoundCardPlayback_i::SoundCardPlayback_i(char *id, char *label, char *profile)
     dev_label = label;
     dev_profile = profile;
 
-
-    // initialize variables
-    playback_buffer = NULL;
-
-    // Start the play_sound thread
-    sound_thread = new omni_thread(run, (void *) this);
-    sound_thread->start();
+    sound_out_port = new standardInterfaces_i::complexShort_p("soundOut", "DomainName1");
 
     dev_usageState = CF::Device::IDLE;
     dev_operationalState = CF::Device::ENABLED;
     dev_adminState = CF::Device::UNLOCKED;
+
+    // Start playback thread
+    play_sound_thread = new omni_thread(do_play_sound, (void *) this);
+    play_sound_thread->start();
 
 }
 
 // Default destructor
 SoundCardPlayback_i::~SoundCardPlayback_i()
 {
-    if (playback_buffer != NULL)
-        delete [] playback_buffer;
-}
-
-// start data processing thread
-void SoundCardPlayback_i::run( void * data )
-{
-    ((SoundCardPlayback_i*) data)->play_sound();
 }
 
 // Device methods
@@ -157,18 +150,6 @@ CORBA::Object_ptr SoundCardPlayback_i::getPort(const char* portName) throw(CF::P
 void SoundCardPlayback_i::initialize() throw (CF::LifeCycle::InitializeError, CORBA::SystemException)
 
 {
-    DEBUG(3, SoundCardPlayback, "initialize() invoked")
-    snd_pcm_stream_t stream = SND_PCM_STREAM_PLAYBACK;
-    char *pcm_name = "plughw:0,0";
-    int rc;
-
-    if ((rc = snd_pcm_open(&pcm_handle, pcm_name, stream, 0)) < 0) {
-    DEBUG(3, SoundCardPlayback, "Failed to open pcm device " << pcm_name)
-    if (rc == -EBUSY) 
-        DEBUG(3, SoundCardPlayback, "Sound device in use.")
-    
-    //throw(CF::LifeCycle::InitializeError());
-    }
 }
 
 void SoundCardPlayback_i::releaseObject() throw (CF::LifeCycle::ReleaseError, CORBA::SystemException)
@@ -205,85 +186,6 @@ void SoundCardPlayback_i::configure(const CF::Properties &props) throw (CORBA::S
     }
 
 
-    snd_pcm_hw_params_t *hwparams;
-    int rc;
-
-    snd_pcm_hw_params_alloca(&hwparams);
-
-    if (snd_pcm_hw_params_any(pcm_handle, hwparams)) {
-        DEBUG(3, SoundCardPlayback, "Can not configure this PCM device.")
-        throw(CF::PropertySet::InvalidConfiguration());
-    }
-
-    if (snd_pcm_hw_params_set_access(pcm_handle, hwparams, SND_PCM_ACCESS_RW_INTERLEAVED) < 0) {
-        DEBUG(3, SoundCardPlayback, "Error setting access mode.")
-        throw(CF::PropertySet::InvalidConfiguration());
-    }
-
-#ifdef __powerpc__
-    if (snd_pcm_hw_params_set_format(pcm_handle, hwparams, SND_PCM_FORMAT_S16_BE) < 0) {
-#else // Default endianess is little endian
-    if (snd_pcm_hw_params_set_format(pcm_handle, hwparams, SND_PCM_FORMAT_S16_LE) < 0) {
-#endif
-        DEBUG(3, SoundCardPlayback, "Error setting format.")
-        throw(CF::PropertySet::InvalidConfiguration());
-    }
-    // Set number of channels to two for stereo
-    if (snd_pcm_hw_params_set_channels(pcm_handle, hwparams, 2) < 0) {
-        DEBUG(3, SoundCardPlayback, "Error setting number of channels.")
-        throw(CF::PropertySet::InvalidConfiguration());
-    }
-
-    unsigned int exact_rate = rate;
-    if (snd_pcm_hw_params_set_rate_near(pcm_handle, hwparams, &exact_rate, 0) < 0) {
-        DEBUG(3, SoundCardPlayback, "Error setting rate.")
-        throw(CF::PropertySet::InvalidConfiguration());
-    }
-
-    if (rate != exact_rate) {
-        DEBUG(3, SoundCardPlayback, "rate " << rate << " is not supported by your hardware. Using " << exact_rate << " instead.")
-    }
-
-    // Set up period size
-    periodsize = 256;
-    snd_pcm_uframes_t exactperiodsize = periodsize;
-    if ((rc = snd_pcm_hw_params_set_period_size_near(pcm_handle, hwparams, &exactperiodsize, 0)) < 0) {
-        DEBUG(3, SoundCardPlayback, "Error setting period size." << snd_strerror(rc))
-        throw(CF::PropertySet::InvalidConfiguration());
-    }
-
-    if (periodsize != exactperiodsize) {
-        DEBUG(3, SoundCardPlayback, "Period size set to " << exactperiodsize << " not the requested " << periodsize)
-        periodsize = exactperiodsize;
-    }
-
-    // Set the buffer size
-    snd_pcm_uframes_t buffersize = 8 * periodsize;
-    if ((rc = snd_pcm_hw_params_set_buffer_size_near(pcm_handle, hwparams, &buffersize)) < 0) {
-        DEBUG(3, SoundCardPlayback, "Error setting buffer size, " << snd_strerror(rc))
-        throw(CF::PropertySet::InvalidConfiguration());
-    }
-
-    // Get the buffer size
-    snd_pcm_uframes_t periods = 0;
-    if ((rc = snd_pcm_hw_params_get_buffer_size(hwparams, &periods)) < 0) {
-        DEBUG(3, SoundCardPlayback, "Error getting the buffer size " << snd_strerror(rc))
-        throw(CF::PropertySet::InvalidConfiguration());
-    }
-
-    DEBUG(3, SoundCardPlayback, "Buffer size : " << periods)
-
-    // Apply HW settings
-    if (snd_pcm_hw_params(pcm_handle, hwparams) < 0) {
-        DEBUG(3, SoundCardPlayback, "Error setting HW params.")
-        throw(CF::PropertySet::InvalidConfiguration());
-    }
-
-    // set up playback buffer
-    length = periods * 2 * 8;
-    DEBUG(3, SoundCardPlayback, "Playback buffer length = " << length)
-    playback_buffer = new short[length];
-
 }
 
 void SoundCardPlayback_i::query (CF::Properties & configProperties)
@@ -304,70 +206,49 @@ CF::UnknownProperties)
 void SoundCardPlayback_i::play_sound()
 
 {
-    bool under_run_occured(true);
+
+    pa_sample_spec ss;
+
+    ss.format = PA_SAMPLE_S16LE;
+    ss.rate = 48000;
+    ss.channels = 2;
+
+    pa_simple *s(NULL);
+    int error(0);
+
+    if (!(s = pa_simple_new(NULL, "SoundOut", PA_STREAM_PLAYBACK, NULL, "playback", &ss, NULL, NULL, &error))) {
+	std::cerr << ": pa_simple_new() failed: " << pa_strerror(error) << std::endl;
+	exit(-1);
+    }
+
+    unsigned int prev_len(0);
+    short *buf(NULL);
 
     while (1) {
-        playback_mutex.lock();
+	PortTypes::ShortSequence *L(NULL), *R(NULL);
+	
+	sound_out_port->getData(L, R);
 
-        const int buf_size = 256;
+	unsigned int len = L->length();
 
-        // Check if we have buf_size periods in the buffer
-        // if not wait for more data, otherwise send samples to sound card
+	if (len > prev_len) {
+	    delete buf;
 
-        //DEBUG(3, SoundCardPlayback, "thread: insert_idx = " << insert_idx << "  read_idx = " << read_idx)
+	    prev_len = len;
+	    buf = new short[len*2];
+	    DEBUG(5, SoundCardPlayback, "buffer size is : " << len);
+	}
 
-        int len = insert_idx - read_idx;
+	for (unsigned int i(0); i<len; i++) {
+	    buf[i*2] = (*L)[i];
+	    buf[i*2+1] = (*R)[i];
+	}
 
-        if ( under_run_occured && 
-             ((len > 0) && (len < buf_size)) ||
-             ((len < 0) && (length - insert_idx + read_idx) < buf_size)) {
+	sound_out_port->bufferEmptied();
 
-            playback_mutex.unlock();
-
-            DEBUG(1, SoundCardPlayback, "Underrun occured, waiting for more sound data")
-
-            data_available.wait();
-
-        } else {
-            short buf[buf_size];
-
-            under_run_occured = false;
-
-            unsigned int buf_length = buf_size/2;
-            for (unsigned int i = 0; i < buf_size; ++i) {
-                buf[i] = playback_buffer[read_idx++];
-                if (read_idx == length)
-                    if (insert_idx != 0)
-                        read_idx = 0;
-                else {
-                    under_run_occured = true;
-                    buf_length = i/2;
-                    break;
-                }
-                if (read_idx == insert_idx - 2) {
-                    under_run_occured = true;
-                    buf_length = i/2;
-                    break;
-                }
-            }
-            playback_mutex.unlock();
-
-            // check status of pcm device
-            int rc;
-            if ((rc = snd_pcm_writei(pcm_handle, buf, buf_length)) != 0) {
-                if (rc == -EPIPE) {
-                    under_run_occured = true;
-                    DEBUG(3, SoundCardPlayback, "Sound card under run occured.")
-                    snd_pcm_prepare(pcm_handle);
-                } else if (rc == -EAGAIN) {
-                    DEBUG(3, SoundCardPlayback, "Sound card over run occured.")
-                } else if (rc < 0) {
-                    DEBUG(3, SoundCardPlayback, "Sound write error, " << snd_strerror(rc))
-                } else {
-                    if (rc != (buf_length))
-                    DEBUG(3, SoundCardPlayback, rc << " frames written, buffer contained " << buf_length)
-                }
-            }
+	if (pa_simple_write(s, buf, (size_t) len*4, &error) < 0) {
+	    std::cerr << "pa_simple_write() failed: " << pa_strerror(error) << std::endl;
+            exit(-1);
         }
     }
 }
