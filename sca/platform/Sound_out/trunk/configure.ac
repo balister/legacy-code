@@ -11,6 +11,10 @@ AC_HEADER_SYS_WAIT
 
 AC_FUNC_FORK
 
+AC_CHECK_HEADERS([pulse/simple.h], [], [AC_MSG_ERROR([cannot find pulse/simple.h])])
+AC_CHECK_HEADERS([pulse/error.h], [], [AC_MSG_ERROR([cannot find pulse/error.h])])
+AC_CHECK_LIB([pulse-simple], [pa_simple_new], [], [AC_MSG_ERROR([cannot find libpulse-simple])])
+
 AC_LANG_PUSH([C++])
 
 AC_CHECK_LIB([omniORB4], [main], [], [AC_MSG_ERROR([cannot find omniORBi4 library])])
@@ -21,10 +25,6 @@ AC_CHECK_LIB([standardInterfaces], [main], [], [AC_MSG_ERROR([cannot find standa
 AC_CHECK_HEADERS([standardinterfaces/complexShort.h], [], [AC_MSG_ERROR([cannot find standardInterfaces header files])])
 
 AC_LANG_POP
-
-AC_CHECK_HEADERS([pulse/simple.h], [], [AC_MSG_ERROR([cannot find pulse/simple.h])])
-AC_CHECK_HEADERS([pulse/error.h], [], [AC_MSG_ERROR([cannot find pulse/error.h])])
-AC_CHECK_LIB([pulse-simple], [pa_simple_new], [], [AC_MSG_ERROR([cannot find libpulse-simple])])
 
 export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig"
 PKG_CHECK_MODULES(OSSIE, ossie >= 0.6.0,,exit)
