@@ -47,7 +47,7 @@ SoundCardPlayback_i::SoundCardPlayback_i(char *id, char *label, char *profile)
     dev_label = label;
     dev_profile = profile;
 
-    sound_out_port = new standardInterfaces_i::complexShort_p("soundOut", "DomainName1");
+    sound_out_port = new standardInterfaces_i::complexShort_p("soundOut", "DomainName1", 20);
 
     dev_usageState = CF::Device::IDLE;
     dev_operationalState = CF::Device::ENABLED;
