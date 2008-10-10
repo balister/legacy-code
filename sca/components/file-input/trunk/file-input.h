@@ -1,6 +1,7 @@
 /****************************************************************************
 
 Copyright 2006, 2008 Virginia Polytechnic Institute and State University
+Copyright 2008       Philip Balister, philip@balister.org
 
 This file is part of the OSSIE FileInput.
 
@@ -75,7 +76,7 @@ class FileInput_i : public virtual Resource_impl
         omni_thread *processing_thread;     //for component writer function
     	omni_mutex accessPrivateData;           // for access to private data
 
-	bool running;
+	volatile bool running;
 
 	// Values from properties
 	std::string fileName;
