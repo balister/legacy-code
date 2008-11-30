@@ -445,8 +445,8 @@ uint32_t NAND_ReadPage(uint32_t block, uint32_t page, uint8_t *dest)
 {
 #ifndef NAND_BYPASS_READ_PAGE_ECC_CHECK
 	uint32_t eccValue[4];
-#endif
 	uint32_t spareValue[4], tempSpareValue;
+#endif
 	uint8_t numReads, i;
 
 	/* Setup numReads */
