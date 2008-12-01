@@ -9,10 +9,13 @@
 # 		v1.11 on 7-Mar-2007
 #		v1.12 on 14-Mar-2007
 
-CROSSCOMPILE=arm-linux-
-CC=$(CROSSCOMPILE)gcc
-OBJCOPY=$(CROSSCOMPILE)objcopy
-OBJDUMP=$(CROSSCOMPILE)objdump
+ifndef CROSS_COMPILE
+CROSS_COMPILE=arm-linux-
+endif
+
+CC=$(CROSS_COMPILE)gcc
+OBJCOPY=$(CROSS_COMPILE)objcopy
+OBJDUMP=$(CROSS_COMPILE)objdump
 INCLUDEDIR=../include
 
 CFLAGS:=-c -Os -Wall -I$(INCLUDEDIR)
