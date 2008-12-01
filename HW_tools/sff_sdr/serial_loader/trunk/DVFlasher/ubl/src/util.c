@@ -90,11 +90,12 @@ uint32_t GetHexAddr(uint8_t *src, uint32_t* addr)
 
 uint32_t SRecDecode(uint8_t *srecAddr, uint32_t srecByteCnt, uint32_t *binAddr, uint32_t *binByteCnt)
 {
-	volatile uint32_t		index;
-	uint8_t		cnt;
+	volatile uint32_t	index;
+	uint8_t			cnt;
 	uint32_t		dstAddr;
 	uint32_t		totalCnt;
 	uint32_t		checksum;
+	int			binAddr_set = 0;
 
 	totalCnt = 0;
 	index = 0;
@@ -122,7 +123,16 @@ uint32_t SRecDecode(uint8_t *srecAddr, uint32_t srecByteCnt, uint32_t *binAddr, 
 
 			checksum += GetHexAddr(srecAddr+index, &dstAddr);
 			index += 8;
-			
+
+			if (!binAddr_set) {
+				/* This is the start address where the data will be copied.
+				 * The DVFlasher uses the entry point in the SREC file
+				 * to point to the first load address, but this is not standard.
+				 * This approch permits the use of a standard SREc file. */
+				*binAddr = dstAddr;
+				binAddr_set = 1;
+			}
+
 			// Eliminate the Address 4 Bytes and checksum
 			cnt -=5;	
 
@@ -152,7 +162,7 @@ uint32_t SRecDecode(uint8_t *srecAddr, uint32_t srecByteCnt, uint32_t *binAddr, 
 
 			if (cnt == 5)
 			{
-				GetHexAddr (&srecAddr[index], binAddr);
+				/* We don't read the entry point. */
 				index +=8;
 
 				// Skip over the checksum
