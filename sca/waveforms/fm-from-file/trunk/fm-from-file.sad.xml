@@ -26,7 +26,7 @@
                     <!--[Component FileInput1, Attribute input_file_format]--> 
                     <simpleref refid="DCE:240ba394-44c7-4369-84d1-29177e06b1a7" value="S16_BE"/>
                     <!--[Component FileInput1, Attribute packet_size]--> 
-                    <simpleref refid="DCE:3b35cc0c-cdda-446f-9e23-5877f213f1e9" value="1024"/>
+                    <simpleref refid="DCE:3b35cc0c-cdda-446f-9e23-5877f213f1e9" value="8192"/>
                     <!--[Component FileInput1, Attribute file_repeat]--> 
                     <simpleref refid="DCE:23882924-7988-11db-9fc2-00123f573a7f" value="5"/>
                     <!--[Component FileInput1, Attribute inter_packet_time]--> 
