@@ -8,6 +8,7 @@ PR = "r1"
 PV = "0.0.0+svnr${SRCREV}"
 
 DEPENDS = "pulseaudio-meta ossie-cf ossie-standardinterfaces"
+RDEPENDS = "pulseaudio-meta"
 
 S = "${WORKDIR}/trunk"
 
