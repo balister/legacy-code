@@ -1,6 +1,7 @@
 /****************************************************************************
 
 Copyright 2006, Virginia Polytechnic Institute and State University
+Copyright 2008, philip@opensdr.com OpenSDR
 
 This file is part of the OSSIE Core Framework.
 
@@ -84,7 +85,7 @@ void realShort::usesPort::connectPort(CORBA::Object_ptr connection, const char* 
 {
     standardInterfaces::realShort_ptr p = standardInterfaces::realShort::_narrow(connection);
     if (CORBA::is_nil(p)) {
-	std::cout << "Print port is not realShort" << std::endl;
+	DEBUG(1, standardInterfaces, "Attempt to connect a realShort uses port to a port that does not provide a realShort interface.");
 	return;
     }
     

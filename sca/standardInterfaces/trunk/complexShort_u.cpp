@@ -1,6 +1,7 @@
 /****************************************************************************
 
 Copyright 2006, Virginia Polytechnic Institute and State University
+Copyright 2008, philip@opensdr.com OpenSDR
 
 This file is part of the OSSIE Core Framework.
 
@@ -84,7 +85,7 @@ void complexShort::usesPort::connectPort(CORBA::Object_ptr connection, const cha
 {
     standardInterfaces::complexShort_ptr p = standardInterfaces::complexShort::_narrow(connection);
     if (CORBA::is_nil(p)) {
-        std::cout << "Print port is not complexShort" << std::endl;
+        DEBUG(1, standardInterfaces, "Attempt to connect a complexShort uses port to a port that does not provide a complexShort interface.");
         return;
     }
     

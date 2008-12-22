@@ -1,6 +1,7 @@
 /****************************************************************************
 
 Copyright 2006, Virginia Polytechnic Institute and State University
+Copyright 2008, philip@opensdr.com OpenSDR
 
 This file is part of the OSSIE Core Framework.
 
@@ -84,7 +85,7 @@ void complexDouble::usesPort::connectPort(CORBA::Object_ptr connection, const ch
 {
     standardInterfaces::complexDouble_ptr p = standardInterfaces::complexDouble::_narrow(connection);
     if (CORBA::is_nil(p)) {
-	std::cout << "Print port is not complexDouble" << std::endl;
+	DEBUG(1, standardInterfaces, "Attempt to connect a complexDouble uses port to a port the does not provide a complexDouble interface.");
 	return;
     }
     
