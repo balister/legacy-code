@@ -38,6 +38,7 @@ namespace standardInterfaces_i {
 
   public:
     realChar_p(const char* portName, unsigned int bufLen = 5);
+    realChar_p(const char* portName, const char* domainName, unsigned int bufLen = 5);
     ~realChar_p();
 
     CORBA::Object_ptr getPort(const char* portName);

@@ -22,6 +22,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include <iostream>
 
+#include <ossie/ossieSupport.h>
+
 #include <standardinterfaces/realChar_p.h>
 
 standardInterfaces_i::realChar_p::realChar_p(const char* _name, unsigned int bufLen) : portName(_name), bufferLength(bufLen), rdPtr(0), wrPtr(0)
@@ -35,6 +37,27 @@ standardInterfaces_i::realChar_p::realChar_p(const char* _name, unsigned int buf
 
     ready_for_input = new omni_semaphore(bufferLength);
     data_ready = new omni_semaphore(0);
+}
+
+standardInterfaces_i::realChar_p::realChar_p(const char* _name, const char* _domain, unsigned int bufLen) : portName(_name), bufferLength(bufLen), rdPtr(0), wrPtr(0)
+{
+    ossieSupport::ORB orb;
+
+    data_servant = new realChar::providesPort(this);
+    data_servant_var = data_servant->_this();
+
+    PortTypes::CharSequence a;
+    I_buf.assign(bufferLength, a);
+
+    ready_for_input = new omni_semaphore(bufferLength);
+    data_ready = new omni_semaphore(0);
+
+    std::string objName;
+    objName = _domain;
+    objName += "/";
+    objName += _name;
+    
+    orb.bind_object_to_name((CORBA::Object_ptr) data_servant_var, objName.c_str());
 }
 
 standardInterfaces_i::realChar_p::~realChar_p()
