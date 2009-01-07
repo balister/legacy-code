@@ -5,6 +5,7 @@ pkginclude_HEADERS =                        \
     realFloat_u.h realFloat_p.h             \
     realDouble_u.h realDouble_p.h           \
     realChar_u.h realChar_p.h               \
+    realString_u.h realString_p.h               \
     complexShort_u.h complexShort_p.h       \
     complexLong_u.h complexLong_p.h         \
     complexChar_u.h complexChar_p.h         \
