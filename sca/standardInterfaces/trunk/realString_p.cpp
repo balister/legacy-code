@@ -79,11 +79,11 @@ void standardInterfaces_i::realString_p::bufferEmptied()
     ready_for_input->post();
 }
 
-void standardInterfaces_i::realString_p::getData(std::string *I)
+void standardInterfaces_i::realString_p::getData(std::string **I)
 {
     data_ready->wait();
 
-    I = &I_buf[rdPtr];
+    *I = &I_buf[rdPtr];
     rdPtr = ++rdPtr % bufferLength;
 }
 

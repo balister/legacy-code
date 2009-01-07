@@ -43,7 +43,7 @@ namespace standardInterfaces_i {
 
     CORBA::Object_ptr getPort(const char* portName);
 
-    void getData(std::string *I);
+    void getData(std::string **I);
     void bufferEmptied();
 
   private:
