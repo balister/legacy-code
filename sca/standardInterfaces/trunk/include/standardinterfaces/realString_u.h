@@ -55,7 +55,7 @@ namespace standardInterfaces_i {
 
     CORBA::Object_ptr getPort(const char* portName);
 
-    void pushPacket(std::string&I);
+    void pushPacket(std::string &I);
 
   private:
     realString_u();

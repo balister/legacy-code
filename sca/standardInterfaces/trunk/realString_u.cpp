@@ -66,11 +66,13 @@ CORBA::Object_ptr standardInterfaces_i::realString_u::getPort(const char* _portN
 	return CORBA::Object::_nil();
 }
 
-void standardInterfaces_i::realString_u::pushPacket(CORBA::String_var &I)
+void standardInterfaces_i::realString_u::pushPacket(std::string &I)
 {
     omni_mutex_lock l(port_mutex);
+    CORBA::String_var str;
     for (unsigned int i = 0; i < dest_ports.size(); ++i) {
-	dest_ports[i].port_obj->pushPacket(I);
+	str = CORBA::string_dup(I.c_str());
+	dest_ports[i].port_obj->pushPacket(str);
     }
 }
 
