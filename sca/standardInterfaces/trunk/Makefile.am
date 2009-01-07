@@ -21,6 +21,7 @@ BUILT_SOURCES =             \
     FM_ControlSK.cpp        \
     soundControlSK.cpp      \
     stereoSoundSK.cpp       \
+    realStringSK.cpp       \
     Radio_ControlSK.cpp
 
 nodist_pkginclude_HEADERS = \
@@ -37,6 +38,7 @@ nodist_pkginclude_HEADERS = \
     FM_Control.h            \
 	soundControl.h          \
     stereoSound.h           \
+    realString.h           \
     Radio_Control.h 
 
 AM_CXXFLAGS = -Wall -g
@@ -58,7 +60,8 @@ pkginclude_HEADERS =        \
     FM_Control.idl          \
     soundControl.idl        \
     stereoSound.idl         \
-    sampleRateConvertorControl.idl 
+    sampleRateConvertorControl.idl \
+    realString.idl
 
 pkgconfigdir = $(libdir)/pkgconfig
 
@@ -72,6 +75,7 @@ libstandardInterfaces_la_SOURCES =              \
     realFloat_u.cpp     realFloat_p.cpp         \
     realDouble_u.cpp    realDouble_p.cpp        \
     realChar_u.cpp      realChar_p.cpp          \
+    realString_u.cpp    realString_p.cpp        \
     complexChar_u.cpp   complexChar_p.cpp       \
     complexShort_u.cpp  complexShort_p.cpp      \
     complexFloat_u.cpp  complexFloat_p.cpp      \
@@ -86,6 +90,7 @@ nodist_libstandardInterfaces_la_SOURCES =       \
     realFloatSK.cpp         \
     realDoubleSK.cpp        \
     realCharSK.cpp          \
+    realStringSK.cpp          \
     complexShortSK.cpp      \
     complexFloatSK.cpp      \
     complexDoubleSK.cpp     \
@@ -101,6 +106,7 @@ CLEANFILES =                                    \
     realFloat.h         realFloatSK.cpp         \
     realDouble.h        realDoubleSK.cpp        \
     realChar.h          realCharSK.cpp          \
+    realString.h        realStringSK.cpp        \
     complexShort.h      complexShortSK.cpp      \
     complexFloat.h      complexFloatSK.cpp      \
     complexDouble.h     complexDoubleSK.cpp     \
