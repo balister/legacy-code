@@ -3,7 +3,7 @@ SECTION =  "libs"
 PRIORITY = "optional"
 LICENSE = "LGPL"
 
-PR = "r1"
+PR = "r2"
 PV = "0.0.0+svnr${SRCREV}"
 
 DEPENDS = "ossie-cf"
