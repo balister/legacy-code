@@ -3,7 +3,7 @@ SECTION =  "libs"
 PRIORITY = "optional"
 LICENSE = "LGPL"
 
-PR = "r1"
+PR = "r2"
 PV = "0.0.0+svnr${SRCREV}"
 
 DEPENDS = "ossie-cf"
@@ -14,6 +14,7 @@ SRC_URI = "svn://svn.geekisp.com/opensdr/sca/SigProc;module=trunk;proto=https"
 
 inherit autotools pkgconfig
 
+EXTRA_OECONF_append_armv7a = " --enable-fpm=arm"
 EXTRA_OECONF_append_armv5 = " --enable-fpm=arm"
 EXTRA_OECONF_append_powerpc = " --enable-fpm=ppc"
 
