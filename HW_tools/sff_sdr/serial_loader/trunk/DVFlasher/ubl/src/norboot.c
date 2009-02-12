@@ -10,8 +10,6 @@
  	          Daniel Allred - Jan-22-2007                                              
  ----------------------------------------------------------------------------- */
 
-#ifdef UBL_NOR
-
 #include "ubl.h"
 #include "nor.h"
 #include "util.h"
@@ -67,5 +65,3 @@ uint32_t NOR_Copy() {
 	}
  	return E_PASS;
 }
-
-#endif

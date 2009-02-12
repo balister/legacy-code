@@ -20,7 +20,7 @@
    ----------------------------------------------------------------------------- */
 
 #include "ubl.h"
-#include "dm644x.h"
+#include "davinci.h"
 #include "uart.h"
 #include "util.h"
 
@@ -142,7 +142,7 @@ void boot()
     
 	// Jump to entry point
 	APPEntry = (void*) gEntryPoint;
-	UARTSendString("About to jump to: ");
+	UARTSendString("Starting 2nd stage bootloader at: ");
 	UARTSendInt((uint32_t)APPEntry);
 	UARTSendCRLF();
 
@@ -163,7 +163,7 @@ int32_t main(void)
 	}
 
 	// Platform Initialization
-	DM644xInit();
+	davinci_platform_init();
 
 	// Set RAM pointer to beginning of RAM space
 	set_current_mem_loc(0);

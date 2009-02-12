@@ -19,35 +19,52 @@ OBJDUMP=$(CROSS_COMPILE)objdump
 INCLUDEDIR=../include
 
 CFLAGS:=-c -Os -Wall -I$(INCLUDEDIR)
-ifeq ($(FLASH),nand)
-	CFLAGS+= -DUBL_NAND
-endif
-ifeq ($(FLASH),nor)
-	CFLAGS+= -DUBL_NOR
-endif
-
-ifeq ($(DEVICE),DM6441)
-	CFLAGS+= -DDM6441
-endif
-ifeq ($(DEVICE),DM6441_LV)
-	CFLAGS+= -DDM6441_LV
-endif
 
 LDFLAGS=-Wl,-T$(LINKERSCRIPT) -nostdlib 
 OBJCOPYFLAGS = -R .ddrram -R .ddrram2 --gap-fill 0xFF --pad-to 0x3800 -S
 
-SOURCES=ubl.c dm644x.c util.c uart.c uartboot.c nor.c norboot.c nand.c nandboot.c
-OBJECTS:=$(patsubst %.c,%_$(FLASH).o,$(wildcard *.c))
+SOURCES := davinci.c uart.c uartboot.c ubl.c util.c gpio.c
+
+ifeq ($(DEVICE),DM6441)
+	CFLAGS += -DDM6441
+	SOURCES += dm644x.c
+	LINKERSCRIPT = dm644x.lds
+endif
+ifeq ($(DEVICE),DM6441_LV)
+	CFLAGS += -DDM6441_LV
+	SOURCES += dm644x.c
+	LINKERSCRIPT = dm644x.lds
+endif
+ifeq ($(DEVICE),DM6446)
+	CFLAGS += -DDM6446
+	SOURCES += dm644x.c
+	LINKERSCRIPT = dm644x.lds
+endif
+ifeq ($(DEVICE),DM355)
+	CFLAGS += -DDM355
+	SOURCES += dm355.c
+	LINKERSCRIPT = dm355.lds
+endif
+
+ifeq ($(FLASH),nand)
+	CFLAGS+= -DUBL_NAND
+	SOURCES += nandboot.c nand.c
+endif
+ifeq ($(FLASH),nor)
+	CFLAGS+= -DUBL_NOR
+	SOURCES += norboot.c nor.c
+endif
+
+OBJECTS:=$(patsubst %.c,%_$(FLASH).o,$(SOURCES))
 EXECUTABLE:=ubl_davinci_$(FLASH)
 BINARY:=../$(EXECUTABLE).bin
 START:=../$(EXECUTABLE)_start_addr.txt
-LINKERSCRIPT=ubl_davinci.lds
 
 all: $(BINARY) $(START)
 
 .PHONY : clean objclean
 clean:
-	-rm -f -v $(OBJECTS) $(BINARY) $(EXECUTABLE) $(START)
+	-rm -f -v *.o $(BINARY) $(EXECUTABLE) $(START)
 
 objclean:
 	-rm -f -v $(OBJECTS)

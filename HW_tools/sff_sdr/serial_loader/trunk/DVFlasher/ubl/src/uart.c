@@ -10,7 +10,7 @@
  *          Daniel Allred - Jan-22-2007
  * -------------------------------------------------------------------------- */
 
-#include "dm644x.h"
+#include "davinci.h"
 #include "uart.h"
 #include "util.h"
 #include "ubl.h"

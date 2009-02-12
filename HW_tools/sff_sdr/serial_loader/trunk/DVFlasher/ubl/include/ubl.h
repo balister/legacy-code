@@ -23,7 +23,7 @@
 #include "tistdtypes.h"
 
 /* UBL version number */
-#define UBL_VERSION_STRING "1.13.1"
+#define UBL_VERSION_STRING "1.13.2"
 #ifdef UBL_NAND
 #define UBL_FLASH_TYPE "NAND"
 #else
@@ -32,7 +32,11 @@
 
 /* Define this for bypassing the ECC check when reading from the NAND.
  * This is useful for debugging or during development. */
-//#define NAND_BYPASS_READ_PAGE_ECC_CHECK 1
+#define NAND_BYPASS_READ_PAGE_ECC_CHECK 1
+
+/* Define this for bypassing the READY/BUSYn line check for the NAND.
+ * This is currently needed for DM355 for an unknown reason. */
+#define NAND_BYPASS_BUSY_CHECK 1
 
 // Define MagicNumber constants
 #define MAGIC_NUMBER_VALID (0xA1ACED00)

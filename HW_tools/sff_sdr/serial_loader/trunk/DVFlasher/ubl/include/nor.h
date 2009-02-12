@@ -15,7 +15,7 @@
 #define _NOR_H_
 
 #include "tistdtypes.h"
-#include "dm644x.h"
+#include "davinci.h"
 
 /************* Constants and Macros **************/
 #define BUS_8BIT    0x01

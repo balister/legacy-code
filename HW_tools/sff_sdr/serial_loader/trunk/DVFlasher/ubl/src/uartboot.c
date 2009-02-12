@@ -13,7 +13,7 @@
 #include "ubl.h"
 #include "uart.h"
 #include "util.h"
-#include "dm644x.h"
+#include "davinci.h"
 
 #ifdef UBL_NOR
 #include "nor.h"

@@ -14,7 +14,6 @@
  	            1394 power domain MDSTAT (Silicon workaround for reset from WDT)
  ----------------------------------------------------------------------------- */
 
-
 #ifndef _NAND_H_
 #define _NAND_H_
 
@@ -22,7 +21,7 @@
 
 #include "ubl.h"
 #include "tistdtypes.h"
-#include "dm644x.h"
+#include "davinci.h"
 #include "nand.h"
 
 // -------------- Constant define and macros --------------------
@@ -33,9 +32,16 @@
 #define BUS_32BIT   0x04
 
 // NAND flash addresses
-#define NAND_DATA_OFFSET    (0x00)
-#define NAND_ALE_OFFSET     (0x0B)
-#define NAND_CLE_OFFSET     (0x10)
+#define NAND_DATA_OFFSET    0x00
+
+#ifdef DM6446
+#define NAND_ALE_OFFSET     0x0B
+#define NAND_CLE_OFFSET     0x10
+#endif
+#ifdef DM355
+#define NAND_ALE_OFFSET     0x08
+#define NAND_CLE_OFFSET     0x10
+#endif
 
 // NAND timeout 
 //#define NAND_TIMEOUT    10240
@@ -124,22 +130,8 @@ typedef union {
 
 // ---------------- Prototypes of functions for NAND flash --------------------
 
-// Generic NAND flash functions
-volatile uint8_t *flash_make_addr (uint32_t baseAddr, uint32_t offset);
-void flash_write_addr (PNAND_INFO pNandInfo, uint32_t addr);
-void flash_write_cmd (PNAND_INFO pNandInfo, uint32_t cmd);
-void flash_write_bytes (PNAND_INFO pNandInfo, void *pSrc, uint32_t numBytes);
-void flash_write_addr_cycles(PNAND_INFO pNandInfo, uint32_t block, uint32_t page);
-void flash_write_addr_bytes(PNAND_INFO pNandInfo, uint32_t numAddrBytes, uint32_t addr);
-void flash_write_row_addr_bytes(PNAND_INFO pNandInfo, uint32_t block, uint32_t page);
-void flash_write_data(PNAND_INFO pNandInfo, uint32_t offset, uint32_t data);
-uint32_t flash_read_data (PNAND_INFO pNandInfo);
-void flash_read_bytes(PNAND_INFO pNandInfo, void *pDest, uint32_t numBytes);
-void flash_swap_data(PNAND_INFO pNandInfo, uint32_t* data);
-
 //Initialize the NAND registers and structures
 uint32_t NAND_Init();
-uint32_t NAND_GetDetails();
 
 // Page read and write functions
 uint32_t NAND_ReadPage(uint32_t block, uint32_t page, uint8_t *dest);
@@ -160,14 +152,5 @@ uint32_t NAND_UnProtectBlocks(uint32_t startBlkNum,uint32_t endBlkNum);
 
 // Protect blocks
 void NAND_ProtectBlocks(void);
-
-// Wait for ready signal seen at NANDFSCR
-uint32_t NAND_WaitForRdy(uint32_t timeout);
-
-// Wait for status result from device to read good */
-uint32_t NAND_WaitForStatus(uint32_t timeout);
-
-// Read ECC data and restart the ECC calculation
-uint32_t NAND_ECCReadAndRestart (PNAND_INFO pNandInfo);
 
 #endif //_NAND_H_

@@ -15,10 +15,8 @@
  *          (Thanks to Ivan Tonchev)
  * -------------------------------------------------------------------------- */
 
-#ifdef UBL_NAND
-
 #include "ubl.h"
-#include "dm644x.h"
+#include "davinci.h"
 #include "uart.h"
 #include "util.h"
 #include "nand.h"
@@ -26,8 +24,8 @@
 /* Define this to have more verbose debug messages */
 #undef NAND_DEBUG
 
-static uint8_t gNandTx[MAX_PAGE_SIZE] __attribute__((section(".ddrram2")));
-static uint8_t gNandRx[MAX_PAGE_SIZE] __attribute__((section(".ddrram2")));
+static uint8_t gNandTx[MAX_PAGE_SIZE] __attribute__((section(".ddrram")));
+static uint8_t gNandRx[MAX_PAGE_SIZE] __attribute__((section(".ddrram")));
 
 /* Symbol from linker script */
 extern uint32_t __NANDFlash;
@@ -36,7 +34,7 @@ extern uint32_t __NANDFlash;
 volatile NAND_INFO gNandInfo;
 
 /* Table of ROM supported NAND devices */
-const NAND_DEVICE_INFO gNandDevInfo[] = {
+static const NAND_DEVICE_INFO gNandDevInfo[] = {
 	/* devID, numBlocks, pagesPerBlock, bytesPerPage */
 	{0x6E,   256, 16, 256+8},   /*   1 MB */
 	{0x68,   256, 16, 256+8},   /*   1 MB */
@@ -46,12 +44,14 @@ const NAND_DEVICE_INFO gNandDevInfo[] = {
 	{0xE3,   512, 16, 512+16},  /*   4 MB */
 	{0xE5,   512, 16, 512+16},  /*   4 MB */
 	{0xE6,  1024, 16, 512+16},  /*   8 MB */
+
 	{0x39,  1024, 16, 512+16},  /*   8 MB */
 	{0x6B,  1024, 16, 512+16},  /*   8 MB */
 	{0x73,  1024, 32, 512+16},  /*  16 MB */
 	{0x33,  1024, 32, 512+16},  /*  16 MB */
 	{0x75,  2048, 32, 512+16},  /*  32 MB */
 	{0x35,  2048, 32, 512+16},  /*  32 MB */
+
 	{0x43,  1024, 32, 512+16},  /*  16 MB 0x1243 */
 	{0x45,  2048, 32, 512+16},  /*  32 MB 0x1245 */
 	{0x53,  1024, 32, 512+16},  /*  16 MB 0x1253 */
@@ -59,7 +59,9 @@ const NAND_DEVICE_INFO gNandDevInfo[] = {
 	{0x36,  4096, 32, 512+16},  /*  64 MB */
 	{0x46,  4096, 32, 512+16},  /*  64 MB 0x1346 */
 	{0x56,  4096, 32, 512+16},  /*  64 MB 0x1356 */
+
 	{0x76,  4096, 32, 512+16},  /*  64 MB */
+
 	{0x74,  8192, 32, 512+16},  /* 128 MB 0x1374 */
 	{0x79,  8192, 32, 512+16},  /* 128 MB */
 	{0x71, 16384, 32, 512+16},  /* 256 MB */
@@ -71,15 +73,16 @@ const NAND_DEVICE_INFO gNandDevInfo[] = {
 	{0xAC,  4096, 64, 2048+64}, /* 512 MB - Big Block */
 	{0xB1,  1024, 64, 2048+64}, /* 128 MB - Big Block 0x22B1 */
 	{0xC1,  1024, 64, 2048+64}, /* 128 MB - Big Block 0x22C1 */
+	{0xD3,  4096, 64, 2048+64}, // 512 MB - Big Block (4th ID byte will be checked)
 	{0x00,	   0,  0,       0}  /* Null entry to indicate end of table */
 };
 
-volatile uint8_t *flash_make_addr(uint32_t baseAddr, uint32_t offset)
+static volatile uint8_t *flash_make_addr(uint32_t baseAddr, uint32_t offset)
 {
 	return ((volatile uint8_t *) (baseAddr + offset));
 }
 
-void flash_write_data(PNAND_INFO pNandInfo, uint32_t offset, uint32_t data)
+static void flash_write_data(PNAND_INFO pNandInfo, uint32_t offset, uint32_t data)
 {
 	volatile FLASHPtr addr;
 	FLASHData dataword;
@@ -96,17 +99,17 @@ void flash_write_data(PNAND_INFO pNandInfo, uint32_t offset, uint32_t data)
 	}
 }
 
-void flash_write_cmd(PNAND_INFO pNandInfo, uint32_t cmd)
+static void flash_write_cmd(PNAND_INFO pNandInfo, uint32_t cmd)
 {
 	flash_write_data(pNandInfo, NAND_CLE_OFFSET, cmd);
 }
 
-void flash_write_addr(PNAND_INFO pNandInfo, uint32_t addr)
+static void flash_write_addr(PNAND_INFO pNandInfo, uint32_t addr)
 {
 	flash_write_data(pNandInfo, NAND_ALE_OFFSET, addr);
 }
 
-void flash_write_bytes(PNAND_INFO pNandInfo, void *pSrc, uint32_t numBytes)
+static void flash_write_bytes(PNAND_INFO pNandInfo, void *pSrc, uint32_t numBytes)
 {
 	volatile FLASHPtr destAddr, srcAddr;
 	uint32_t i;
@@ -125,15 +128,7 @@ void flash_write_bytes(PNAND_INFO pNandInfo, void *pSrc, uint32_t numBytes)
 	}
 }
 
-void flash_write_addr_cycles(PNAND_INFO pNandInfo, uint32_t block,
-			     uint32_t page)
-{
-	flash_write_addr_bytes(pNandInfo, pNandInfo->numColAddrBytes,
-			       0x00000000);
-	flash_write_row_addr_bytes(pNandInfo, block, page);
-}
-
-void flash_write_addr_bytes(PNAND_INFO pNandInfo, uint32_t numAddrBytes,
+static void flash_write_addr_bytes(PNAND_INFO pNandInfo, uint32_t numAddrBytes,
 			    uint32_t addr)
 {
 	uint32_t i;
@@ -141,7 +136,7 @@ void flash_write_addr_bytes(PNAND_INFO pNandInfo, uint32_t numAddrBytes,
 		flash_write_addr(pNandInfo, ((addr >> (8*i)) & 0xff));
 }
 
-void flash_write_row_addr_bytes(PNAND_INFO pNandInfo, uint32_t block,
+static void flash_write_row_addr_bytes(PNAND_INFO pNandInfo, uint32_t block,
 				uint32_t page)
 {
 	uint32_t row_addr;
@@ -150,7 +145,15 @@ void flash_write_row_addr_bytes(PNAND_INFO pNandInfo, uint32_t block,
 	flash_write_addr_bytes(pNandInfo, pNandInfo->numRowAddrBytes, row_addr);
 }
 
-uint32_t flash_read_data(PNAND_INFO pNandInfo)
+static void flash_write_addr_cycles(PNAND_INFO pNandInfo, uint32_t block,
+			     uint32_t page)
+{
+	flash_write_addr_bytes(pNandInfo, pNandInfo->numColAddrBytes,
+			       0x00000000);
+	flash_write_row_addr_bytes(pNandInfo, block, page);
+}
+
+static uint32_t flash_read_data(PNAND_INFO pNandInfo)
 {
 	volatile FLASHPtr addr;
 	FLASHData cmdword;
@@ -168,7 +171,7 @@ uint32_t flash_read_data(PNAND_INFO pNandInfo)
 	return cmdword.l;
 }
 
-void flash_read_bytes(PNAND_INFO pNandInfo, void *pDest, uint32_t numBytes)
+static void flash_read_bytes(PNAND_INFO pNandInfo, void *pDest, uint32_t numBytes)
 {
 	volatile FLASHPtr destAddr, srcAddr;
 	uint32_t i;
@@ -187,7 +190,7 @@ void flash_read_bytes(PNAND_INFO pNandInfo, void *pDest, uint32_t numBytes)
 	}
 }
 
-void flash_swap_data(PNAND_INFO pNandInfo, uint32_t *data)
+static void flash_swap_data(PNAND_INFO pNandInfo, uint32_t *data)
 {
 	uint32_t i, temp = *data;
 	volatile FLASHPtr dataAddr, tempAddr;
@@ -208,18 +211,26 @@ void flash_swap_data(PNAND_INFO pNandInfo, uint32_t *data)
 }
 
 /* Poll bit of NANDFSR to indicate ready */
-uint32_t NAND_WaitForRdy(uint32_t timeout)
+static uint32_t NAND_WaitForRdy(uint32_t timeout)
 {
-	volatile uint32_t cnt;
-	cnt = timeout;
+	volatile uint32_t cnt = timeout;
+	uint32_t ready;
 
 	waitloop(200);
 
-	while (!(AEMIF->NANDFSR & NAND_NANDFSR_READY) && ((cnt--) > 0))
-		if (cnt == 0) {
-			UARTSendString("NANDWaitForRdy() Timeout!\n");
-			return E_FAIL;
-		}
+	do {
+		ready = AEMIF->NANDFSR & NAND_NANDFSR_READY;
+		cnt--;
+#ifdef NAND_BYPASS_BUSY_CHECK
+	} while (cnt > 0);
+#else
+	} while ((cnt > 0) && !ready);
+
+	if (cnt == 0) {
+		UARTSendString("NANDWaitForRdy() Timeout!\n");
+		return E_FAIL;
+	}
+#endif /* NAND_BYPASS_BUSY_CHECK */
 
 #ifdef NAND_DEBUG
 	UARTSendString("NANDWaitForRdy()Remaining time = ");
@@ -227,15 +238,15 @@ uint32_t NAND_WaitForRdy(uint32_t timeout)
 	UARTSendCRLF();
 #endif
 
+
 	return E_PASS;
 }
-
 
 /* Wait for the status to be ready in NAND register
  * There were some problems reported in DM320 with Ready/Busy pin
  * not working with all NANDs. So this check has also been added.
  */
-uint32_t NAND_WaitForStatus(uint32_t timeout)
+static uint32_t NAND_WaitForStatus(uint32_t timeout)
 {
 	volatile uint32_t cnt;
 	uint32_t status;
@@ -258,7 +269,7 @@ uint32_t NAND_WaitForStatus(uint32_t timeout)
 }
 
 /* Read the current ECC calculation and restart process */
-uint32_t NAND_ECCReadAndRestart(PNAND_INFO pNandInfo)
+static uint32_t NAND_ECCReadAndRestart(PNAND_INFO pNandInfo)
 {
 	uint32_t retval;
 	/* Read and mask appropriate (based on CSn space flash is in)
@@ -280,51 +291,9 @@ uint32_t NAND_ECCReadAndRestart(PNAND_INFO pNandInfo)
 	return retval;
 }
 
-/* Initialize NAND interface and find the details of the NAND used */
-uint32_t NAND_Init()
-{
-	uint32_t width, *CSRegs;
-
-	UARTSendString("Initializing NAND flash:\r\n");
-
-#ifdef NAND_BYPASS_READ_PAGE_ECC_CHECK
-	UARTSendString("  Bypassing ECC check on page reads.\r\n");
-#endif /* NAND_BYPASS_READ_PAGE_ECC_CHECK */
-
-	/* Set NAND flash base address */
-	gNandInfo.flashBase = (uint32_t) &(__NANDFlash);
-
-	/* Get the CSOffset (can be 0 through 3 - corresponds with CS2 through
-	 * CS5) */
-	gNandInfo.CSOffset = (gNandInfo.flashBase >> 25) - 1;
-
-	/* Setting the nand_width = 0(8 bit NAND) or 1(16 bit NAND). AEMIF CS2
-	 *  bus Width is given by the BOOTCFG(bit no.5). */
-	width = (((SYSTEM->BOOTCFG) & 0x20) >> 5);
-	gNandInfo.busWidth = (width)?BUS_16BIT:BUS_8BIT;
-
-	/* Setup AEMIF registers for NAND     */
-	CSRegs = (uint32_t *) &(AEMIF->AB1CR);
-
-	/* Set correct ABxCR reg */
-	CSRegs[gNandInfo.CSOffset] = 0x3FFFFFFC | width;
-
-	/* NAND enable for CSx. */
-	AEMIF->NANDFCR |= (0x1 << (gNandInfo.CSOffset));
-	NAND_ECCReadAndRestart((PNAND_INFO)&gNandInfo);
-
-	/* Send reset command to NAND */
-	flash_write_cmd((PNAND_INFO)&gNandInfo, NAND_RESET);
-
-	if (NAND_WaitForRdy(NAND_TIMEOUT) != E_PASS)
-		return E_FAIL;
-
-	return NAND_GetDetails();
-}
-
 /* Get details of the NAND flash used from the id and the table of NAND
  * devices. */
-uint32_t NAND_GetDetails()
+static uint32_t NAND_GetDetails()
 {
 	uint32_t deviceID, i, j;
 
@@ -438,6 +407,53 @@ uint32_t NAND_GetDetails()
 	}
 	/* No match was found for the device ID */
 	return E_FAIL;
+}
+
+/* Initialize NAND interface and find the details of the NAND used */
+uint32_t NAND_Init(void)
+{
+	uint32_t width;
+	uint32_t *CSRegs;
+
+	UARTSendString("Initializing NAND flash:\r\n");
+
+#ifdef NAND_BYPASS_READ_PAGE_ECC_CHECK
+	UARTSendString("  Bypassing ECC check on page reads.\r\n");
+#endif /* NAND_BYPASS_READ_PAGE_ECC_CHECK */
+
+#ifdef NAND_BYPASS_BUSY_CHECK
+	UARTSendString("  Bypassing READY/BUSYn line check.\r\n");
+#endif /* NAND_BYPASS_BUSY_CHECK */
+
+	/* Set NAND flash base address */
+	gNandInfo.flashBase = (uint32_t) &(__NANDFlash);
+
+	/* Get the CSOffset (can be 0 through 3 - corresponds with CS2 through
+	 * CS5) */
+	gNandInfo.CSOffset = (gNandInfo.flashBase >> 25) - 1;
+
+	/* Setting the nand_width = 0(8 bit NAND) or 1(16 bit NAND). AEMIF CS2
+	 *  bus Width is given by the BOOTCFG(bit no.5). */
+	width = (((SYSTEM->BOOTCFG) & 0x20) >> 5);
+	gNandInfo.busWidth = (width)?BUS_16BIT:BUS_8BIT;
+
+	/* Setup AEMIF registers for NAND     */
+	CSRegs = (uint32_t *) &(AEMIF->A1CR);
+
+	/* Set correct AxCR reg */
+	CSRegs[gNandInfo.CSOffset] = 0x3FFFFFFC | width;
+
+	/* NAND enable for CSx. */
+	AEMIF->NANDFCR |= (0x1 << (gNandInfo.CSOffset));
+	NAND_ECCReadAndRestart((PNAND_INFO)&gNandInfo);
+
+	/* Send reset command to NAND */
+	flash_write_cmd((PNAND_INFO)&gNandInfo, NAND_RESET);
+
+	if (NAND_WaitForRdy(NAND_TIMEOUT) != E_PASS)
+		return E_FAIL;
+
+	return NAND_GetDetails();
 }
 
 /* Routine to read a page from NAND */
@@ -840,5 +856,3 @@ NAND_WRITE_RETRY:
 
 	return E_PASS;
 }
-
-#endif

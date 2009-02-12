@@ -13,7 +13,7 @@
 #include <stdint.h>
 
 #include "ubl.h"
-#include "dm644x.h"
+#include "davinci.h"
 #include "uart.h"
 #include "util.h"
 
@@ -50,7 +50,6 @@ void *ubl_alloc_mem (uint32_t size)
 
 	return cPtr;
 }
-
 
 // S-record Decode stuff
 uint32_t GetHexData(uint8_t *src, uint32_t numBytes, uint8_t* seq)
@@ -128,7 +127,7 @@ uint32_t SRecDecode(uint8_t *srecAddr, uint32_t srecByteCnt, uint32_t *binAddr, 
 				/* This is the start address where the data will be copied.
 				 * The DVFlasher uses the entry point in the SREC file
 				 * to point to the first load address, but this is not standard.
-				 * This approch permits the use of a standard SREc file. */
+				 * This approch permits the use of a standard SREC file. */
 				*binAddr = dstAddr;
 				binAddr_set = 1;
 			}
@@ -195,8 +194,12 @@ uint32_t SRecDecode(uint8_t *srecAddr, uint32_t srecByteCnt, uint32_t *binAddr, 
 // Simple wait loop - comes in handy.
 void waitloop(int32_t loopcnt)
 {
-	for (; loopcnt > 0; loopcnt--)
-	{
-		asm("   NOP");
-	}
+  for (; loopcnt > 0; loopcnt--)
+    asm("   NOP");
+}
+
+void sleep_ms(int ms)
+{
+  for (; ms > 0; ms--)
+    waitloop(20000);
 }

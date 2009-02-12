@@ -10,10 +10,8 @@
    Daniel Allred - Jan-22-2007                                            
    ----------------------------------------------------------------------------- */
 
-#ifdef UBL_NOR
-
 #include "ubl.h"
-#include "dm644x.h"
+#include "davinci.h"
 #include "uart.h"
 #include "nor.h"
 
@@ -260,15 +258,16 @@ uint32_t NOR_Init()
 	SYSTEM->PINMUX[0] = 0xC1F;
 
 	// Program Asynchronous Wait Cycles Configuration Control Register
-	AEMIF->AWCCR |= 0x0 ;
+#warning "To check: AEMIF->AWCCR |= 0x0;"
+	AEMIF->AWCCR |= 0x0;
 
 	// Program Asynchronous Bank3-5 Register
-	AEMIF->AB1CR = 0x3FFFFFFC | width;
-	AEMIF->AB2CR = 0x3FFFFFFC | width;
-	AEMIF->AB3CR = 0x3FFFFFFC | width;
-	AEMIF->AB4CR = 0x3FFFFFFC | width;
+	AEMIF->A1CR = 0x3FFFFFFC | width;
+	AEMIF->A2CR = 0x3FFFFFFC | width;
+	AEMIF->A3CR = 0x3FFFFFFC | width;
+	AEMIF->A4CR = 0x3FFFFFFC | width;
     
-	/*AEMIF->AB1CR = 0
+	/*AEMIF->A1CR = 0
 	  | ( 0 << 31 ) // selectStrobe      = 0;
 	  | ( 0 << 30 ) // extWait           = 0;
 	  | ( 0 << 26 ) // writeSetup        = 0;    //   0 ns
@@ -1032,5 +1031,3 @@ uint32_t NOR_WriteBytes( uint32_t writeAddress,
   	}
   	return retval;
 }
-
-#endif

@@ -16,8 +16,6 @@
  	                             header.
  ----------------------------------------------------------------------------- */
 
-#ifdef UBL_NAND
-
 #include "ubl.h"
 #include "nand.h"
 #include "uart.h"
@@ -155,5 +153,3 @@ NAND_retry:
 	
 	return E_PASS;
 }
-
-#endif
