@@ -221,23 +221,18 @@ static uint32_t NAND_WaitForRdy(uint32_t timeout)
 	do {
 		ready = AEMIF->NANDFSR & NAND_NANDFSR_READY;
 		cnt--;
-#ifdef NAND_BYPASS_BUSY_CHECK
-	} while (cnt > 0);
-#else
 	} while ((cnt > 0) && !ready);
 
 	if (cnt == 0) {
 		UARTSendString("NANDWaitForRdy() Timeout!\n");
 		return E_FAIL;
 	}
-#endif /* NAND_BYPASS_BUSY_CHECK */
 
 #ifdef NAND_DEBUG
 	UARTSendString("NANDWaitForRdy()Remaining time = ");
 	UARTSendInt(cnt);
 	UARTSendCRLF();
 #endif
-
 
 	return E_PASS;
 }
@@ -420,10 +415,6 @@ uint32_t NAND_Init(void)
 #ifdef NAND_BYPASS_READ_PAGE_ECC_CHECK
 	UARTSendString("  Bypassing ECC check on page reads.\r\n");
 #endif /* NAND_BYPASS_READ_PAGE_ECC_CHECK */
-
-#ifdef NAND_BYPASS_BUSY_CHECK
-	UARTSendString("  Bypassing READY/BUSYn line check.\r\n");
-#endif /* NAND_BYPASS_BUSY_CHECK */
 
 	/* Set NAND flash base address */
 	gNandInfo.flashBase = (uint32_t) &(__NANDFlash);

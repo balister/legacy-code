@@ -65,6 +65,7 @@ all: $(BINARY) $(START)
 .PHONY : clean objclean
 clean:
 	-rm -f -v *.o $(BINARY) $(EXECUTABLE) $(START)
+	-rm -f -v *~
 
 objclean:
 	-rm -f -v $(OBJECTS)

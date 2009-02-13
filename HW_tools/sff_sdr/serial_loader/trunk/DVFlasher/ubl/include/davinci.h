@@ -285,7 +285,12 @@ typedef struct _emif_regs_
 	volatile uint32_t NANDERRVAL2;     // 0xDC - ONLY ON DM355
 } emifRegs;
 
+#ifdef DM6446
 #define AEMIF ((emifRegs*) 0x01E00000)
+#endif
+#ifdef DM355
+#define AEMIF ((emifRegs*) 0x01E10000)
+#endif
 
 /* -------------------------------------------------------------------------- *
  *    UART Register structure - See sprue33.pdf for more details.             *
