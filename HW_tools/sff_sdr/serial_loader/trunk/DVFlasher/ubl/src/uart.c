@@ -88,6 +88,8 @@ void UARTSendInt(uint32_t value)
 	char seq[9];
 	uint32_t i, shift, temp;
 
+	UARTSendString("0x");
+
 	for (i = 0; i < 8; i++) {
 		shift = ((7-i)*4);
 		temp = ((value>>shift) & (0x0000000F));

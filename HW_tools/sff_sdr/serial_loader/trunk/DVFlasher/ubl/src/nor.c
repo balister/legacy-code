@@ -370,7 +370,7 @@ uint32_t NOR_Init()
 		break;
 	}
 	UARTSendCRLF();
-	UARTSendString("  Size (in bytes): 0x");
+	UARTSendString("  Size (in bytes): ");
 	UARTSendInt(gNorInfo.flashSize);
 	UARTSendCRLF();
     
@@ -922,7 +922,7 @@ uint32_t NOR_Erase(volatile uint32_t start_address, volatile uint32_t size)
 		//Increment to the next block
 		if ( (*Flash_Erase)(blockAddr) != E_PASS)
 		{
-			UARTSendString("Erase failure at block address 0x");
+			UARTSendString("Erase failure at block address ");
 			UARTSendInt(blockAddr);
 			UARTSendCRLF();
 			return E_FAIL;
@@ -930,7 +930,7 @@ uint32_t NOR_Erase(volatile uint32_t start_address, volatile uint32_t size)
 		addr = blockAddr + blockSize;
 	    
 		// Show status messages
-		UARTSendString("Erased through 0x");
+		UARTSendString("Erased through ");
 		UARTSendInt(addr);
 		UARTSendCRLF();
   	}
@@ -1012,7 +1012,7 @@ uint32_t NOR_WriteBytes( uint32_t writeAddress,
 		{    
 			if  ( ((writeAddress & (~((blockSize>>4)-1))) == writeAddress) || (numBytes == 0) )
 			{
-				UARTSendString("NOR Write OK through 0x");
+				UARTSendString("NOR Write OK through ");
 				UARTSendInt(writeAddress);
 				UARTSendCRLF();
         		

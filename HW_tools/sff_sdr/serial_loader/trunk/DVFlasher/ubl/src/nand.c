@@ -679,9 +679,9 @@ uint32_t NAND_EraseBlocks(uint32_t startBlkNum, uint32_t blkCnt)
 		return E_FAIL;
 
 	/* Output info about what we are doing */
-	UARTSendString("Erasing blocks 0x");
+	UARTSendString("Erasing blocks ");
 	UARTSendInt(startBlkNum);
-	UARTSendString(" through 0x");
+	UARTSendString(" through ");
 	UARTSendInt(startBlkNum + blkCnt - 1);
 	UARTSendString(".\r\n");
 
@@ -718,9 +718,9 @@ uint32_t NAND_UnProtectBlocks(uint32_t startBlkNum, uint32_t blkCnt)
 	if (endBlkNum >= gNandInfo.numBlocks)
 		return E_FAIL;
 
-	UARTSendString("Unprotecting blocks 0x");
+	UARTSendString("Unprotecting blocks ");
 	UARTSendInt(startBlkNum);
-	UARTSendString(" through 0x");
+	UARTSendString(" through ");
 	UARTSendInt(endBlkNum);
 	UARTSendString(".\n");
 
@@ -757,7 +757,7 @@ uint32_t NAND_WriteHeaderAndData(NAND_BOOT *nandBoot, uint8_t *srcBuf)
 	while ((numBlks * gNandInfo.pagesPerBlock)  < (nandBoot->numPage + 1))
 		numBlks++;
 
-	UARTSendString("Number of blocks needed for header and data: 0x");
+	UARTSendString("Number of blocks needed for header and data: ");
 	UARTSendInt(numBlks);
 	UARTSendCRLF();
 
@@ -778,7 +778,7 @@ NAND_WRITE_RETRY:
 	if (blockNum > endBlockNum)
 		return E_FAIL;
 
-	UARTSendString("Attempting to start in block number 0x");
+	UARTSendString("Attempting to start in block number ");
 	UARTSendInt(blockNum);
 	UARTSendCRLF();
 
