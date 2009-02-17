@@ -162,16 +162,20 @@ static int pll_init(PLLRegs *pll, int pll_mult, int plldiv_ratio[5])
 	plldiv_reg[3] = &pll->PLLDIV4;
 	plldiv_reg[4] = &pll->PLLDIV5;
 	
-	/* Set PLL1 clock input to internal osc. */
+	/* Set PLL clock input to internal osc. */
 	pll->PLLCTL &= ~(DEVICE_PLLCTL_CLKMODE_MASK);
 
 	/* Set PLL to bypass, then wait for PLL to stabilize */
-	pll->PLLCTL &= ~(DEVICE_PLLCTL_PLLENSRC_MASK);
-	pll->PLLCTL &= ~(DEVICE_PLLCTL_PLLEN_MASK);
+	pll->PLLCTL &= ~(DEVICE_PLLCTL_PLLENSRC_MASK |
+			 DEVICE_PLLCTL_PLLEN_MASK);
 	waitloop(150);
 
-	/* Reset PLL */
+	/* Reset PLL: Warning, bit state is inverted for DM6446 vs DM355. */
+#if defined(DM6446)
+	pll->PLLCTL &= ~DEVICE_PLLCTL_PLLRST_MASK;
+#elif defined(DM355)
 	pll->PLLCTL |= DEVICE_PLLCTL_PLLRST_MASK;
+#endif
 
 	if (pll_is_powered_up) {
 		/* Disable PLL */
@@ -228,7 +232,13 @@ static int pll_init(PLLRegs *pll, int pll_mult, int plldiv_ratio[5])
 	waitloop(5000);
 
 	/* Release PLL from reset */
-	pll->PLLCTL &= ~(DEVICE_PLLCTL_PLLRST_MASK);
+
+	/* Reset PLL: Warning, bit state is inverted for DM6446 vs DM355. */
+#if defined(DM6446)
+	pll->PLLCTL |= DEVICE_PLLCTL_PLLRST_MASK;
+#elif defined(DM355)
+	pll->PLLCTL &= ~DEVICE_PLLCTL_PLLRST_MASK;
+#endif
 
 	/* Wait for PLL to re-lock:
 	 * DM644z: 2000P
