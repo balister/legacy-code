@@ -7,10 +7,47 @@
 
 #include "tistdtypes.h"
 
-//Return type defines 
-#define E_PASS    0x00000000u
-#define E_FAIL    0x00000001u
-#define E_TIMEOUT 0x00000002u
+/* -------------------------------------------------------------------------- *
+ *    System Control Module register structure - See sprue14.pdf, Chapter 10  *
+ *       for more details.                                                    *
+ * -------------------------------------------------------------------------- */ 
+typedef struct _sys_module_regs_
+{
+#if defined(DM6446)
+	volatile uint32_t PINMUX[2];         //0x00
+	volatile uint32_t DSPBOOTADDR;       //0x08
+	volatile uint32_t SUSPSRC;           //0x0C
+	volatile uint32_t INTGEN;            //0x10
+#elif defined(DM355)
+	volatile uint32_t PINMUX[5];         //0x00
+#endif
+	volatile uint32_t BOOTCFG;           //0x14
+	volatile uint32_t ARM_INTMUX;        //0x18 - ONLY ON DM355
+	volatile uint32_t EDMA_EVTMUX;       //0x1C - ONLY ON DM355
+	volatile uint32_t DDR_SLEW;          //0x20 - ONLY ON DM355
+	volatile uint32_t CLKOUT;            //0x24 - ONLY ON DM355
+	volatile uint32_t DEVICE_ID;         //0x28
+	volatile uint32_t VDAC_CONFIG;       //0x2C - ONLY ON DM355
+	volatile uint32_t TIMER64_CTL;       //0x30 - ONLY ON DM355
+	volatile uint32_t USBPHY_CTL;        //0x34
+#if defined(DM6446)
+	volatile uint32_t CHP_SHRTSW;        //0x38
+#elif defined(DM355)
+	volatile uint32_t MISC;              //0x38
+#endif
+	volatile uint32_t MSTPRI[2];         //0x3C
+	volatile uint32_t VPSS_CLKCTL;       //0x44
+#if defined(DM6446)
+	volatile uint32_t VDD3P3V_PWDN;      //0x48
+	volatile uint32_t DDRVTPER;          //0x4C
+	volatile uint32_t RSVD2[8];          //0x50 
+#elif defined(DM355)
+	volatile uint32_t DEEPSLEEP;         //0x48
+	volatile uint32_t RSVD0;             //0x4C
+	volatile uint32_t DEBOUNCE[8];       //0x50
+	volatile uint32_t VTPIOCR;           //0x70
+#endif
+} sysModuleRegs;
 
 #define SYSTEM ((sysModuleRegs*) 0x01C40000)
 
@@ -49,34 +86,46 @@ typedef struct _aintc_regs_
 typedef struct _PLL_regs_
 {
 	volatile uint32_t PID;
-	volatile uint8_t  RSVD0[224];
-	volatile uint32_t RSTYPE;
-	volatile uint8_t  RSVD1[24];	
-	volatile uint32_t PLLCTL;
-	volatile uint8_t  RSVD2[12];	
-	volatile uint32_t PLLM;
-	volatile uint8_t  RSVD3[4];
-	volatile uint32_t PLLDIV1;
+	volatile uint32_t RSVD0[56];
+	volatile uint32_t RSTYPE;    /* 0x0E4 */
+	volatile uint32_t RSVD1[6];
+	volatile uint32_t PLLCTL;    /* 0x100 */
+	volatile uint32_t RSVD2[3];
+	volatile uint32_t PLLM;      /* 0x110 */
+	volatile uint32_t RSVD3;
+	volatile uint32_t PLLDIV1;   /* 0x118 */
 	volatile uint32_t PLLDIV2;
-	volatile uint32_t PLLDIV3;	
-	volatile uint8_t  RSVD4[4]; 
-	volatile uint32_t POSTDIV;
+	volatile uint32_t PLLDIV3;
+	volatile uint32_t RSVD4;
+	volatile uint32_t POSTDIV;   /* 0x128 */
 	volatile uint32_t BPDIV;
-	volatile uint8_t  RSVD5[8];	
-	volatile uint32_t PLLCMD;
+	volatile uint32_t RSVD5[2];
+	volatile uint32_t PLLCMD;    /* 0x138 */
 	volatile uint32_t PLLSTAT;
 	volatile uint32_t ALNCTL;
 	volatile uint32_t DCHANGE;
 	volatile uint32_t CKEN;
 	volatile uint32_t CKSTAT;
 	volatile uint32_t SYSTAT;
-	volatile uint8_t  RSVD6[12];
-	volatile uint32_t PLLDIV4;
-	volatile uint32_t PLLDIV5;
+	volatile uint32_t RSVD6[3];
+	volatile uint32_t PLLDIV4;   /* 0x160 - Only on DM35x */
+	volatile uint32_t PLLDIV5;   /* 0x164 - Only on DM644x */
 } PLLRegs;
 
 #define PLL1 ((PLLRegs*) 0x01C40800)
 #define PLL2 ((PLLRegs*) 0x01C40C00)
+
+#define DEVICE_PLLCTL_CLKMODE_MASK  0x00000100
+#define DEVICE_PLLCTL_PLLEN_MASK    0x00000001
+#define DEVICE_PLLCTL_PLLPWRDN_MASK 0x00000002
+#define DEVICE_PLLCTL_PLLRST_MASK   0x00000008
+#define DEVICE_PLLCTL_PLLDIS_MASK   0x00000010
+#define DEVICE_PLLCTL_PLLENSRC_MASK 0x00000020
+
+#define DEVICE_PLLCMD_GOSET_MASK    0x00000001
+#define DEVICE_PLLSTAT_GOSTAT_MASK  0x00000001
+#define DEVICE_PLLDIV_EN_MASK       0x00008000
+#define DEVICE_PLLSTAT_LOCK_MASK    0x00000002
 
 /* -------------------------------------------------------------------------- *
  *    Power/Sleep Ctrl Register structure - See sprue14.pdf, Chapter 7        * 
@@ -136,25 +185,23 @@ typedef struct _PSC_regs_
 #define LPSC_TPCC           2
 #define LPSC_TPTC0          3
 #define LPSC_TPTC1          4
-#ifdef DM6446
+#if defined(DM6446)
 #define LPSC_EMAC0          5
 #define LPSC_EMAC1          6
 #define LPSC_MDIO           7
 #define LPSC_1394           8
-#endif
-#ifdef DM355
+#elif defined(DM355)
 #define LPSC_TIMER3         5
 #define LPSC_SPI1           6
 #define LPSC_MMC_SD1        7
 #define LPSC_ASP1           8
 #endif
 #define LPSC_USB            9
-#ifdef DM6446
+#if defined(DM6446)
 #define LPSC_ATA            10
 #define LPSC_VLYNQ          11
 #define LPSC_HPI            12
-#endif
-#ifdef DM355
+#elif defined(DM355)
 #define LPSC_PWM3           10
 #define LPSC_SPI2           11
 #define LPSC_RTO            12
@@ -166,7 +213,7 @@ typedef struct _PSC_regs_
 #define LPSC_ASP0           17
 #define LPSC_I2C            18
 #define LPSC_UART0          19
-#ifdef DM355
+#if defined(DM355)
 #define LPSC_UART1          20
 #define LPSC_UART2          21
 #define LPSC_SPIO           22
@@ -176,17 +223,16 @@ typedef struct _PSC_regs_
 #endif
 #define LPSC_GPIO           26
 #define LPSC_TIMER0         27
-#ifdef DM355
+#if defined(DM355)
 #define LPSC_TIMER1         28
 #define LPSC_TIMER2         29
 #define LPSC_SYSMOD         30
 #endif
 #define LPSC_ARM            31
-#ifdef DM6446
+#if defined(DM6446)
 #define LPSC_DSP            39
 #define LPSC_IMCOP          40
-#endif
-#ifdef DM355
+#elif defined(DM355)
 #define LPSC_VPSS_DAC       40
 #endif
 
@@ -225,8 +271,14 @@ typedef struct _DDR2_MEM_CTL_REGS_
 #define DDRVTPR (*((volatile uint32_t*) 0x01C42030))
 #define DDR ((DDR2Regs*) 0x20000000)
 #define DDR_TEST_PATTERN 0xA55AA55Au
-#define DDR_RAM_SIZE 0x10000000u
 
+#if defined(DDR_SIZE_64MB)
+#define DDR_RAM_SIZE 0x04000000
+#elif defined (DDR_SIZE_128MB)
+#define DDR_RAM_SIZE 0x08000000
+#elif defined (DDR_SIZE_256MB)
+#define DDR_RAM_SIZE 0x10000000
+#endif
 
 /* -------------------------------------------------------------------------- *
  *    AEMIF Register structure - See sprue20a.pdf for more details.           *
@@ -285,10 +337,9 @@ typedef struct _emif_regs_
 	volatile uint32_t NANDERRVAL2;     // 0xDC - ONLY ON DM355
 } emifRegs;
 
-#ifdef DM6446
+#if defined(DM6446)
 #define AEMIF ((emifRegs*) 0x01E00000)
-#endif
-#ifdef DM355
+#elif defined(DM355)
 #define AEMIF ((emifRegs*) 0x01E10000)
 #endif
 
@@ -319,6 +370,9 @@ typedef struct _uart_regs_
 
 #define UART0 ((uartRegs*) 0x01C20000)
 
+#define UART_BCLK_RATIO	16	/* BCLK is 16 times the baudrate */
+#define UART_BAUDRATE	115200
+
 /* -------------------------------------------------------------------------- *
  *    Timer Register structure - See sprue26.pdf for more details.             *
  * -------------------------------------------------------------------------- */
@@ -345,7 +399,6 @@ typedef struct _timer_regs_
 
 #define TIMER0 ((timerRegs*) 0x01C21400)
 
-
 struct gpio_controller {
 	uint32_t     dir;
 	uint32_t     out_data;
@@ -365,16 +418,11 @@ struct gpio_controller {
 
 #define GPIO(X) (X) /* 0 <= X <= (DAVINCI_N_GPIO - 1) */
 
-
 void LPSCTransition(uint8_t module, uint8_t domain, uint8_t state);
 int davinci_platform_init(void);
 void PSCInit(void);
-int UART0Init(void);
-int PLL1Init(void);
-int PLL2Init(void);
 int DDR2Init(void);
 
-uint32_t TIMER0Init(void);
 void TIMER0Start(void);
 uint32_t TIMER0Status(void);
 
@@ -384,10 +432,9 @@ int gpio_direction_out(unsigned gpio, int value);
 
 void sleep_ms(int ms);
 
-#ifdef DM6446
+#if defined(DM6446)
 #include "dm644x.h"
-#endif
-#ifdef DM355
+#elif defined(DM355)
 #include "dm355.h"
 #endif
 

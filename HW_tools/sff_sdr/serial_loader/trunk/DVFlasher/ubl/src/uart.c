@@ -18,6 +18,12 @@
 extern volatile uint32_t gMagicFlag, gBootCmd;
 extern volatile uint32_t gDecodedByteCount, gSrecByteCount;
 
+/* Symbol from linker script */
+extern uint32_t DDRStart;
+
+#define DDR_START_ADDR ((uint32_t) &DDRStart)
+#define DDR_LAST_ADDR  (DDR_START_ADDR + (DDR_RAM_SIZE - 1))
+
 /* Get string length by finding null terminating char */
 static int32_t GetStringLen(uint8_t *seq)
 {
@@ -249,8 +255,8 @@ uint32_t UARTGetHeaderAndData(UART_ACK_HEADER *ackHeader)
 	/* Verify application start address is in RAM (lower 16bit of
 	 * appStartAddr also used to hold UBL entry point if this header
 	 * describes a UBL) */
-	if ((ackHeader->appStartAddr < RAM_START_ADDR) ||
-	    (ackHeader->appStartAddr > RAM_END_ADDR)) {
+	if ((ackHeader->appStartAddr < DDR_START_ADDR) ||
+	    (ackHeader->appStartAddr > DDR_LAST_ADDR)) {
 		UARTSendStringNULL("BADADDR");
 		return E_FAIL;
 	}

@@ -1,22 +1,24 @@
 all:
-		$(MAKE) -C src FLASH=nand DEVICE=DM6446
-		$(MAKE) -C src FLASH=nor DEVICE=DM6446
+	@echo "You must select a board"; exit 1
 
-DM6441:
-		$(MAKE) -C src FLASH=nand DEVICE=DM6441
-		$(MAKE) -C src FLASH=nor DEVICE=DM6441
+evmdm6446:
+	$(MAKE) -C src BOARD=$(MAKECMDGOALS)
 
-DM6441_LV:
-		$(MAKE) -C src FLASH=nand DEVICE=DM6441_LV
-		$(MAKE) -C src FLASH=nor DEVICE=DM6441_LV
+sffsdr:
+	$(MAKE) -C src BOARD=$(MAKECMDGOALS)
 
-dm355:
-		$(MAKE) -C src FLASH=nand DEVICE=DM355
-		$(MAKE) -C src FLASH=nor DEVICE=DM355
+das:
+	$(MAKE) -C src BOARD=$(MAKECMDGOALS)
+
+evmdm355:
+	$(MAKE) -C src BOARD=$(MAKECMDGOALS)
+
+minidas:
+	$(MAKE) -C src BOARD=$(MAKECMDGOALS)
+
+afeusb:
+	$(MAKE) -C src BOARD=$(MAKECMDGOALS)
 
 clean:
-		$(MAKE) -C src FLASH=nand clean
-		$(MAKE) -C src FLASH=nor clean
-%::
-		$(MAKE) -C src FLASH=nand $@
-		$(MAKE) -C src FLASH=nor $@
+	$(MAKE) -C src FLASH=nand clean
+	$(MAKE) -C src FLASH=nor clean

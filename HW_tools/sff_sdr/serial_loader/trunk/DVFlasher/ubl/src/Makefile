@@ -1,8 +1,8 @@
 #############################################################
 # Makefile for TI UBL project.                              #
-#   Generates the binary UBL file can be used as the 		#
-#	secondary bootloader for the DM644x in NOR, NAND, and	#
-#	UART boot modes.										#
+#   Generates the binary UBL file can be used as the        #
+#	secondary bootloader for the DM644x in NOR, NAND,   #
+#	and UART boot modes.                                #
 #############################################################
 # Auth: Daniel Allred (d-allred@ti.com)
 # Vers: v1.1 on 1-Feb-2007
@@ -25,6 +25,47 @@ OBJCOPYFLAGS = -R .ddrram -R .ddrram2 --gap-fill 0xFF --pad-to 0x3800 -S
 
 SOURCES := davinci.c uart.c uartboot.c ubl.c util.c gpio.c
 
+# Board setup
+ifeq ($(BOARD),evmdm6446)
+	DEVICE   := DM6446
+	FLASH    := nand
+	DDR_TYPE := MICRON_MT47H64M16BT_3_162MHZ
+	DDR_SIZE := DDR_SIZE_256MB
+endif
+ifeq ($(BOARD),sffsdr)
+	DEVICE   := DM6446
+	FLASH    := nand
+	DDR_TYPE := MICRON_MT47H32M16BN_3_162MHZ
+	DDR_SIZE := DDR_SIZE_128MB
+endif
+ifeq ($(BOARD),das)
+	DEVICE   := DM6446
+	FLASH    := nand
+	DDR_TYPE := MICRON_MT47H64M16HR_3_162MHZ
+	DDR_SIZE := DDR_SIZE_256MB
+endif
+ifeq ($(BOARD),minidas)
+	DEVICE   := DM355
+	FLASH    := nand
+	DDR_TYPE := MICRON_MT47H128M16HG_3IT_171MHZ
+	DDR_SIZE := DDR_SIZE_256MB
+endif
+ifeq ($(BOARD),afeusb)
+	DEVICE   := DM355
+	FLASH    := nand
+	DDR_TYPE := MICRON_MT47H32M16BN_3_171MHZ
+	DDR_SIZE := DDR_SIZE_64MB
+endif
+ifeq ($(BOARD),evmdm355)
+	DEVICE   := DM355
+	FLASH    := nand
+	DDR_TYPE := MICRON_MT47H64M16BT_37E_171MHZ
+	DDR_SIZE := DDR_SIZE_128MB
+endif
+
+CFLAGS += -D$(DDR_TYPE) -D$(DDR_SIZE)
+
+# Processor setup
 ifeq ($(DEVICE),DM6441)
 	CFLAGS += -DDM6441
 	SOURCES += dm644x.c
@@ -46,6 +87,7 @@ ifeq ($(DEVICE),DM355)
 	LINKERSCRIPT = dm355.lds
 endif
 
+# NAND flash setup
 ifeq ($(FLASH),nand)
 	CFLAGS+= -DUBL_NAND
 	SOURCES += nandboot.c nand.c

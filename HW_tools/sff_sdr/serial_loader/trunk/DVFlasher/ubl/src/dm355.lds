@@ -9,7 +9,7 @@ SECTIONS {
   	DRAMStart  = 0x00010000;
 	DRAMSize   = 0x00008000;
 	DDRStart   = 0x80000000;
-	DDRSize    = 0x10000000;
+	DDRSize    = 0x10000000; /* Board specific */
 
 	STACKStart = DRAMStart + DRAMSize;	
 	__topstack = (DRAMStart + DRAMSize) - 0x4;

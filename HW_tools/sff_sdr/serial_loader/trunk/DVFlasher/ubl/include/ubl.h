@@ -23,12 +23,7 @@
 #include "tistdtypes.h"
 
 /* UBL version number */
-#define UBL_VERSION_STRING "1.14.0"
-#ifdef UBL_NAND
-#define UBL_FLASH_TYPE "NAND"
-#else
-#define UBL_FLASH_TYPE "NOR"
-#endif
+#define UBL_VERSION_STRING "1.14.1"
 
 /* Define this for bypassing the ECC check when reading from the NAND.
  * This is useful for debugging or during development. */
@@ -51,13 +46,14 @@
 #define UBL_MAGIC_BIN_IMG			(0xA1ACED66)		/* Execute in place supported*/
 
 /* Used by UBL when doing UART boot */
-#define UBL_MAGIC_NOR_RESTORE		(0xA1ACED77)		/* Download via UART & Restore NOR with binary data */
-#define UBL_MAGIC_NOR_SREC_BURN		(0xA1ACED88)		/* Download via UART & Burn NOR with UBL readable header and SREC data*/
-#define UBL_MAGIC_NOR_BIN_BURN      (0xA1ACED99)		/* Download via UART & Burn NOR with UBL readable header and BIN data*/
-#define UBL_MAGIC_NOR_GLOBAL_ERASE	(0xA1ACEDAA)		/* Download via UART & Global erase the NOR Flash*/
-#define UBL_MAGIC_NAND_SREC_BURN	(0xA1ACEDBB)		/* Download via UART & Burn NAND - Image is S-record*/
-#define UBL_MAGIC_NAND_BIN_BURN		(0xA1ACEDCC)		/* Download via UART & Burn NAND - Image is binary */
-#define UBL_MAGIC_NAND_GLOBAL_ERASE	(0xA1ACEDDD)		/* Download via UART & Global erase the NAND Flash*/
+#define UBL_MAGIC_NOR_RESTORE		0xA1ACED77	/* Download via UART & Restore NOR with binary data */
+#define UBL_MAGIC_NOR_SREC_BURN		0xA1ACED88	/* Download via UART & Burn NOR with UBL readable header and SREC data*/
+#define UBL_MAGIC_NOR_BIN_BURN		0xA1ACED99	/* Download via UART & Burn NOR with UBL readable header and BIN data*/
+#define UBL_MAGIC_NOR_GLOBAL_ERASE	0xA1ACEDAA	/* Download via UART & Global erase the NOR Flash*/
+#define UBL_MAGIC_NAND_SREC_BURN	0xA1ACEDBB	/* Download via UART & Burn NAND - Image is S-record*/
+#define UBL_MAGIC_NAND_BIN_BURN		0xA1ACEDCC	/* Download via UART & Burn NAND - Image is binary */
+#define UBL_MAGIC_NAND_GLOBAL_ERASE	0xA1ACEDDD	/* Download via UART & Global erase the NAND Flash*/
+#define UBL_MAGIC_DDR_TEST		0xA1ACEDEE	/* Test DDR2 memory. */
 
 // Define UBL image size
 #define UBL_IMAGE_SIZE      (0x00003800)
@@ -65,14 +61,10 @@
 // Define maximum downloadable image size
 #define MAX_IMAGE_SIZE		(0x00800000)
 
-/* Set details of RAM */
-#define RAM_START_ADDR		(0x80000000)
-#define RAM_END_ADDR		(0x87FFFFFF) /* SFFSDR has 128 Mb of DDR-II */
-
 typedef struct {
 	uint32_t magicNum;	/* Expected magic number */
 	uint32_t entryPoint;	/* Entry point of the user application */
-	uint32_t numPage;		/* Number of pages where boot loader is stored */
+	uint32_t numPage;	/* Number of pages where boot loader is stored */
 	uint32_t block;		/* starting block number where User boot loader is stored */
 	uint32_t page;		/* starting page number where boot-loader is stored */
 	uint32_t ldAddress;	/* Starting RAM address where image is to copied - XIP Mode */

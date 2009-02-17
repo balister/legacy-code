@@ -23,6 +23,11 @@ typedef int Bool;
 #define NULL  0
 #endif
 
+//Return type defines 
+#define E_PASS    0x00000000
+#define E_FAIL    0x00000001
+#define E_TIMEOUT 0x00000002
+
 // BIT mask defines
 //  BIT masks
 #define BIT0    0x00000001

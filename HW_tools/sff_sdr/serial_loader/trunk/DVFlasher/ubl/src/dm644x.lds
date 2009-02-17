@@ -10,6 +10,9 @@
 
 ENTRY(boot)
 SECTIONS {
+	DDRStart   = 0x80000000;
+	DDRSize    = 0x10000000; /* Board specific */
+
 	. = 0x02000000;
 	__CS2start = .;
 	__NORFlash = .;
@@ -68,20 +71,12 @@ SECTIONS {
 	}
 	
 	__topstack = 0xC000 - 0x4;
-	
-	/* 64 MB of DDR2 */
-   	. = 0x80000000;
+
+	/* DDR2 */	
+   	. = DDRStart;
 	.ddrram	:
 	{
    		*(.ddrram)
 	}
-
-	/* 32 MB of DDR2 */
-   	. = 0x82000000;
-	.ddrram2	 :
-	{
-		*(.ddrram2)
-    }
-    
 }
 

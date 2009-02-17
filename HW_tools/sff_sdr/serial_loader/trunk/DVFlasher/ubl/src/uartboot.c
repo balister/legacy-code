@@ -33,6 +33,74 @@ extern NAND_INFO gNandInfo;
 extern NOR_INFO gNorInfo;
 #endif
 
+/* For DDR memory testing */
+extern volatile uint8_t DDRMem[0];
+
+static int ddr_memory_test(void)
+{
+	int k;
+	uint32_t ddr_size32 = (DDR_RAM_SIZE / 4);
+	volatile uint32_t read32;
+	volatile uint32_t *ddr_test = (uint32_t *) DDRMem;
+
+	UARTSendCRLF();
+
+	UARTSendString("DDR tests (start = ");
+	UARTSendInt((uint32_t) ddr_test);
+	UARTSendString(")\n");
+
+	UARTSendString("1. RAMP test:\n");
+	for (k = 0; k < ddr_size32; k++)
+		ddr_test[k] = k; /* Write */
+
+	for (k = 0; k < ddr_size32; k++) {
+		read32 = ddr_test[k];
+		if (read32 != k) { /* Read */
+			UARTSendString("  Failed at address: ");
+			UARTSendInt(k * 4);
+			UARTSendCRLF();
+
+			UARTSendString("    Expected: ");
+			UARTSendInt(k);
+			UARTSendCRLF();
+			UARTSendString("    Read:     ");
+			UARTSendInt(read32);
+			UARTSendCRLF();
+
+			goto error;
+		}
+	}
+	UARTSendString("  Success\n");
+
+	UARTSendString("2. PATTERN test:\n");
+	for (k = 0; k < ddr_size32; k++) {
+		ddr_test[k] = DDR_TEST_PATTERN;
+
+		if (ddr_test[k] != DDR_TEST_PATTERN) {
+			UARTSendString("  Failed at address: ");
+			UARTSendInt(k * 4);
+			UARTSendCRLF();
+
+			UARTSendString("    Expected: ");
+			UARTSendInt(k);
+			UARTSendCRLF();
+			UARTSendString("    Read:     ");
+			UARTSendInt(read32);
+			UARTSendCRLF();
+
+			goto error;
+		}
+	}
+	UARTSendString("  Success\n");
+
+	UARTSendStringNULL("DDRTEST_SUCCESS");
+	return 0;
+
+error:
+	UARTSendStringNULL("DDRTEST_FAILURE");
+	return -1;
+}
+
 void UART_Boot(void)
 {
 #ifdef UBL_NAND
@@ -72,6 +140,13 @@ UART_tryAgain:
 		gEntryPoint = ackHeader.binAddr;
 		break;
 	}
+
+	case UBL_MAGIC_DDR_TEST:
+		/* Perform DDR memory testing. */
+		ddr_memory_test();
+		goto UART_tryAgain;
+		break;
+
 #ifdef UBL_NOR
 	// Flash the UBL to start of NOR and put header and s-record app in NOR
 	case UBL_MAGIC_NOR_SREC_BURN:

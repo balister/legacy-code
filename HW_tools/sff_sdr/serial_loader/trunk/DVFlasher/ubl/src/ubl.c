@@ -172,9 +172,14 @@ int32_t main(void)
 	UARTSendString("TI UBL Version: ");
 	UARTSendString(UBL_VERSION_STRING);
 	UARTSendString(", Flash type: ");
-	UARTSendString(UBL_FLASH_TYPE);
+#ifdef UBL_NAND
+	UARTSendString("NAND");
+#else
+	UARTSendString("NOR");
+#endif
+
 	UARTSendString("\r\nBooting PSP Boot Loader\r\nPSPBootMode = ");
-	
+
 	/* Select Boot Mode */
 	switch(gBootMode)
 	{

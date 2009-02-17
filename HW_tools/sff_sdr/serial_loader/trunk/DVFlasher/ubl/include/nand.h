@@ -34,14 +34,8 @@
 // NAND flash addresses
 #define NAND_DATA_OFFSET    0x00
 
-#ifdef DM6446
-#define NAND_ALE_OFFSET     0x0B
-#define NAND_CLE_OFFSET     0x10
-#endif
-#ifdef DM355
 #define NAND_ALE_OFFSET     0x08
 #define NAND_CLE_OFFSET     0x10
-#endif
 
 // NAND timeout 
 //#define NAND_TIMEOUT    10240
