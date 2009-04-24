@@ -43,6 +43,20 @@ inout wire [15:0] io_tx_a,
 inout wire [15:0] io_rx_a
 );
 
+wire host_spi_clk;
+wire host_spi_simo;
+wire host_spi_somi;
+wire host_spi_cs0;
+wire host_spi_cs1;
+
+assign host_spi_clk = pin21;
+assign host_spi_simo = pin19;
+assign host_spi_somi = pin17;
+assign host_spi_cs0 = pin11;
+assign host_spi_cs1 = pin13;
+
+
+
 assign io_rx_a[0] = pin3;
 assign io_rx_a[1] = pin4;
 assign io_rx_a[2] = pin23;
@@ -68,5 +82,21 @@ begin
 end
 
 assign pin17 = rx_data;
+
+//`define FOO
+`ifdef FOO
+rx_buffer rx_buffer
+	  ( .spi_clk(host_spi_clk), .spi_simo(host_spi_clk), .spi_somi(host_spi_somi),
+		.spi_cs0(host_spi_cs0), .spi_cs1(host_spi_cs1),
+		.bus_reset(rx_bus_reset),.reset(rx_dsp_reset), .reset_regs(rx_dsp_reset),
+		.RD(RD),.have_pkt_rdy(have_pkt_rdy),.rx_overrun(rx_overrun),
+		.channels(rx_numchan),
+		.ch_0(ch0rx),.ch_1(ch1rx),
+		.ch_2(ch2rx),.ch_3(ch3rx),
+		.rxclk(clk64),.rxstrobe(hb_strobe),
+		.clear_status(clear_status),
+		.serial_addr(serial_addr),.serial_data(serial_data),.serial_strobe(serial_strobe),
+		.debugbus(rx_debugbus) );
+`endif
 
 endmodule

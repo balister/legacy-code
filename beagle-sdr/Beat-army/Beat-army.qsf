@@ -321,9 +321,9 @@ set_instance_assignment -name IO_STANDARD "3.3-V LVCMOS" -to tx_a[3]
 set_instance_assignment -name IO_STANDARD "3.3-V LVCMOS" -to tx_a[2]
 set_instance_assignment -name IO_STANDARD "3.3-V LVCMOS" -to tx_a[1]
 set_instance_assignment -name IO_STANDARD "3.3-V LVCMOS" -to tx_a[0]
-set_global_assignment -name TIMEQUEST_MULTICORNER_ANALYSIS ON
-set_global_assignment -name TIMEQUEST_DO_CCPP_REMOVAL ON
 set_global_assignment -name FORCE_CONFIGURATION_VCCIO ON
 set_global_assignment -name RESERVE_FLASH_NCE_AFTER_CONFIGURATION "USE AS REGULAR IO"
 set_global_assignment -name LL_ROOT_REGION ON -section_id "Root Region"
 set_global_assignment -name LL_MEMBER_STATE LOCKED -section_id "Root Region"
+set_global_assignment -name QIP_FILE rx_fifo.qip
+set_global_assignment -name VERILOG_FILE rx_buffer.v
