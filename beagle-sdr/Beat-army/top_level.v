@@ -48,12 +48,14 @@ wire host_spi_input;
 wire host_spi_output;
 wire host_spi_cs0;
 wire host_spi_cs1;
+wire data_ready;
 
 assign host_spi_clk = pin21;
 assign host_spi_input = pin19;
-assign host_spi_output = pin17;
+assign pin17 = host_spi_output;
 assign host_spi_cs0 = pin11;
 assign host_spi_cs1 = pin13;
+//assign pin3 data_ready;
 
 wire [15:0]rx_debug_bus;
 
@@ -72,7 +74,7 @@ rx_buffer rx_buffer
 	  ( .spi_clk(host_spi_clk), .spi_input(host_spi_input), .spi_output(host_spi_output),
 		.spi_cs0(host_spi_cs0), .spi_cs1(host_spi_cs1),
 		.reset(), .reset_regs(),
-		.have_pkt_rdy(),.rx_overrun(),
+		.have_pkt_rdy(data_ready),.rx_overrun(),
 		.channels(),
 		.ch_0(),.ch_1(),
 		.ch_2(),.ch_3(),
