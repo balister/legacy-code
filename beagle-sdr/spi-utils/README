@@ -1,0 +1,21 @@
+I compiled these on the BeagleBoard under Angstrom. Byte orders may not be
+correct if you cross-compile using OpenEmbedded. All of these tools are 
+derived from, and accept the same options as, spidev_test in the kernel
+documentation.
+
+peek_poke: reads or writes control registers on the FPGA or ADC
+
+P=peek, K=poke, Q=quit. Addresses are 6 bits long, data is 8 bits long. Data
+may be expressed in hex, octal, or decimal. pokes.log shows the sequence of
+commands I used to make the AD9862 produce a reasonable signal when I wired
+the ADC's digital output to the DAC's digital input.
+
+dump_data: reads bytes from stdin, sends them over SPI as fast as possible
+           while simultaneously reading bytes over SPI & writing them to stdout
+
+The command line option -c or --count tells dump_data to quit after
+reading/writing a certain number of bytes. You should redirect stdin and
+stdout when running dump_data, or at least pipe the output through hexdump.
+
+-- George Schaertl
+gschaertl@gmail.com

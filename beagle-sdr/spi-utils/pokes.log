@@ -1,0 +1,10 @@
+george@beagleboard:~$ ./peek-poke -D /dev/spidev3.0 -s 500000
+spi mode: 0
+bits per word: 16
+max speed: 500000 Hz (500 KHz)
+Enter P/K/Q, address, data: k 0 0x20
+Enter P/K/Q, address, data: k 2 0x14
+Enter P/K/Q, address, data: k 11 0x48
+Enter P/K/Q, address, data: k 14 0x80
+Enter P/K/Q, address, data: k 16 0xff
+Enter P/K/Q, address, data: q
