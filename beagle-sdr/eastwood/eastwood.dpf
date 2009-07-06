@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<pin_planner>
+	<pin_info>
+		<pin name="led[7]" direction="Output" source="Pin Planner" >
+		</pin>
+		<pin name="led[6]" direction="Output" source="Pin Planner" >
+		</pin>
+		<pin name="led[5]" direction="Output" source="Pin Planner" >
+		</pin>
+		<pin name="led[4]" direction="Output" source="Pin Planner" >
+		</pin>
+		<pin name="led[3]" direction="Output" source="Pin Planner" >
+		</pin>
+		<pin name="led[2]" direction="Output" source="Pin Planner" >
+		</pin>
+		<pin name="led[1]" direction="Output" source="Pin Planner" >
+		</pin>
+		<pin name="led[0]" direction="Output" source="Pin Planner" >
+		</pin>
+		<pin name="led[0..7]" source="Pin Planner" >
+		</pin>
+	</pin_info>
+	<buses>
+		<bus name="led[0..7]" direction="" >
+			<member name="led[0]" />
+			<member name="led[1]" />
+			<member name="led[2]" />
+			<member name="led[3]" />
+			<member name="led[4]" />
+			<member name="led[5]" />
+			<member name="led[6]" />
+			<member name="led[7]" />
+		</bus>
+	</buses>
+	<group_file_association>
+	</group_file_association>
+	<pin_planner_file_specifies>
+	</pin_planner_file_specifies>
+</pin_planner>
