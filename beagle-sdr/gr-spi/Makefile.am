@@ -21,7 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = bootstrap configure config.h.in 
+EXTRA_DIST = bootstrap configure config.h.in doc
 SUBDIRS = config src
 DIST_SUBDIRS = config src
 

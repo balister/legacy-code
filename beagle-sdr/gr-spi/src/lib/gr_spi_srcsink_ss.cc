@@ -15,6 +15,7 @@
 #include <sys/ioctl.h>
 #include <linux/types.h>
 #include <linux/spi/spidev.h>
+#include <endian.h>
 
 gr_spi_srcsink_ss_sptr gr_make_spi_srcsink_ss ()
 {
@@ -27,7 +28,7 @@ static const int MIN_OUT = 1;
 static const int MAX_OUT = 1;
 
 // The kernel doesn't like more than 4096 bytes in one spi_transfer
-static const int MAX_ITEMS 2048;
+static const int MAX_ITEMS = 2048;
 
 gr_spi_srcsink_ss::gr_spi_srcsink_ss ()
 	: gr_sync_block("spi_srcsink_ss",
@@ -36,9 +37,7 @@ gr_spi_srcsink_ss::gr_spi_srcsink_ss ()
 {
 	set_output_multiple(MAX_ITEMS); // Short spi_transfers are inefficient
 
-        // there's got to be a better way to find the machine's endianness...
-	short foo = 0x0001;
-	d_swap_bytes = (char* (&foo))[0];
+	d_swap_bytes = (BYTE_ORDER != BIG_ENDIAN);
 }
 
 gr_spi_srcsink_ss::~gr_spi_srcsink_ss ()
@@ -87,13 +86,15 @@ int gr_spi_srcsink_ss::work (int noutput_items,
 {
 	if (noutput_items > MAX_ITEMS) noutput_items = MAX_ITEMS;
 
-	if (d_swap_bytes) swap_bytes(input_items,noutput_items*sizeof(short));
+	if (d_swap_bytes) swap_bytes(
+		(char*) &input_items[0],
+		noutput_items*sizeof(short));
 
 	int ret;
 
 	struct spi_ioc_transfer tr;
-	tr.tx_buf = (unsigned long) input_items,
-	tr.rx_buf = (unsigned long) output_items,
+	tr.tx_buf = (unsigned long) &input_items[0],
+	tr.rx_buf = (unsigned long) &output_items[0],
 	tr.len = noutput_items * sizeof(short),
 	tr.delay_usecs = 0,
 	tr.speed_hz = d_spi_speed,
@@ -102,7 +103,9 @@ int gr_spi_srcsink_ss::work (int noutput_items,
 	ret = ioctl(d_fd, SPI_IOC_MESSAGE(1), &tr);
 	if (ret == 1) return -1;
 
-        if (d_swap_bytes) swap_bytes(output_items,noutput_items*sizeof(short));
+        if (d_swap_bytes) swap_bytes(
+		(char*) &output_items[0],
+		noutput_items*sizeof(short));
 
 	return noutput_items;
 }

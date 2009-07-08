@@ -20,9 +20,10 @@
 #include <sys/ioctl.h>
 #include <linux/types.h>
 #include <linux/spi/spidev.h>
+#include <endian.h>
 
 #define ARRAY_SIZE(a) (sizeof(a) / sizeof((a)[0]))
-typedef enum {false, true} bool;
+#define SWAP (BYTE_ORDER != BIG_ENDIAN)
 
 static void pabort(const char *s)
 {
@@ -36,7 +37,7 @@ static uint8_t bits = 16;
 static uint32_t speed = 12000000;
 static uint16_t delay;
 
-static void transfer(int fd,bool poke, unsigned short reg, unsigned short data)
+static void transfer(int fd,int poke, unsigned short reg, unsigned short data)
 {
  int ret;
  uint8_t word[2];
@@ -47,14 +48,14 @@ data &= 0xff;
 
 //printf(" register %02x, data byte %02x\n",reg,data);
 
-word[0] = (poke ? 0x80 : 0) | reg;
-word[1] = data;
+word[SWAP] = (poke ? 0x80 : 0) | reg;
+word[!SWAP] = data;
 //word = (reg << 8) | data;  // this wouldn't guarantee byte order
 //if (!poke) word |= 0x8000;
 
 struct spi_ioc_transfer tr = {
-.tx_buf = &word,
-.rx_buf = &word,
+.tx_buf = (uint64_t) &word,
+.rx_buf = (uint64_t) &word,
 .len = 2,
 .delay_usecs = delay,
 .speed_hz = speed,
@@ -68,7 +69,7 @@ if (ret == 1)
 pabort("can't send spi message");
 
 if (!poke) printf(" Read 0x%02x = %3d = %d%d%d%d %d%d%d%d from register %2d\n",
-  word[1],
+  word[1],word[1],
  (word[1])/0x80,
  (word[1]%0x80)/0x40,
  (word[1]%0x40)/0x20,
@@ -79,7 +80,7 @@ if (!poke) printf(" Read 0x%02x = %3d = %d%d%d%d %d%d%d%d from register %2d\n",
  (word[1]%0x02),
   reg);
 else printf("Wrote 0x%02x = %3d =  %d%d%d%d %d%d%d%d   to register %2d\n",
-  data,
+  data,data,
  (data)/0x80,
  (data%0x80)/0x40,
  (data%0x40)/0x20,
@@ -174,7 +175,7 @@ int ret = 0;
 int fd;
 char foo;
 char line[80];
-bool poke;
+int poke;
 unsigned short reg, data;
 
 parse_opts(argc, argv);
@@ -220,7 +221,7 @@ printf("spi mode: %d\n", mode);
 printf("bits per word: %d\n", bits);
 printf("max speed: %d Hz (%d KHz)\n", speed, speed/1000);
 
-while (true) {
+while (1) {
 printf("Enter P/K/Q, address, data: ");
 fgets(line,sizeof(line),stdin);
 sscanf(line,"%c %hi %hi",&foo, &reg, &data);

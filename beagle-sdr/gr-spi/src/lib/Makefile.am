@@ -45,7 +45,7 @@ _gr_spi_la_SOURCES = gr_spi.cc gr_spi_source_s.cc gr_spi_srcsink_ss.cc
 
 _gr_spi_la_LDFLAGS = -module -avoid-version
 
-_gr_spi_la_LIBADD = -lgrswigrunpy -lstdc++
+_gr_spi_la_LIBADD = $(PYTHON_LDFLAGS) -lstdc++
 
 gr_spi.cc gr_spi.py: gr_spi.i $(ALL_IFILES)
 	$(SWIG) $(SWIGCPPPYTHONARGS) -module gr_spi -o gr_spi.cc $<
