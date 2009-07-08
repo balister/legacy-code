@@ -183,7 +183,7 @@ int main(int argc, char *argv[])
 	if (ret == -1)
 		pabort("can't get max speed hz");
 
-	gettimeofday(&start,NULL);
+	gettimeofday(&finish,NULL);
 	for (total=0; total < max; total += bytes_read) {
 		if (total + MAX_LENGTH <= max)
 			bytes_read = fread(buffer, 1, MAX_LENGTH, stdin);
