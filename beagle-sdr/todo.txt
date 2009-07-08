@@ -1,0 +1,75 @@
+TO DO:
+
+Name this board
+Write the paper (GNU Radio plus pretty pictures)
+
+--- GNU Radio ---
+Make srcsink_ss compile and run without hanging on the BeagleBoard
+Include the spi-utils in gr-spi
+Change the Python package name to spi, so we can do "from gnuradio import spi; spi.srcsink_ss()"
+Document the gr-spi package
+Create a class, spi.control, that lets you control the FPGA and ADC from Python
+
+--- OpenEmbedded ---
+Make a BitBake recipe that will actually install gr-spi
+Make a BitBake recipe to create an x11-image with gnuradio, gr-spi, and task-native-sdk
+Find a better way to patch the OE metadata to enable McSPI3 and McSPI4 in kernel and U-Boot
+Patch the BitBake recipe for GNU Radio to demand python-numpy as a prerequisite
+Make a BitBake recipe that will compile and install wxPython, so GNU Radio can have wxgui
+
+--- FPGA ---
+Make the trivial TX/RX path with interpolation and decimation actually work
+Beef up (and document) the control registers; create mnemonics in spi_control
+Change the pin assignments for hardware revision 2
+
+--- Documentation (i.e. WTFM) ---
+I. Getting up and running
+ A. OpenEmbedded
+  1. Setting up OE
+  2. Adding our special patches & recipes
+  3. Creating an image
+ B. BeagleBoard
+  1. Putting the image on an SD card
+  2. Flashing the BeagleBoard to read the correct u-boot
+  3. Using the x11 image
+ C. The Board with No Name
+  1. Power, daughterboard, RF, and BeagleBoard connections
+  2. Compiling the VHDL design
+  3. Programming using JTAG or ASMI
+ D. GNU Radio
+  1. Running the GUIfied example
+  2. Using the spi.srcsink_ss block
+  3. Using the spi.control block
+II. The design, big to small
+ A. Overview: big huge block diagram
+ B. RF daughterboards
+  1. Analog signal path
+  2. Digital signals exposed
+  3. Our current support for them
+ C. The ADC/DAC
+  1. Control registers
+  2. Analog characteristics
+  3. Signal processing path
+ D. The FPGA
+  1. Control registers
+  2. SPI interface
+  3. Signal processing path
+ E. The BeagleBoard
+  1. Pin muxing
+  2. spidev
+  3. The SPI and MMC subsystems: I'm not a kernel hacker, you can be one if you want
+ F. GNU Radio
+  1. Scheduling and "What is a block?"
+  2. SWIG and flow graphs in Python
+  3. Dictionary of signal processing blocks
+  4. wxgui and its use
+  5. Accelerating GNU Radio with NEON or DSP instructions: ask Philip, not me
+ G. OpenEmbedded
+  1. What, exactly, OE provides (metadata)
+  2. What BitBake does (tasks and built process)
+  3. Creating / modifying your own recipes
+III. Project Ideas
+ A. MMC interface
+ B. Support for RFX900 daughterboard
+ C. More signal processing (MAC/PHY layers??) on the FPGA
+ D. Accelerating GNU Radio
