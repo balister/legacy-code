@@ -1,14 +1,11 @@
 TO DO:
 
-Name this board
-Write the paper (GNU Radio plus pretty pictures)
-
 --- GNU Radio ---
 Make srcsink_ss compile and run without hanging on the BeagleBoard
 Include the spi-utils in gr-spi
 Change the Python package name to spi, so we can do "from gnuradio import spi; spi.srcsink_ss()"
 Document the gr-spi package
-Create a class, spi.control, that lets you control the FPGA and ADC from Python
+Create a class, spi.control, that lets you control the FPGA and ADC from Python or C++
 
 --- OpenEmbedded ---
 Make a BitBake recipe that will actually install gr-spi
@@ -23,7 +20,7 @@ Beef up (and document) the control registers; create mnemonics in spi_control
 Change the pin assignments for hardware revision 2
 
 --- Documentation (i.e. WTFM) ---
-I. Getting up and running
+I. Getting Started
  A. OpenEmbedded
   1. Setting up OE
   2. Adding our special patches & recipes
@@ -40,7 +37,7 @@ I. Getting up and running
   1. Running the GUIfied example
   2. Using the spi.srcsink_ss block
   3. Using the spi.control block
-II. The design, big to small
+II. System Description
  A. Overview: big huge block diagram
  B. RF daughterboards
   1. Analog signal path
@@ -68,8 +65,9 @@ II. The design, big to small
   1. What, exactly, OE provides (metadata)
   2. What BitBake does (tasks and built process)
   3. Creating / modifying your own recipes
-III. Project Ideas
+III. Hacking (Project Ideas)
  A. MMC interface
  B. Support for RFX900 daughterboard
  C. More signal processing (MAC/PHY layers??) on the FPGA
  D. Accelerating GNU Radio
+IV. Appendices

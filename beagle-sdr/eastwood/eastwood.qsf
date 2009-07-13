@@ -38,7 +38,7 @@
 
 set_global_assignment -name FAMILY "Cyclone III"
 set_global_assignment -name DEVICE EP3C16Q240C8
-set_global_assignment -name TOP_LEVEL_ENTITY blondie
+set_global_assignment -name TOP_LEVEL_ENTITY eastwood
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION "9.0 SP1"
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "11:35:34  JUNE 15, 2009"
 set_global_assignment -name LAST_QUARTUS_VERSION "9.0 SP1"
@@ -393,6 +393,27 @@ set_global_assignment -name POWER_USE_DEVICE_CHARACTERISTICS MAXIMUM
 set_global_assignment -name POWER_USE_INPUT_FILES OFF
 set_global_assignment -name POWER_REPORT_SIGNAL_ACTIVITY ON
 set_global_assignment -name POWER_REPORT_POWER_DISSIPATION ON
+set_global_assignment -name MISC_FILE eastwood.dpf
+set_global_assignment -name VHDL_FILE harry.vhd
+set_global_assignment -name VHDL_FILE eastwood.vhd
+set_global_assignment -name VHDL_FILE blondie.vhd
+set_global_assignment -name QIP_FILE tx_fifo.qip
+set_global_assignment -name QIP_FILE rx_fifo.qip
+set_global_assignment -name VHDL_FILE control_spi_slave.vhd
+set_global_assignment -name VECTOR_WAVEFORM_FILE control_spi_slave_test.vwf
+set_global_assignment -name QIP_FILE shiftreg14.qip
+set_global_assignment -name QIP_FILE shiftreg8.qip
+set_global_assignment -name VHDL_FILE control_slave_fsm.vhd
+set_global_assignment -name QIP_FILE dac_fifo.qip
+set_global_assignment -name QIP_FILE adc_fifo.qip
+set_global_assignment -name VHDL_FILE data_spi_slave.vhd
+set_global_assignment -name VECTOR_WAVEFORM_FILE data_spi_slave_test.vwf
+set_global_assignment -name QIP_FILE shiftreg12.qip
+set_global_assignment -name VHDL_FILE data_slave_fsm.vhd
+set_global_assignment -name VHDL_FILE register_file.vhd
+set_global_assignment -name VHDL_FILE interp.vhd
+set_global_assignment -name VHDL_FILE decim.vhd
+set_global_assignment -name VHDL_FILE xmastree.vhd
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 set_global_assignment -name LL_ROOT_REGION ON -section_id "Root Region"
@@ -455,24 +476,3 @@ set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to spi_adc_clk
 set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to spi_adc_simo
 set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to spi_adc_somi
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
-set_global_assignment -name MISC_FILE eastwood.dpf
-set_global_assignment -name VHDL_FILE harry.vhd
-set_global_assignment -name VHDL_FILE eastwood.vhd
-set_global_assignment -name VHDL_FILE blondie.vhd
-set_global_assignment -name QIP_FILE tx_fifo.qip
-set_global_assignment -name QIP_FILE rx_fifo.qip
-set_global_assignment -name VHDL_FILE control_spi_slave.vhd
-set_global_assignment -name VECTOR_WAVEFORM_FILE control_spi_slave_test.vwf
-set_global_assignment -name QIP_FILE shiftreg14.qip
-set_global_assignment -name QIP_FILE shiftreg8.qip
-set_global_assignment -name VHDL_FILE control_slave_fsm.vhd
-set_global_assignment -name QIP_FILE dac_fifo.qip
-set_global_assignment -name QIP_FILE adc_fifo.qip
-set_global_assignment -name VHDL_FILE data_spi_slave.vhd
-set_global_assignment -name VECTOR_WAVEFORM_FILE data_spi_slave_test.vwf
-set_global_assignment -name QIP_FILE shiftreg12.qip
-set_global_assignment -name VHDL_FILE data_slave_fsm.vhd
-set_global_assignment -name VHDL_FILE register_file.vhd
-set_global_assignment -name VHDL_FILE interp.vhd
-set_global_assignment -name VHDL_FILE decim.vhd
-set_global_assignment -name VHDL_FILE xmastree.vhd
