@@ -48,7 +48,7 @@ data &= 0xff;
 
 //printf(" register %02x, data byte %02x\n",reg,data);
 
-word[SWAP] = (poke ? 0x80 : 0) | reg;
+word[SWAP] = reg | (poke ? 0 : 0x80);
 word[!SWAP] = data;
 //word = (reg << 8) | data;  // this wouldn't guarantee byte order
 //if (!poke) word |= 0x8000;

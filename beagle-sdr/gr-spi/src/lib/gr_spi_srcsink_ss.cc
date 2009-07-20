@@ -17,6 +17,12 @@
 #include <linux/spi/spidev.h>
 #include <endian.h>
 
+#if FAKE_IOCTL
+int ioctl(int fd, int req, void* arg) {
+	return 0;
+}
+#endif
+
 gr_spi_srcsink_ss_sptr gr_make_spi_srcsink_ss ()
 {
 	return gr_spi_srcsink_ss_sptr (new gr_spi_srcsink_ss ());

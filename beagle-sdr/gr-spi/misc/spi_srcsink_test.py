@@ -6,10 +6,9 @@ import sys
 class spi_test (gr.top_block):
 
 	def build_graph(self,device,speed):
-		self.src = gr.sig_source_s(
-			2,gr.GR_CONST_WAVE,1,0,1)
+		self.src = gr.sig_source_s(2,gr.GR_CONST_WAVE,1,0,1)
 		self.sink = gr.null_sink(gr.sizeof_short)
-		self.spi = gr_spi.spi_srcsink_ss()
+		self.spi = gr_spi.gr_spi_srcsink_ss()
 		sys.stdout.write("Blocks created\n")
 		self.spi.open_spi(device,speed)
 		sys.stdout.write("SPI device open\n")
