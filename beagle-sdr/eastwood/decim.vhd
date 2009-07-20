@@ -29,6 +29,8 @@ begin
 			if (pr_state = get_input) then
 				count <= count + 1;
 				registered_input <= input;
+			elsif (pr_state = send_output) then
+				count <= 0;
 			end if;
 		end if;
 	end process;

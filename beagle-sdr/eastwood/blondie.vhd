@@ -130,7 +130,7 @@ architecture structural of blondie is
 			leds: out std_logic_vector(7 downto 0);
 			interpolation_rate: out std_logic_vector(15 downto 0);
 			decimation_rate: out std_logic_vector(15 downto 0);
-			dac_underflow, adc_overflow: in std_logic
+			dac_underflow, adc_overflow, rx_overflow, tx_underflow: in std_logic
 		);
 	end component;
 	
@@ -286,6 +286,8 @@ begin
 		decimation_rate => zz_decimation_rate,
 		dac_underflow => zz_dac_underflow,
 		adc_overflow => zz_adc_overflow,
+		rx_overflow => rx_fifo_wr_full,
+		tx_underflow => tx_fifo_rd_empty,
 		leds => led
 	);
 

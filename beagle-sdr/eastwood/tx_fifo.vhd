@@ -96,11 +96,11 @@ BEGIN
 	dcfifo_component : dcfifo
 	GENERIC MAP (
 		intended_device_family => "Cyclone III",
-		lpm_numwords => 2048,
+		lpm_numwords => 16384,
 		lpm_showahead => "OFF",
 		lpm_type => "dcfifo",
 		lpm_width => 14,
-		lpm_widthu => 11,
+		lpm_widthu => 14,
 		overflow_checking => "ON",
 		rdsync_delaypipe => 4,
 		underflow_checking => "ON",
@@ -131,7 +131,7 @@ END SYN;
 -- Retrieval info: PRIVATE: AlmostFullThr NUMERIC "-1"
 -- Retrieval info: PRIVATE: CLOCKS_ARE_SYNCHRONIZED NUMERIC "0"
 -- Retrieval info: PRIVATE: Clock NUMERIC "4"
--- Retrieval info: PRIVATE: Depth NUMERIC "2048"
+-- Retrieval info: PRIVATE: Depth NUMERIC "16384"
 -- Retrieval info: PRIVATE: Empty NUMERIC "1"
 -- Retrieval info: PRIVATE: Full NUMERIC "1"
 -- Retrieval info: PRIVATE: INTENDED_DEVICE_FAMILY STRING "Cyclone III"
@@ -158,11 +158,11 @@ END SYN;
 -- Retrieval info: PRIVATE: wsFull NUMERIC "1"
 -- Retrieval info: PRIVATE: wsUsedW NUMERIC "0"
 -- Retrieval info: CONSTANT: INTENDED_DEVICE_FAMILY STRING "Cyclone III"
--- Retrieval info: CONSTANT: LPM_NUMWORDS NUMERIC "2048"
+-- Retrieval info: CONSTANT: LPM_NUMWORDS NUMERIC "16384"
 -- Retrieval info: CONSTANT: LPM_SHOWAHEAD STRING "OFF"
 -- Retrieval info: CONSTANT: LPM_TYPE STRING "dcfifo"
 -- Retrieval info: CONSTANT: LPM_WIDTH NUMERIC "14"
--- Retrieval info: CONSTANT: LPM_WIDTHU NUMERIC "11"
+-- Retrieval info: CONSTANT: LPM_WIDTHU NUMERIC "14"
 -- Retrieval info: CONSTANT: OVERFLOW_CHECKING STRING "ON"
 -- Retrieval info: CONSTANT: RDSYNC_DELAYPIPE NUMERIC "4"
 -- Retrieval info: CONSTANT: UNDERFLOW_CHECKING STRING "ON"
@@ -188,7 +188,7 @@ END SYN;
 -- Retrieval info: GEN_FILE: TYPE_NORMAL tx_fifo.vhd TRUE
 -- Retrieval info: GEN_FILE: TYPE_NORMAL tx_fifo.inc FALSE
 -- Retrieval info: GEN_FILE: TYPE_NORMAL tx_fifo.cmp TRUE
--- Retrieval info: GEN_FILE: TYPE_NORMAL tx_fifo.bsf FALSE
+-- Retrieval info: GEN_FILE: TYPE_NORMAL tx_fifo.bsf TRUE FALSE
 -- Retrieval info: GEN_FILE: TYPE_NORMAL tx_fifo_inst.vhd FALSE
 -- Retrieval info: GEN_FILE: TYPE_NORMAL tx_fifo_waveforms.html TRUE
 -- Retrieval info: GEN_FILE: TYPE_NORMAL tx_fifo_wave*.jpg FALSE

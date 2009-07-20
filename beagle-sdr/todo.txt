@@ -1,23 +1,25 @@
 TO DO:
 
 --- GNU Radio ---
-Make srcsink_ss compile and run without hanging on the BeagleBoard
-Include the spi-utils in gr-spi
-Change the Python package name to spi, so we can do "from gnuradio import spi; spi.srcsink_ss()"
-Document the gr-spi package
 Create a class, spi.control, that lets you control the FPGA and ADC from Python or C++
+Add daughterboard support (see usrp/host/lib/db*)
+Create spi.source and spi.sink blocks that are more flexible than spi.srcsink
+Move the spi package into the gr package (it really belongs in gnuradio-core/src/lib/io)
+Submit it as a patch against GNU Radio
+Make it stop crashing all the time on the BeagleBoard!
 
 --- OpenEmbedded ---
 Make a BitBake recipe that will actually install gr-spi
-Make a BitBake recipe to create an x11-image with gnuradio, gr-spi, and task-native-sdk
+Make a BitBake recipe to create an x11-image with gnuradio and gr-spi
 Find a better way to patch the OE metadata to enable McSPI3 and McSPI4 in kernel and U-Boot
 Patch the BitBake recipe for GNU Radio to demand python-numpy as a prerequisite
 Make a BitBake recipe that will compile and install wxPython, so GNU Radio can have wxgui
 
 --- FPGA ---
-Make the trivial TX/RX path with interpolation and decimation actually work
-Beef up (and document) the control registers; create mnemonics in spi_control
-Change the pin assignments for hardware revision 2
+Un-reinvent the wheel, i.e. start with the Verilog design for the USRP and modify it to work on our board, instead of making something work on our board and then trying to make it like the USRP
+Add a receive path (downmixing/filtering) 
+Add daughterboard support
+Change the pin configuration to the correct one for rev. 2 with a real 28-pin ribbon cable
 
 --- Documentation (i.e. WTFM) ---
 I. Getting Started

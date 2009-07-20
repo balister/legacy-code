@@ -29,6 +29,7 @@ begin
 			if (pr_state = send_output) then
 				count <= count + 1;
 			elsif (pr_state = get_input) then
+				count <= 0;
 				registered_input <= input;
 			end if;
 		end if;

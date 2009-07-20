@@ -9,10 +9,10 @@ entity register_file is
 		rd_data: out std_logic_vector(7 downto 0);
 		wr_data: in  std_logic_vector(7 downto 0);
 		
+		leds: out std_logic_vector(7 downto 0);
 		interpolation_rate: out std_logic_vector(15 downto 0);
 		decimation_rate: out std_logic_vector(15 downto 0);
-		dac_underflow, adc_overflow: in std_logic;
-		leds: out std_logic_vector(7 downto 0)
+		dac_underflow, adc_overflow, rx_overflow, tx_underflow: in std_logic
 	);
 end register_file;
 
@@ -26,7 +26,7 @@ begin
 	interpolation_rate <= ram(4) & ram(5);
 	decimation_rate <= ram(6) & ram(7);
 	
-	leds <= "000000" & dac_underflow & adc_overflow;
+	leds <= dac_underflow & tx_underflow & "0000" & rx_overflow & adc_overflow;
 
 	process (master_clk)
 	begin
