@@ -1,5 +1,3 @@
-
-
 module rx_buffer (
 	input spi_clk,
 	output spi_output,
@@ -34,13 +32,13 @@ wire [31:0] fifo_data;
 wire [31:0] spi_data;
 reg read_fifo;
 reg write_fifo;
-wire [11:0] rd_fifo_level;
-wire [11:0] wr_fifo_level;
+wire [12:0] rd_fifo_level;
+wire [12:0] wr_fifo_level;
 wire wr_fifo_full;
 
 // tmp rx_clk divider
 
-reg [6:0] clk_div;
+reg [12:0] clk_div;
 wire rx_clk_div;
 
 always @(posedge rx_clk)
@@ -48,7 +46,7 @@ begin
 	clk_div <= clk_div + 1;
 end
 
-assign rx_clk_div = clk_div[6];
+assign rx_clk_div = clk_div[8];
 
 // Instantiate FIFO
 
@@ -56,7 +54,7 @@ rx_fifo	rx_fifo_inst (
 	.data (fifo_data),
 	.rdclk (!spi_clk),
 	.rdreq (read_fifo),
-	.wrclk (rx_clk),
+	.wrclk (rx_clk_div),
 	.wrreq (fill_fifo),
 	.q (spi_data),
 	.rdempty (rx_underrun),
@@ -107,20 +105,24 @@ assign debug_bus[14] = have_pkt_rdy;
 // Write data into FIFO
 
 reg fill_fifo;
-reg [31:0]rx_data;
+reg [15:0]cha_data;
+reg [15:0]chb_data;
 
 always @(negedge rx_clk_div)
 begin
-	rx_data <= 32'hDEADBEEF;
+	cha_data <= cha_data + 16'd1;
+	chb_data <= chb_data + 16'd1;
+//	cha_data <= 16'h1234;
+//	chb_data <= 16'h5678;
 	fill_fifo <= 1;
 
-	if (rd_fifo_level > 2048)
+	if (wr_fifo_level > 12'd1024)
 		have_pkt_rdy <= 1;
 	else
 		have_pkt_rdy <= 0;
 end
 
-assign fifo_data = rx_data;
+assign fifo_data = {chb_data, cha_data};
 
 assign debug_bus[9] = fill_fifo;
 assign debug_bus[10] = wr_fifo_full;

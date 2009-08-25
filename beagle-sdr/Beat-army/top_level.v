@@ -15,7 +15,7 @@ input pin11, // MCSPI3_CS0
 input pin12,
 input pin13, // MCSPI3_CS1
 input pin14,
-input pin15,
+output pin15, // GPIO_133
 input pin16,
 output pin17, // MCSPI3_SOMI
 input pin18,
@@ -55,7 +55,7 @@ assign host_spi_input = pin19;
 assign pin17 = host_spi_output;
 assign host_spi_cs0 = pin11;
 assign host_spi_cs1 = pin13;
-//assign pin3 data_ready;
+assign pin15 = data_ready;
 
 wire [15:0]rx_debug_bus;
 
