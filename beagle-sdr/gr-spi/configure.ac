@@ -62,7 +62,6 @@ dnl AX_BOOST_WSERIALIZATION
 AC_CONFIG_FILES([\
 	  Makefile \
 	  config/Makefile \
-	  doc/Makefile \
 	  src/Makefile \
 	  src/lib/Makefile \
 	  src/python/Makefile \
