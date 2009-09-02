@@ -1,5 +1,5 @@
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2004,2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -19,11 +19,15 @@
 # Boston, MA 02110-1301, USA.
 # 
 
+ACLOCAL_AMFLAGS = -I config
+
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = bootstrap configure config.h.in doc
+EXTRA_DIST = bootstrap configure config.h.in \
+	Makefile.swig Makefile.swig.gen.t
+
 SUBDIRS = config src
-DIST_SUBDIRS = config src
+DIST_SUBDIRS = config src doc
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA =

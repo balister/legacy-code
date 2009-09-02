@@ -1,11 +1,11 @@
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2004,2005,2006,2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2, or (at your option)
+# the Free Software Foundation; either version 3, or (at your option)
 # any later version.
 # 
 # GNU Radio is distributed in the hope that it will be useful,
@@ -15,43 +15,61 @@
 # 
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
-# the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-# Boston, MA 02111-1307, USA.
+# the Free Software Foundation, Inc., 51 Franklin Street,
+# Boston, MA 02110-1301, USA.
 # 
 
 include $(top_srcdir)/Makefile.common
 
-ourpythondir = $(grpythondir)
-ourlibdir    = $(grpyexecdir)
+# C/C++ headers get installed in ${prefix}/include/gnuradio
+grinclude_HEADERS =		\
+	spi_srcsink_ss.h
 
-INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS)
+###################################
+# SWIG Python interface and library
 
-SWIGCPPPYTHONARGS = -noruntime -c++ -python $(PYTHON_CPPFLAGS) \
-	-I$(swigincludedir) -I$(grincludedir)
+TOP_SWIG_IFILES = 		\
+	spi.i
 
-ALL_IFILES = $(LOCAL_IFILES) $(NON_LOCAL_IFILES)             
+# Install so that they end up available as:
+#   import gnuradio.spi
+# This ends up at:
+#   ${prefix}/lib/python${python_version}/site-packages/gnuradio
+spi_pythondir_category =	\
+	gnuradio
 
-NON_LOCAL_IFILES = $(GNURADIO_CORE_INCLUDEDIR)/swig/gnuradio.i
+# additional arguments to the SWIG command
+#spi_la_swig_args =		\
+#	-g
 
-LOCAL_IFILES = gr_spi.i 
+# additional sources for the SWIG-generated library
+spi_la_swig_sources = 	\
+	spi_srcsink_ss.cc
 
-BUILT_SOURCES = gr_spi.cc gr_spi.py
+# additional arguments to the SWIG command
+#spi_la_swig_args =		\
+#	$(SWIG_PYTHON_ARGS)
 
-ourpython_PYTHON = gr_spi.py
+# additional libraries for linking with the SWIG-generated library
+#spi_la_swig_libadd =		\
+#	libm.dylib
 
-ourlib_LTLIBRARIES = _gr_spi.la
+# additional LD flags for linking the SWIG-generated library
+#spi_la_swig_ldflags =	\
+#	-L/opt/local/bin
 
-_gr_spi_la_SOURCES = gr_spi.cc gr_spi_source_s.cc gr_spi_srcsink_ss.cc
+# additional Python files to be installed along with the SWIG-generated one
+#spi_python =			\
+#	__init__.py
 
-_gr_spi_la_LDFLAGS = -module -avoid-version
+# additional SWIG files to be installed
+#spi_swiginclude_headers =	\
+#	nothing.i
 
-_gr_spi_la_LIBADD = $(PYTHON_LDFLAGS) -lstdc++
+include $(top_srcdir)/Makefile.swig
 
-gr_spi.cc gr_spi.py: gr_spi.i $(ALL_IFILES)
-	$(SWIG) $(SWIGCPPPYTHONARGS) -module gr_spi -o gr_spi.cc $<
+# add some of the variables generated inside the Makefile.swig.gen
+BUILT_SOURCES = $(swig_built_sources)
 
-grinclude_HEADERS = gr_spi_source_s.h gr_spi_srcsink_ss.h
-
-swiginclude_HEADERS = $(LOCAL_IFILES)
-
-MOSTLYCLEANFILES = $(BUILT_SOURCES) *.pyc
+# Do not distribute the output of SWIG
+no_dist_files = $(swig_built_sources)
