@@ -30,8 +30,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/exception.hpp>
-#ifdef BOOST_1_34
+#ifndef BOOST_VERSION
+#include <boost/version.hpp>
+#endif
+
+#if BOOST_VERSION < 103700
 #include <boost/filesystem/cerrno.hpp>
+#else
+#include <boost/cerrno.hpp>
 #endif
 
 namespace fs = boost::filesystem;
@@ -111,10 +117,12 @@ void FileSystem_impl::copy (const char *sourceFileName, const char *destinationF
 	
 	fs::copy_file(sFile, dFile);
     } catch (const fs::filesystem_error &ex) {
-#ifdef BOOST_1_34
-	if (ex.system_error() == ENOENT)
+#if BOOST_VERSION < 103400
+      if (ex.error() == fs::not_found_error)
+#elif BOOST_VERSION < 103700
+      if (ex.system_error() == ENOENT)
 #else
-        if (ex.error() == fs::not_found_error)
+	if (ex.code().value() == ENOENT)
 #endif
 	    throw CF::FileException(CF::CFENOENT, ex.what());
 	
@@ -194,18 +202,22 @@ CF::FileSystem::FileInformationSequence* FileSystem_impl::list (const char *patt
 	return result._retn();
 
     } catch (const fs::filesystem_error &ex) {
-#ifdef BOOST_1_34
+#if BOOST_VERSION < 103400
+	DEBUG(9, FileSystem, "Caught exception in list, error_code " << ex.error());
+#elif BOOST_VERSION < 103700
 	DEBUG(9, FileSystem, "Caught exception in list, error_code " << ex.system_error());
 #else
-	DEBUG(9, FileSystem, "Caught exception in list, error_code " << ex.error());
+	DEBUG(9, FileSystem, "Caught exception in list, error_code " << ex.code());
 #endif
 
-#ifdef BOOST_1_34
+#if BOOST_VERSION < 103400
+	if (ex.error() == fs::other_error)
+#elif BOOST_VERSION < 103700
 	if (ex.system_error() == EINVAL)
 #else
-	if (ex.error() == fs::other_error)
+        if (ex.code().value() == EINVAL)
 #endif
-	    throw CF::InvalidFileName(CF::CFEINVAL, ex.what());
+	  throw CF::InvalidFileName(CF::CFEINVAL, ex.what());
 
 	throw CF::FileException(CF::CFNOTSET, ex.what());
     }
