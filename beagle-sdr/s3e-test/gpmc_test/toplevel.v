@@ -23,22 +23,7 @@ module toplevel(
 input clk,    // 50 MHz clock
 
 // Connections to beagle via FX2 connector
-inout AD0,   // IO1
-inout AD1,   // IO2
-inout AD2,   // IO3
-inout AD3,   // IO4
-inout AD4,   // IO5
-inout AD5,   // IO6
-inout AD6,   // IO7
-inout AD7,   // IO8
-inout AD8,   // IO9
-inout AD9,   // IO10
-inout AD10,  // IO11
-inout AD11,  // IO12
-inout AD12,  // IO13
-inout AD13,  // IO14
-inout AD14,  // IO15
-inout AD15,  // IO16
+inout [15:0] AD,   // IO1-IO16
  
 input nWE,   // IO18
 input nOE,   // IO19
@@ -53,7 +38,22 @@ output lcd_rs,
 output lcd_rw,
 output lcd_e,
 output [3:0] lcd_d
+);
 
-    );
+reg [15:0] data_out;
+reg [15:0] count;
+
+assign AD = nOE ? 16'bz : count;
+
+always @(negedge nOE)
+begin
+	if (count == 16'd65535) begin
+		count <= 16'b0;
+		data_out <= count;
+	end else begin
+		count <= count + 16'b1;
+		data_out <= count;
+	end
+end
 
 endmodule
