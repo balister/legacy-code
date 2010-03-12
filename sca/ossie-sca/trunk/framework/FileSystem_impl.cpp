@@ -34,7 +34,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <boost/version.hpp>
 #endif
 
-#if BOOST_VERSION < 103700
+#if BOOST_VERSION < 103600
 #include <boost/filesystem/cerrno.hpp>
 #else
 #include <boost/cerrno.hpp>
