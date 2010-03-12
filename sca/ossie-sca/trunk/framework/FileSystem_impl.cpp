@@ -119,7 +119,7 @@ void FileSystem_impl::copy (const char *sourceFileName, const char *destinationF
     } catch (const fs::filesystem_error &ex) {
 #if BOOST_VERSION < 103400
       if (ex.error() == fs::not_found_error)
-#elif BOOST_VERSION < 103700
+#elif BOOST_VERSION < 103600
       if (ex.system_error() == ENOENT)
 #else
 	if (ex.code().value() == ENOENT)
@@ -204,7 +204,7 @@ CF::FileSystem::FileInformationSequence* FileSystem_impl::list (const char *patt
     } catch (const fs::filesystem_error &ex) {
 #if BOOST_VERSION < 103400
 	DEBUG(9, FileSystem, "Caught exception in list, error_code " << ex.error());
-#elif BOOST_VERSION < 103700
+#elif BOOST_VERSION < 103600
 	DEBUG(9, FileSystem, "Caught exception in list, error_code " << ex.system_error());
 #else
 	DEBUG(9, FileSystem, "Caught exception in list, error_code " << ex.code());
@@ -212,7 +212,7 @@ CF::FileSystem::FileInformationSequence* FileSystem_impl::list (const char *patt
 
 #if BOOST_VERSION < 103400
 	if (ex.error() == fs::other_error)
-#elif BOOST_VERSION < 103700
+#elif BOOST_VERSION < 103600
 	if (ex.system_error() == EINVAL)
 #else
         if (ex.code().value() == EINVAL)

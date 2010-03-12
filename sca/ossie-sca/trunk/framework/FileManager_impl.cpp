@@ -250,7 +250,7 @@ CF::InvalidFileName)
 
 #if BOOST_VERSION < 103400
       DEBUG(9, FileManager, "Caught exception in list, error_code " << ex.error());
-#elif BOOST_VERSION < 103700
+#elif BOOST_VERSION < 103600
       DEBUG(9, FileManager, "Caught exception in list, error_code " << ex.system_error());
 #else
     DEBUG(9, FileManager, "Caught exception in list, error_code " << ex.code());
@@ -258,7 +258,7 @@ CF::InvalidFileName)
 
 #if BOOST_VERSION < 103400
       if (ex.error() == fs::other_error)
-#elif BOOST_VERSION < 103700
+#elif BOOST_VERSION < 103600
 	///\todo retest against JTAP
 	if (ex.system_error() == EINVAL)
 #else
