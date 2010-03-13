@@ -4,7 +4,7 @@ PRIORITY = "optional"
 LICENSE = "LGPL"
 DEPENDS = "omniorb boost libtool-cross"
 
-PR = "r1"
+PR = "r2"
 PV = "0.0.0+svnr${SRCREV}"
 
 S = "${WORKDIR}/trunk"

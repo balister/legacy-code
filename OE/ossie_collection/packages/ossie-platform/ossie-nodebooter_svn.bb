@@ -3,7 +3,7 @@ SECTION =  "apps"
 PRIORITY = "optional"
 LICENSE = "GPL"
 
-PR = "r1"
+PR = "r2"
 PV = "0.0.0+svnr${SRCREV}"
 
 DEPENDS = "ossie-cf"

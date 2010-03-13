@@ -4,7 +4,7 @@ PRIORITY = "optional"
 MAINTAINER = "Philip Balister philip@balister.org"
 LICENSE = "GPL"
 
-PR = "r1"
+PR = "r3"
 PV = "0.0.0+svnr${SRCREV}"
 
 DEPENDS = "ossie-cf"
