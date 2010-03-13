@@ -1,6 +1,7 @@
 /****************************************************************************
 
 Copyright 2004, 2007 Virginia Polytechnic Institute and State University
+Copyright 2010 Philip Balister <philip@opensdr.com>
 
 This file is part of the OSSIE Core Framework.
 
