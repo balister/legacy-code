@@ -19,7 +19,7 @@ AC_CHECK_LIB([omniDynamic4], [main], [], [AC_MSG_ERROR([cannot find omniDynamic4
 AC_CHECK_HEADERS([omniORB4/CORBA.h], [], [AC_MSG_ERROR([cannot find omniORB4 header files])])
 
 AC_CHECK_HEADERS([boost/filesystem/operations.hpp], [], [AC_MSG_ERROR([Boost filesystem library headers not installed.])])
-AC_CHECK_LIB([boost_filesystem], [main], [], [AC_MSG_ERROR([cannot find boost_filesystem library.])])
+AC_CHECK_LIB([boost_filesystem-mt], [main], [], [AC_MSG_ERROR([cannot find boost_filesystem library.])])
 
 AC_LANG_POP
 
