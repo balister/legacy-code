@@ -15,7 +15,7 @@ AC_CHECK_HEADERS([omniORB4/CORBA.h], [], [AC_MSG_ERROR([cannot find omniORB4 hea
 AC_CHECK_PROG([IDL], [omniidl], [omniidl], [AC_MSG_ERROR([cannot find omniidl prgram])])
 
 AC_CHECK_HEADERS([boost/filesystem/operations.hpp], [], [AC_MSG_ERROR([Boost filesystem library headers not installed.])])
-AC_CHECK_LIB([boost_filesystem-mt], [main], [], [AC_MSG_ERROR([cannot find boost_filesystem library.])])
+AC_CHECK_LIB([boost_filesystem], [main], [], [AC_MSG_ERROR([cannot find boost_filesystem library.])])
 
 
 AC_HEADER_SYS_WAIT
